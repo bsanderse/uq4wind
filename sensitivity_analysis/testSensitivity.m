@@ -4,7 +4,7 @@ clc
 close all
 clearvars
 
-input_file = 'linear_portfolio'; % specify directory which contains test case settings and model
+input_file = 'airfoil_lift'; % specify directory which contains test case settings and model
 
 
 %% Sobol options
@@ -23,6 +23,11 @@ uqlab
 %% start running
 run(['cases/' input_file '/initialize.m']);
 
+if (exist('mean_exact','var'))
+    compare_mean = 1;
+else
+    compare_mean = 0;
+end
 if (exist('std_exact','var'))
     compare_std = 1;
 else
@@ -49,20 +54,21 @@ if (find(strcmp(methods,'MC')))
             mean_MC(k,i) = mean(Y_ED2);
             std_MC(k,i)  = std(Y_ED2);
             
-
+            
             SobolOpts.Sobol.SampleSize = NsamplesMC(i);
             SobolAnalysis_MC = uq_createAnalysis(SobolOpts);
             SobolResults_MC  = SobolAnalysis_MC.Results;
             Sobol_MC(k,i,1:ndim) = SobolResults_MC.FirstOrder;
-%             Sobol_MC(k,i,1:ndim) = SobolResults_MC.Total;
-
-
+            %             Sobol_MC(k,i,1:ndim) = SobolResults_MC.Total;
+            
+            
         end
     end
     % take average over first dimension
     Sobol_MC = squeeze(mean(Sobol_MC,1));
-    
-    err_mean_MC = abs((mean(mean_MC,1)-mean_exact)/mean_ref);
+    if (compare_mean == 1)
+        err_mean_MC = abs((mean(mean_MC,1)-mean_exact)/mean_ref);
+    end
     if (compare_std == 1)
         err_std_MC = abs((mean(std_MC,1)-std_exact)/std_ref);
     end
@@ -87,11 +93,11 @@ if (find(strcmp(methods,'PCE_Quad')))
         
         metamodelQuad.Degree = DegreesPCE(i);
         myPCE_Quad           = uq_createModel(metamodelQuad);
-       
+        
         SobolAnalysis_PCE    = uq_createAnalysis(SobolOpts);
         SobolResults_PCE     = SobolAnalysis_PCE.Results;
         Sobol_PCE(i,1:ndim)  = SobolResults_PCE.FirstOrder;
-%         Sobol_PCE(i,1:ndim)  = SobolResults_PCE.Total;
+        %         Sobol_PCE(i,1:ndim)  = SobolResults_PCE.Total;
         
         NsamplesPCE(i) = myPCE_Quad.ExpDesign.NSamples;
         mean_PCE(i)    = myPCE_Quad.PCE.Moments.Mean;
@@ -99,7 +105,9 @@ if (find(strcmp(methods,'PCE_Quad')))
         
     end
     
-    err_mean_PCE =  abs( (mean_PCE-mean_exact)/mean_ref);
+    if (compare_mean == 1)
+        err_mean_PCE =  abs( (mean_PCE-mean_exact)/mean_ref);
+    end
     if (compare_std == 1)
         err_std_PCE  =  abs( (std_PCE - std_exact)/std_ref);
     end
@@ -136,7 +144,9 @@ if (find(strcmp(methods,'PCE_OLS')))
     end
     
     % take mean over first dimension (k)
-    err_mean_OLS =  abs((mean(mean_OLS,1)-mean_exact)/mean_ref);
+    if (compare_mean == 1)
+        err_mean_OLS =  abs((mean(mean_OLS,1)-mean_exact)/mean_ref);
+    end
     if (compare_std == 1)
         err_std_OLS =  abs((mean(std_OLS,1)-std_exact)/std_ref);
     end
@@ -179,8 +189,9 @@ if (find(strcmp(methods,'PCE_LARS')))
         end
     end
     
-    err_mean_LARS =  abs((mean(mean_LARS,1)-mean_exact)/mean_ref);
-    
+    if (compare_mean == 1)
+        err_mean_LARS =  abs((mean(mean_LARS,1)-mean_exact)/mean_ref);
+    end
     if (compare_std == 1)
         err_std_LARS =  abs((mean(std_LARS,1)-std_exact)/std_ref);
     end
@@ -192,27 +203,30 @@ end
 % myColors = uq_cmap(2);
 
 %% mean
-figure
-if (find(strcmp(methods,'MC')))
-    loglog(NsamplesMC, err_mean_MC, 'x-','Linewidth', 2); %, 'Color', myColors(1,:));
-    hold on
+if (compare_mean == 1)
+    
+    figure
+    if (find(strcmp(methods,'MC')))
+        loglog(NsamplesMC, err_mean_MC, 'x-','Linewidth', 2); %, 'Color', myColors(1,:));
+        hold on
+    end
+    if (find(strcmp(methods,'PCE_Quad')))
+        loglog(NsamplesPCE, err_mean_PCE, 's-','Linewidth', 2);%,'Color', myColors(2,:));
+        hold on
+    end
+    if (find(strcmp(methods,'PCE_OLS')))
+        loglog(NsamplesOLS, err_mean_OLS, 'o-','Linewidth', 2); %,'Color', 'y');
+        hold on
+    end
+    if (find(strcmp(methods,'PCE_LARS')))
+        loglog(NsamplesLARS, err_mean_LARS, 'd-','Linewidth', 2); %,'Color', 'r');
+        hold on
+    end
+    xlabel('N') % Add proper labelling and a legend
+    legend({'Monte Carlo','PCE - quadrature','PCE - least squares','PCE - LARS'})
+    grid on;
+    title('Error in mean')
 end
-if (find(strcmp(methods,'PCE_Quad')))
-    loglog(NsamplesPCE, err_mean_PCE, 's-','Linewidth', 2);%,'Color', myColors(2,:));
-    hold on
-end
-if (find(strcmp(methods,'PCE_OLS')))
-    loglog(NsamplesOLS, err_mean_OLS, 'o-','Linewidth', 2); %,'Color', 'y');
-    hold on
-end
-if (find(strcmp(methods,'PCE_LARS')))
-    loglog(NsamplesLARS, err_mean_LARS, 'd-','Linewidth', 2); %,'Color', 'r');
-    hold on
-end
-xlabel('N') % Add proper labelling and a legend
-legend({'Monte Carlo','PCE - quadrature','PCE - least squares','PCE - LARS'})
-grid on;
-title('Error in mean')
 
 %% standard deviation
 if (compare_std == 1)
@@ -267,6 +281,19 @@ xlabel('N') % Add proper labelling and a legend
 ylabel('Total index');
 grid on;
 title('Comparison of Sobol indices')
+
+
+figure
+% uq_bar((1:ndim)-0.25, SobolResults_MC.Total, 0.25, 'EdgeColor', 'none')
+% hold on
+uq_bar(1:ndim, SobolResults_PCE.FirstOrder, 0.25, 'EdgeColor', 'none')
+hold on
+% uq_setInterpreters(gca)
+set(gca, 'XTick', 1:length(Input.Marginals),...
+    'XTickLabel', SobolResults_PCE.VariableNames, 'FontSize', 14)
+% uq_bar((1:ndim)+0.25, mySobolResultsLRA.Total, 0.25,...
+%     'FaceColor', cm(64,:), 'EdgeColor', 'none')
+
 
 %% plot polynomial approximations for quadrature-based methods
 if (find(strcmp(methods,'PCE_Quad')))

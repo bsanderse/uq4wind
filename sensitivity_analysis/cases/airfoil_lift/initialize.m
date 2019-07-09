@@ -27,15 +27,16 @@ NsamplesMC = [1e1 1e2 1e3 1e4];
 % X2: CL
 % X3: V
 
-ndim = 3;
+ndim = 2;
 
 %% uniform:
-bounds = [1 1.5; 0.1 1; 5 10];
-
+bounds = [0.1 1; 5 10];
+names = {'CL','V'};
 for ii = 1 : ndim
+    Input.Marginals(ii).Name = names{ii};
     Input.Marginals(ii).Type = 'Uniform'; 
-    Input.Marginals(ii).Parameters = bounds(ii);
-    Input.Marginals(ii).Bounds = bounds(ii); % not necessary for uniform but useful for plotting
+    Input.Marginals(ii).Parameters = bounds(ii,:);
+    Input.Marginals(ii).Bounds = bounds(ii,:); % not necessary for uniform but useful for plotting
 end
 
 % % exact mean and std
