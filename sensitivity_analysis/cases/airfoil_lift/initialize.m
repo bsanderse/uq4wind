@@ -29,15 +29,17 @@ NsamplesMC = [1e1 1e2 1e3 1e4];
 
 ndim = 2;
 
-%% uniform:
-bounds = [0.1 1; 5 10];
-names = {'CL','V'};
-for ii = 1 : ndim
-    Input.Marginals(ii).Name = names{ii};
-    Input.Marginals(ii).Type = 'Uniform'; 
-    Input.Marginals(ii).Parameters = bounds(ii,:);
-    Input.Marginals(ii).Bounds = bounds(ii,:); % not necessary for uniform but useful for plotting
-end
+%% marginals
+
+Input.Marginals(1).Name = 'CL';
+Input.Marginals(1).Type = 'Uniform'; 
+Input.Marginals(1).Parameters = [0.1 1];
+Input.Marginals(1).Bounds = [0.1 1]; 
+
+Input.Marginals(2).Name = 'V';
+Input.Marginals(2).Type = 'Weibull'; 
+Input.Marginals(2).Parameters = [10 2]; % scale and shape parameter
+% Input.Marginals(1).Bounds = [0.1 1]; 
 
 % % exact mean and std
 % mean_exact = a(1)/2;

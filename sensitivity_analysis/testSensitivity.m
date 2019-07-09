@@ -261,7 +261,7 @@ figure
 cmap = get(gca,'ColorOrder');
 
 if (find(strcmp(methods,'MC')))
-    semilogx(NsamplesMC', Sobol_MC, 'x-','Linewidth', 2, 'Color', cmap(1,:));
+    semilogx(NsamplesMC', Sobol_MC, 'x-','Linewidth', 2, 'Color', cmap(1,:),'EdgeColor', 'none');
     hold on
 end
 if (find(strcmp(methods,'PCE_Quad')))
@@ -282,17 +282,22 @@ ylabel('Total index');
 grid on;
 title('Comparison of Sobol indices')
 
-
+%% 
 figure
-% uq_bar((1:ndim)-0.25, SobolResults_MC.Total, 0.25, 'EdgeColor', 'none')
-% hold on
-uq_bar(1:ndim, SobolResults_PCE.FirstOrder, 0.25, 'EdgeColor', 'none')
+uq_bar((1:ndim)-0.125, SobolResults_MC.FirstOrder, 0.25, 'FaceColor', cmap(1,:), 'EdgeColor', 'none')
 hold on
+uq_bar((1:ndim)+0.125, SobolResults_PCE.FirstOrder, 0.25, 'FaceColor', cmap(2,:), 'EdgeColor', 'none')
+hold on
+% uq_bar((1:ndim)+0.25, mySobolResultsLRA.Total, 0.25,...
+%     'FaceColor', cm(64,:), 'EdgeColor', 'none')
 % uq_setInterpreters(gca)
 set(gca, 'XTick', 1:length(Input.Marginals),...
     'XTickLabel', SobolResults_PCE.VariableNames, 'FontSize', 14)
-% uq_bar((1:ndim)+0.25, mySobolResultsLRA.Total, 0.25,...
-%     'FaceColor', cm(64,:), 'EdgeColor', 'none')
+uq_legend({...
+    sprintf('MC based (%.0e simulations)', NsamplesMC(end)),...
+    sprintf('PCE-based (%d simulations)', myPCE_Quad.ExpDesign.NSamples)})
+ylabel('Total order Sobol index');
+ylim([0 1])
 
 
 %% plot polynomial approximations for quadrature-based methods
@@ -338,12 +343,16 @@ if (find(strcmp(methods,'PCE_Quad')))
                 myInput.Marginals(p1).Moments(1)+2*myInput.Marginals(p1).Moments(2),N1)';
         elseif (strcmp(myInput.Marginals(p1).Type,'Uniform'))
             X1 = linspace(myInput.Marginals(p1).Bounds(1),myInput.Marginals(p1).Bounds(2),N1)';
+        elseif (strcmp(myInput.Marginals(p1).Type,'Weibull'))
+            X1 = linspace(0,myInput.Marginals(p1).Moments(1) + 3*myInput.Marginals(p1).Moments(2),N1)';
         end
         if (strcmp(myInput.Marginals(p2).Type,'Gaussian'))
             X2 = linspace(myInput.Marginals(p2).Moments(1)-2*myInput.Marginals(p2).Moments(2),...
                 myInput.Marginals(p2).Moments(1)+2*myInput.Marginals(p2).Moments(2),N2)';
         elseif (strcmp(myInput.Marginals(p2).Type,'Uniform'))
             X2 = linspace(myInput.Marginals(p2).Bounds(1),myInput.Marginals(p2).Bounds(2),N2)';
+        elseif (strcmp(myInput.Marginals(p2).Type,'Weibull'))
+            X2 = linspace(0,myInput.Marginals(p2).Moments(1) + 3*myInput.Marginals(p2).Moments(2),N2)';            
         end
         
         if (n_inputs==2)
