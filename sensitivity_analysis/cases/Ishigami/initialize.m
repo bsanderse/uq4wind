@@ -16,16 +16,18 @@ methods = {'MC','PCE_Quad'};
 % number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
 MC_repeat = 1;
-
-DegreesPCE = 1:8; %[1 2 3 4 5 6];
+% number of samples with MC
 NsamplesMC = [1e1 1e2 1e3 1e4];
 
+% for PCE-Quad, specify the polynomial degrees to be tested
+DegreesQuad = 1:8; %[1 2 3 4 5 6];
 
 
-%% Description of input marginals
+
+%% input description
 ndim = 3;
 
-%% uniform:
+% uniform:
 for ii = 1 : ndim
     Input.Marginals(ii).Type = 'Uniform'; 
     Input.Marginals(ii).Parameters = [-pi, pi];

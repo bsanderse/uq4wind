@@ -1,32 +1,34 @@
 %% model description 
 
-
 % infinitely continuous function
 % see Patterson,
 % ﻿On the construction of a practical Ermakov-Zolotukhin multiple integrator
 % integral 5
-% Model.mFile = 'cases/Cinf/Cinf';
+
+% name of Matlab file representing the model
 Model.mHandle = @Cinf;
 
 
 
-%% input
+%% list of UQ methods to be used for analysis
 
-% take options from following list:
+% specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 methods = {'MC','PCE_Quad'};
 
-% number of times to repeat MC-based methods to obtain 'nice' convergence
+% for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
 MC_repeat = 1;
-
-DegreesPCE = 1:6; %[1 2 3 4 5 6];
 NsamplesMC = [1e1 1e2 1e3 1e4 1e5];
 
+% for PCE-Quad, specify the polynomial degrees to be tested
+DegreesQuad = 1:6; %[1 2 3 4 5 6];
 
 
-%% Description of input marginals
+%% input description
+
 ndim = 2;
+
 for ii = 1 : ndim
     Input.Marginals(ii).Type = 'Uniform'; 
     Input.Marginals(ii).Parameters = [0, 1];

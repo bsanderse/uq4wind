@@ -4,23 +4,25 @@ clc
 close all
 clearvars
 
-input_file = 'airfoil_lift'; % specify directory which contains test case settings and model
+input_file = 'Cinf'; % specify directory which contains test case settings and model
 
 
 %% Sobol options
+
 SobolOpts.Type        = 'Sensitivity';
 SobolOpts.Method      = 'Sobol';
 SobolOpts.Sobol.Order = 1;
 
 
 %% initialize UQlab
+
 % add path
 addpath(genpath('../../UQLabCore_Rel1.0.0/'));
 % start uqlab
 uqlab
 
 
-%% start running
+%% process input files
 run(['cases/' input_file '/initialize.m']);
 
 if (exist('mean_exact','var'))
@@ -34,38 +36,56 @@ else
     compare_std = 0;
 end
 
-myModel = uq_createModel(Model);      % create and add the model to UQLab
+% create and add the model to UQLab
+myModel = uq_createModel(Model);
+% create input object with UQLab
 myInput = uq_createInput(Input) ;
-uq_print(myInput);
 
+% display input properties
+uq_print(myInput);
 uq_display(myInput);
 
 
-%% MC
+%% Monte-Carlo
 if (find(strcmp(methods,'MC')))
     
     disp('=========MC==========');
+    N_MC     = length(NsamplesMC);
+    mean_MC  = zeros(MC_repeat,N_MC);
+    std_MC   = zeros(MC_repeat,N_MC);
+    Sobol_MC_FirstOrder = zeros(MC_repeat,N_MC,ndim);
+    Sobol_MC_Total      = zeros(MC_repeat,N_MC,ndim);
     
+    % perform multiple runs to decrease effect of random sampling
     for k = 1:MC_repeat
-        for i=1:length(NsamplesMC)
-            disp([NsamplesMC(i)]);
-            X_ED2 = uq_getSample(NsamplesMC(i), 'MC') ;
-            Y_ED2 = uq_evalModel(myModel,X_ED2) ;
-            mean_MC(k,i) = mean(Y_ED2);
-            std_MC(k,i)  = std(Y_ED2);
+        
+        
+        for i=1:N_MC
             
+            disp(NsamplesMC(i));
+            % get random samples ('experimental design')
+            X_ED = uq_getSample(NsamplesMC(i), 'MC') ;
+            % evaluate model at sample
+            Y_ED = uq_evalModel(myModel,X_ED) ;
             
+            % moments of solution
+            mean_MC(k,i) = mean(Y_ED);
+            std_MC(k,i)  = std(Y_ED);
+            
+            % Sobol analysis; 
             SobolOpts.Sobol.SampleSize = NsamplesMC(i);
-            SobolAnalysis_MC = uq_createAnalysis(SobolOpts);
-            SobolResults_MC  = SobolAnalysis_MC.Results;
-            Sobol_MC(k,i,1:ndim) = SobolResults_MC.FirstOrder;
-            %             Sobol_MC(k,i,1:ndim) = SobolResults_MC.Total;
-            
+            SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);
+            SobolResults_MC            = SobolAnalysis_MC.Results;
+            Sobol_MC_FirstOrder(k,i,1:ndim) = SobolResults_MC.FirstOrder;
+            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;
             
         end
     end
-    % take average over first dimension
-    Sobol_MC = squeeze(mean(Sobol_MC,1));
+    
+    % take average over first dimension (multiple MC runs)
+    Sobol_MC_FirstOrder = squeeze(mean(Sobol_MC_FirstOrder,1));
+    Sobol_MC_Total      = squeeze(mean(Sobol_MC_Total,1));
+    
     if (compare_mean == 1)
         err_mean_MC = abs((mean(mean_MC,1)-mean_exact)/mean_ref);
     end
@@ -75,12 +95,21 @@ if (find(strcmp(methods,'MC')))
     
 end
 
-%% PCE
+
+%% Polynomial Chaos with quadrature
 
 if (find(strcmp(methods,'PCE_Quad')))
     
     disp('=========PCE==========');
     
+    N_Quad      = length(DegreesQuad);
+    NsamplesQuad = zeros(N_Quad,1);
+    mean_Quad    = zeros(N_Quad,1);
+    std_Quad     = zeros(N_Quad,1);
+    Sobol_Quad_FirstOrder = zeros(N_Quad,ndim);
+    Sobol_Quad_Total = zeros(N_Quad,ndim);
+    
+    % set up PCE metamodel
     metamodelQuad.FullModel = myModel;
     metamodelQuad.Input     = myInput;
     metamodelQuad.Type      = 'Metamodel';
@@ -89,56 +118,93 @@ if (find(strcmp(methods,'PCE_Quad')))
     metamodelQuad.Method          = 'Quadrature' ;
     metamodelQuad.Quadrature.Type = 'Full';
     
-    for i = 1:length(DegreesPCE)
+    
+    for i = 1:N_Quad
         
-        metamodelQuad.Degree = DegreesPCE(i);
+        metamodelQuad.Degree = DegreesQuad(i);
         myPCE_Quad           = uq_createModel(metamodelQuad);
         
-        SobolAnalysis_PCE    = uq_createAnalysis(SobolOpts);
-        SobolResults_PCE     = SobolAnalysis_PCE.Results;
-        Sobol_PCE(i,1:ndim)  = SobolResults_PCE.FirstOrder;
-        %         Sobol_PCE(i,1:ndim)  = SobolResults_PCE.Total;
+        % moments of solution
+        NsamplesQuad(i) = myPCE_Quad.ExpDesign.NSamples;
+        mean_Quad(i)    = myPCE_Quad.PCE.Moments.Mean;
+        std_Quad(i)     = sqrt(myPCE_Quad.PCE.Moments.Var);
         
-        NsamplesPCE(i) = myPCE_Quad.ExpDesign.NSamples;
-        mean_PCE(i)    = myPCE_Quad.PCE.Moments.Mean;
-        std_PCE(i)     = sqrt(myPCE_Quad.PCE.Moments.Var);
+        % Sobol analysis
+        % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model        
+        SobolAnalysis_Quad    = uq_createAnalysis(SobolOpts);
+        SobolResults_Quad     = SobolAnalysis_Quad.Results;
+        Sobol_Quad_FirstOrder(i,1:ndim) = SobolResults_Quad.FirstOrder;
+        Sobol_Quad_Total(i,1:ndim)      = SobolResults_Quad.Total;
+        
         
     end
     
     if (compare_mean == 1)
-        err_mean_PCE =  abs( (mean_PCE-mean_exact)/mean_ref);
+        err_mean_Quad =  abs((mean_Quad - mean_exact)/mean_ref);
     end
     if (compare_std == 1)
-        err_std_PCE  =  abs( (std_PCE - std_exact)/std_ref);
+        err_std_Quad  =  abs((std_Quad - std_exact)/std_ref);
     end
     
 end
 
-%% OLS
+
+%% Polynomial Chaos with ordinary least squares (OLS)
+
 if (find(strcmp(methods,'PCE_OLS')))
     
     disp('=========OLS==========');
     
+    if (~exist('NsamplesOLS','var'))
+        if (find(strcmp(methods,'PCE_Quad')))
+            % we specify number of OLS samples based on samples used with
+            % quadrature
+            NsamplesOLS = NsamplesQuad;
+            warning('number of OLS samples taken based on number of Quadrature samples');
+        else
+            error('please specify NsamplesOLS');
+        end
+    end
+    
+    
+    N_OLS       = length(NsamplesOLS);
+    mean_OLS    = zeros(N_OLS,1);
+    std_OLS     = zeros(N_OLS,1);
+    Sobol_OLS_FirstOrder = zeros(N_OLS,ndim);
+    Sobol_OLS_Total      = zeros(N_OLS,ndim);
+    
     metamodelOLS.FullModel = myModel;
-    metamodelOLS.Input = myInput;
-    metamodelOLS.Type = 'Metamodel';
-    metamodelOLS.MetaType = 'PCE';
-    metamodelOLS.Method = 'OLS' ;
-    metamodelOLS.Degree = 1:6;
+    metamodelOLS.Input     = myInput;
+    metamodelOLS.Type      = 'Metamodel';
+    metamodelOLS.MetaType  = 'PCE';
+    metamodelOLS.Method    = 'OLS';
+    % specify array of possible degrees;
+    % the degree with the lowest Leave-One-Out cross-validation error (LOO error)
+    % is automatically selected:
+    metamodelOLS.Degree    = 1:6;
     
-    % use this if issues with LOO: metamodelOLS.OLS.ModifiedLOO = 0;
-    % note default sampling: LHS
+    % if there are issues with LOO, try the following: metamodelOLS.OLS.ModifiedLOO = 0;
+    % note that default sampling is LHS, this can be changed (see below)
     
-    NsamplesOLS = NsamplesPCE;
-    
-    for k = 1:MC_repeat
-        for i = 1:length(NsamplesOLS)
+    % as there is randomness in the experimental design, we can 
+    % average over several runs
+    for k = 1:OLS_repeat
+        for i = 1:N_OLS
             
             metamodelOLS.ExpDesign.NSamples = NsamplesOLS(i);
             metamodelOLS.ExpDesign.Sampling = 'LHS'; % LHS is default
             myPCE_OLS = uq_createModel(metamodelOLS);
+            
+            % moments of solution            
             mean_OLS(k,i) = myPCE_OLS.PCE.Moments.Mean;
-            std_OLS(k,i) = sqrt(myPCE_OLS.PCE.Moments.Var);
+            std_OLS(k,i)  = sqrt(myPCE_OLS.PCE.Moments.Var);
+            
+            % Sobol analysis
+            % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
+            SobolAnalysis_OLS    = uq_createAnalysis(SobolOpts);
+            SobolResults_OLS     = SobolAnalysis_OLS.Results;
+            Sobol_OLS_FirstOrder(i,1:ndim) = SobolResults_OLS.FirstOrder;
+            Sobol_OLS_Total(i,1:ndim)      = SobolResults_OLS.Total;
         end
         
     end
@@ -153,10 +219,27 @@ if (find(strcmp(methods,'PCE_OLS')))
     
 end
 
-%% PCE LARS
+%% Polynomial Chaos with LARS
 if (find(strcmp(methods,'PCE_LARS')))
     
     disp('=========LARS==========');
+    
+    if (~exist('NsamplesLARS','var'))
+        if (find(strcmp(methods,'PCE_Quad')))
+            % we specify number of OLS samples based on samples used with
+            % quadrature
+            NsamplesLARS = NsamplesQuad;
+            warning('number of LARS samples taken based on number of Quadrature samples');
+        else
+            error('please specify NsamplesLARS');
+        end
+    end
+    
+    N_LARS       = length(NsamplesLARS);
+    mean_LARS    = zeros(N_LARS,1);
+    std_LARS     = zeros(N_LARS,1);
+    Sobol_LARS_FirstOrder = zeros(N_LARS,ndim);
+    Sobol_LARS_Total      = zeros(N_LARS,ndim);
     
     metamodelLARS.FullModel = myModel;
     metamodelLARS.Input     = myInput;
@@ -166,11 +249,10 @@ if (find(strcmp(methods,'PCE_LARS')))
     metamodelLARS.Degree    = 1:6; % this automatically switches on degree adaptive PCE
     metamodelLARS.TruncOptions.qNorm = 0.75;
     
-    % NsamplesLARS = [4 25 50 100 200];
-    NsamplesLARS = NsamplesPCE;
-    
-    for k = 1:MC_repeat
-        for i = 1:length(NsamplesLARS)
+    % as there is randomness in the experimental design, we can 
+    % average over several runs    
+    for k = 1:LARS_repeat
+        for i = 1:N_LARS
             
             % use manual experimental design:
             %         X_ED = uq_getSample(NsamplesLARS(i),'MC') ;
@@ -178,14 +260,21 @@ if (find(strcmp(methods,'PCE_LARS')))
             %         metamodelLARS.ExpDesign.X = X_ED;
             %         metamodelLARS.ExpDesign.Y = Y_ED;
             
-            % use sampling strategy, note default MC!
+            % use sampling strategy, note that default is MC!
             metamodelLARS.ExpDesign.Sampling = 'LHS'; % or 'LHS' or 'Sobol' or 'Halton'
-            metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);
-            
+            metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);            
             myPCE_LARS     = uq_createModel(metamodelLARS);
             
+            % moments of solution            
             mean_LARS(k,i) = myPCE_LARS.PCE.Moments.Mean;
             std_LARS(k,i)  = sqrt(myPCE_LARS.PCE.Moments.Var);
+
+            % Sobol analysis
+            % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
+            SobolAnalysis_LARS    = uq_createAnalysis(SobolOpts);
+            SobolResults_LARS     = SobolAnalysis_LARS.Results;
+            Sobol_LARS_FirstOrder(i,1:ndim) = SobolResults_LARS.FirstOrder;
+            Sobol_LARS_Total(i,1:ndim)      = SobolResults_LARS.Total;
         end
     end
     
@@ -211,7 +300,7 @@ if (compare_mean == 1)
         hold on
     end
     if (find(strcmp(methods,'PCE_Quad')))
-        loglog(NsamplesPCE, err_mean_PCE, 's-','Linewidth', 2);%,'Color', myColors(2,:));
+        loglog(NsamplesQuad, err_mean_Quad, 's-','Linewidth', 2);%,'Color', myColors(2,:));
         hold on
     end
     if (find(strcmp(methods,'PCE_OLS')))
@@ -228,6 +317,7 @@ if (compare_mean == 1)
     title('Error in mean')
 end
 
+
 %% standard deviation
 if (compare_std == 1)
     
@@ -237,7 +327,7 @@ if (compare_std == 1)
         hold on
     end
     if (find(strcmp(methods,'PCE_Quad')))
-        loglog(NsamplesPCE, err_std_PCE, 's-','Linewidth', 2);%,'Color', myColors(2,:));
+        loglog(NsamplesQuad, err_std_Quad, 's-','Linewidth', 2);%,'Color', myColors(2,:));
         hold on
     end
     if (find(strcmp(methods,'PCE_OLS')))
@@ -255,25 +345,26 @@ if (compare_std == 1)
     
 end
 
-%% Sobol indices
+
+%% Convergence of Sobol indices
 
 figure
 cmap = get(gca,'ColorOrder');
 
 if (find(strcmp(methods,'MC')))
-    semilogx(NsamplesMC', Sobol_MC, 'x-','Linewidth', 2, 'Color', cmap(1,:),'EdgeColor', 'none');
+    semilogx(NsamplesMC', Sobol_MC_Total, 'x-','Linewidth', 2, 'Color', cmap(1,:));
     hold on
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    semilogx(NsamplesPCE', Sobol_PCE, 's-','Linewidth', 2,'Color', cmap(2,:));
+    semilogx(NsamplesQuad', Sobol_Quad_Total, 's-','Linewidth', 2,'Color', cmap(2,:));
     hold on
 end
 if (find(strcmp(methods,'PCE_OLS')))
-    loglog(NsamplesOLS, Sobol_OLS, 'o-','Linewidth', 2,'Color', cmap(3,:));
+    loglog(NsamplesOLS, Sobol_OLS_Total, 'o-','Linewidth', 2,'Color', cmap(3,:));
     hold on
 end
 if (find(strcmp(methods,'PCE_LARS')))
-    loglog(NsamplesLARS, Sobol_LARS, 'd-','Linewidth', 2,'Color', cmap(4,:));
+    loglog(NsamplesLARS, Sobol_LARS_Total, 'd-','Linewidth', 2,'Color', cmap(4,:));
     hold on
 end
 xlabel('N') % Add proper labelling and a legend
@@ -282,17 +373,39 @@ ylabel('Total index');
 grid on;
 title('Comparison of Sobol indices')
 
-%% 
+
+%% bar chart of Sobol indices
+
 figure
-uq_bar((1:ndim)-0.125, SobolResults_MC.FirstOrder, 0.25, 'FaceColor', cmap(1,:), 'EdgeColor', 'none')
 hold on
-uq_bar((1:ndim)+0.125, SobolResults_PCE.FirstOrder, 0.25, 'FaceColor', cmap(2,:), 'EdgeColor', 'none')
-hold on
+
+n_methods = length(methods);
+bar_width = 0.5/n_methods;
+bar_vec   = 1:n_methods;
+coords    = (bar_vec - mean(bar_vec))*bar_width;
+k         = 1;
+if (find(strcmp(methods,'MC')))
+    uq_bar((1:ndim)+coords(k), SobolResults_MC.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    k = k+1;
+end
+if (find(strcmp(methods,'PCE_Quad')))
+    uq_bar((1:ndim)+coords(k), SobolResults_Quad.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    k = k+1;
+end
+if (find(strcmp(methods,'PCE_OLS')))
+    uq_bar((1:ndim)+coords(k), SobolResults_OLS.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    k = k+1;
+end
+if (find(strcmp(methods,'PCE_LARS')))
+    uq_bar((1:ndim)+coords(k), SobolResults_LARS.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    k = k+1;
+end
+
 % uq_bar((1:ndim)+0.25, mySobolResultsLRA.Total, 0.25,...
 %     'FaceColor', cm(64,:), 'EdgeColor', 'none')
 % uq_setInterpreters(gca)
 set(gca, 'XTick', 1:length(Input.Marginals),...
-    'XTickLabel', SobolResults_PCE.VariableNames, 'FontSize', 14)
+    'XTickLabel', SobolResults_Quad.VariableNames, 'FontSize', 14)
 uq_legend({...
     sprintf('MC based (%.0e simulations)', NsamplesMC(end)),...
     sprintf('PCE-based (%d simulations)', myPCE_Quad.ExpDesign.NSamples)})
@@ -300,7 +413,9 @@ ylabel('Total order Sobol index');
 ylim([0 1])
 
 
-%% plot polynomial approximations for quadrature-based methods
+
+%% plot the polynomial response surface for PCE quadrature-based
+
 if (find(strcmp(methods,'PCE_Quad')))
     
     n_inputs = length(Input.Marginals);
@@ -310,7 +425,8 @@ if (find(strcmp(methods,'PCE_Quad')))
         Ysamples  = myPCE_Quad.ExpDesign.Y;
         
         N = 100;
-        X = linspace(Input.Marginals(1).Bounds(1),Input.Marginals(1).Bounds(2),N)';
+        domain = getMarginalBounds(myInput.Marginals(1));
+        X      = linspace(domain(1),domain(2),N)';
         
         Y     = uq_evalModel(myModel,X);
         Y_PCE = uq_evalModel(myPCE_Quad,X); % or myPCE_OLS, myPCE_LARS
@@ -338,22 +454,11 @@ if (find(strcmp(methods,'PCE_Quad')))
         
         % create regular grid of points where surrogate model will be evaluated
         % (this should be cheap)
-        if (strcmp(myInput.Marginals(p1).Type,'Gaussian'))
-            X1 = linspace(myInput.Marginals(p1).Moments(1)-2*myInput.Marginals(p1).Moments(2),...
-                myInput.Marginals(p1).Moments(1)+2*myInput.Marginals(p1).Moments(2),N1)';
-        elseif (strcmp(myInput.Marginals(p1).Type,'Uniform'))
-            X1 = linspace(myInput.Marginals(p1).Bounds(1),myInput.Marginals(p1).Bounds(2),N1)';
-        elseif (strcmp(myInput.Marginals(p1).Type,'Weibull'))
-            X1 = linspace(0,myInput.Marginals(p1).Moments(1) + 3*myInput.Marginals(p1).Moments(2),N1)';
-        end
-        if (strcmp(myInput.Marginals(p2).Type,'Gaussian'))
-            X2 = linspace(myInput.Marginals(p2).Moments(1)-2*myInput.Marginals(p2).Moments(2),...
-                myInput.Marginals(p2).Moments(1)+2*myInput.Marginals(p2).Moments(2),N2)';
-        elseif (strcmp(myInput.Marginals(p2).Type,'Uniform'))
-            X2 = linspace(myInput.Marginals(p2).Bounds(1),myInput.Marginals(p2).Bounds(2),N2)';
-        elseif (strcmp(myInput.Marginals(p2).Type,'Weibull'))
-            X2 = linspace(0,myInput.Marginals(p2).Moments(1) + 3*myInput.Marginals(p2).Moments(2),N2)';            
-        end
+        domain1 = getMarginalBounds(myInput.Marginals(p1));
+        X1      = linspace(domain1(1),domain1(2),N1)';
+        domain2 = getMarginalBounds(myInput.Marginals(p2));
+        X2      = linspace(domain2(1),domain2(2),N2)';
+        
         
         if (n_inputs==2)
             X1new=kron(X1,ones(N2,1));
@@ -365,7 +470,7 @@ if (find(strcmp(methods,'PCE_Quad')))
             % for quadrature methods based on tensor formulation,
             % number of samples in one direction = degree+1
             % take 'middle' (mean?) point of samples in X3
-            samples1D = 1+DegreesPCE(end);
+            samples1D = 1+DegreesQuad(end);
             start1D  = ceil(samples1D/2);
             X3    = Xsamples(start1D,p3);
             
@@ -394,7 +499,7 @@ if (find(strcmp(methods,'PCE_Quad')))
             elseif (n_inputs==3)
                 plot3(Xsamples(start1D:samples1D:end,1),Xsamples(start1D:samples1D:end,2),Ysamples(start1D:samples1D:end),'s','MarkerSize',16,'MarkerFaceColor','black');
             end
-            
+            title('polynomial response surface'); 
         end
         
     end

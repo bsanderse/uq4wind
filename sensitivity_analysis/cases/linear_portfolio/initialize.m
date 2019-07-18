@@ -9,23 +9,25 @@ Model.Parameters = a;
 
 %% input description
 
-% take options from following list:
+% specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 methods = {'MC','PCE_Quad'};
 
-% number of times to repeat MC-based methods to obtain 'nice' convergence
+% for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
 MC_repeat = 1;
-
-DegreesPCE = 1:6; %[1 2 3 4 5 6];
+% number of samples with MC
 NsamplesMC = [1e1 1e2 1e3 1e4];
 
+% for PCE-Quad, specify the polynomial degrees to be tested
+DegreesQuad = 1:6; %[1 2 3 4 5 6];
 
 
-%% Description of input marginals
+
+%% input description
 ndim = 2;
 
-%% uniform:
+% uniform:
 % for ii = 1 : ndim
 %     Input.Marginals(ii).Type = 'Uniform'; 
 %     Input.Marginals(ii).Parameters = [0, 1];
@@ -41,7 +43,7 @@ ndim = 2;
 %     
 % end
 
-%% Gaussian 
+% Gaussian random variables
 mu    = [0;0];
 sigma = [1;3];
 for ii = 1 : ndim

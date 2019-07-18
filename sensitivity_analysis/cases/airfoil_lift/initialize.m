@@ -3,61 +3,75 @@
 % name of Matlab file representing the model
 Model.mHandle = @airfoil_lift;
 
-% parameters
-% a = [1;2];
-% Model.Parameters = a;
+% optionally, one can pass parameters to the model
+P = [1;1]; % density and chord, see airfoil.m
+Model.Parameters = P;
 
-%% UQ settings
 
-% take options from following list:
+%% list of UQ methods to be used for analysis
+
+% specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
-methods = {'MC','PCE_Quad'};
+methods = {'MC','PCE_Quad','PCE_OLS'};%,'PCE_LARS'};
 
-% number of times to repeat MC-based methods to obtain 'nice' convergence
+% for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
 MC_repeat = 1;
-
-DegreesPCE = 1:8; %[1 2 3 4 5 6];
+% number of samples with MC
 NsamplesMC = [1e1 1e2 1e3 1e4];
+
+% for PCE-Quad, specify the polynomial degrees to be tested
+DegreesQuad = 1:8; %[1 2 3 4 5 6];
+
+% for PCE-OLS:
+NsamplesOLS = [5 10 20 30 40]; % if not specified, the number of samples from Quad is taken
+OLS_repeat = 1; % like MC_repeat
+
+% for PCE-LARS:
+NsamplesLARS = [5 10 20 30 40]; % if not specified, the number of samples from Quad is taken
+LARS_repeat = 1; % like MC_repeat
 
 
 %% input description
 
-% X1: rho
-% X2: CL
-% X3: V
+% X1: CL
+% X2: V
 
+% number of random variables
 ndim = 2;
 
-%% marginals
-
+% marginal distribution X1
 Input.Marginals(1).Name = 'CL';
 Input.Marginals(1).Type = 'Uniform'; 
 Input.Marginals(1).Parameters = [0.1 1];
 Input.Marginals(1).Bounds = [0.1 1]; 
 
+% marginal distribution X2
 Input.Marginals(2).Name = 'V';
 Input.Marginals(2).Type = 'Weibull'; 
 Input.Marginals(2).Parameters = [10 2]; % scale and shape parameter
-% Input.Marginals(1).Bounds = [0.1 1]; 
 
-% % exact mean and std
-% mean_exact = a(1)/2;
-% mean_ref   = mean_exact;
-% var_exact  = (a(1)^2)/8 + (a(2)*pi^4)/5 + (a(2)^2)*(pi^8)/18 + 1/2;
+%% exact mean/std for error computation, if known:
+% mean_exact = ;
+% var_exact  = ;
 % std_exact  = sqrt(var_exact);
+
+% mean_ref and std_ref should be taken different from mean_exact and
+% std_exact if it equals zero
+% mean_ref   = mean_exact;
 % std_ref    = std_exact;
-% 
-% % exact Sobol indices
-% D1 = (a(2)*pi^4)/5 + (a(2)^2)*(pi^8)/50 + 1/2;
-% D2 = (a(1)^2)/8;
-% D3 = 0;
-% D12 = 0;
-% D13 = (a(2)^2)*(pi^4)/18 - (a(2)^2)*(pi^8)/50;
-% D23 = 0;
-% D123 = 0;
-% 
-% % first order indices
+ 
+%% exact Sobol indices
+% variances:
+% D1 = ;
+% D2 = ;
+% D3 = ;
+% D12 = ;
+% D13 = ;
+% D23 = ;
+% D123 = ;
+ 
+% first order indices
 % S1 = D1/var_exact;
 % S2 = D2/var_exact;
 % S3 = D3/var_exact;
