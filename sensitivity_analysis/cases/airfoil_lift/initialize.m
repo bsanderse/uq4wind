@@ -12,7 +12,7 @@ Model.Parameters = P;
 
 % specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
-methods = {'MC','PCE_Quad','PCE_OLS'};%,'PCE_LARS'};
+methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
 % for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs

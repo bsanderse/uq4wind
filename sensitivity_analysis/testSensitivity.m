@@ -4,7 +4,7 @@ clc
 close all
 clearvars
 
-input_file = 'Cinf'; % specify directory which contains test case settings and model
+input_file = 'airfoil_lift'; % specify directory which contains test case settings and model
 
 
 %% Sobol options
