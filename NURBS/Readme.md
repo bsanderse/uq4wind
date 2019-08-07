@@ -11,11 +11,13 @@ For t0 = [0 1/3 2/3 1] and for n =2,3,4 we get linear, quadratic and cubic basis
 <img src="./image/cubic.png" width="500" height="150">
 
 ##test_ControlPoints
+
 This routine computes control points c for B-splines that corresponds to sampled data.
 
-<img src="./image/controlPoint.png" width="300" height="300">
+<img src="./image/controlPoints.png" width="300" height="300">
 
 ##test_perturbNURBS
+
 This routine computes perturbed samples obtained from perturbing control points of baseline curve
 
-<img src="./image/perturbedCurves.png" width="300" height="300">
+<img src="./image/purturbedCurves.png" width="300" height="300">
