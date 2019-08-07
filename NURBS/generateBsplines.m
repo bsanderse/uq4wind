@@ -5,7 +5,7 @@ clear all
 clc
 
 t = [0 1/3 2/3 1]; % knot vector, results in numel(t)+1 B-splines
-n = 4; % 2 for linear B-splines, 3 for Quadratic, so on. Polynomial degree of B-spline is n-1. 
+n = 3; % 2 for linear B-splines, 3 for Quadratic, so on. Polynomial degree of B-spline is n-1. 
 t = [t(1)*ones(1,n-1) t t(end)*ones(1,n-1)]; % padded knot vector obtained by padding(n-1) elements at front and end. 
 j = 0: numel(t)-n-1; % Index of B-spline from 0 =< j < numel(t)-n
 hold all;
