@@ -1,7 +1,18 @@
 % This routine compute samples of power output and axial force with uncertain chord and twist inputs
 % using the ECN AERO module software package 
+close all
+clearvars
+clc
 
-samples = 10; % Number of samples 
+workingDir = pwd; % Store the current working directory
+
+% Add paths for dependent routines located in the directories 'NURBS',
+% 'AEROmoduleWrapper' and 'Geometry'
+addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\AEROmoduleWrapper\')
+addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\NURBS\')
+addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\Geometry\')
+
+samples = 1; % Number of samples 
 folder ='C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\'; % Location where the AERO modules  
 
 % Variables of input file extracted from reference test case from DANAERO
@@ -12,13 +23,13 @@ TURBINETYPE = 1;
 zB = [0 2 4 6 8 10 12 14 16 18 20 22 ...
       24 26 28 30 32 34 36 37 38 38.4 38.8];
 
-chord = [2.42 2.48 2.65 2.81 2.98 3.14 3.17 2.99 2.79 2.58 2.38 ...
+ref_chord = [2.42 2.48 2.65 2.81 2.98 3.14 3.17 2.99 2.79 2.58 2.38 ...
          2.21 2.06 1.92 1.8 1.68 1.55 1.41 1.18 0.98 0.62 0.48 0.07]; % Replace with random chord vector using NURBS
 
 t_by_c = [0.9999 0.9641 0.8053 0.6508 0.5167 0.403 0.3253 0.284 0.2562 0.2377 0.2225 ...
           0.2099 0.2003 0.194 0.1903 0.1879 0.186 0.1839 0.1795 0.1739 0.1633 0.157 0.1484]; % Replace with ?? 
 
-twist = [0 5.37 6.69 7.9 9.11 10.19 9.39 7.16 5.45 4.34 3.5 2.86 ... 
+ref_twist = [0 5.37 6.69 7.9 9.11 10.19 9.39 7.16 5.45 4.34 3.5 2.86 ... 
          2.31 1.77 1.28 0.9 0.55 0.23 0.03 0.02 0.93 2.32 6.13]; % Replace with random twist vector using NURBS
 
 C14 = [-25 -25 -25 -25 -25 -25 -25 -25 -25 -25 -25 -25 -25 -25 ...
@@ -46,18 +57,38 @@ YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
 
+% Declare the random variable
+chord = zeros(samples,vectorLength);
+twist = zeros(samples,vectorLength);
+
+% Top and the end of AeroPower.dat file
+startRow = 2;
+endRow = 445; % depends on the TEND and TIMESTEP
+PowerWatt = zeros(samples, endRow - startRow+1);
+Axial_ForceN = zeros(samples, endRow - startRow+1);
+
+filename = [folder,'output\AeroPower.dat']; % location of the AeroPower.dat output file
+
+% Loop through the samples
+for i = 1:samples
 % Write the random data into the input file of AERO module
 writeAeroModuleInput(AEROMODEL,TURBINETYPE,vectorLength,...
-                              zB, chord, t_by_c, twist, C14, xB, yB,... 
+                              zB, chord(i,:), t_by_c, twist(i,:), C14, xB, yB,... 
                               BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, RPM, ...
                               PITCHANGLE, TIMESTEP, XNAC2HUB, TEND, YAWANGLE,...
                               NROFBEMELEMENTS, ZNAC2HUB, folder)
-                          
-working_dir = pwd; % Store the current working directory
+                           
 chdir(folder); % Go to the AERO module directory
 system('ECNAero.exe') % Run the executable
-chdir('output/') % Go the the output directory
+
 % read output from the AERO module
+[Times,Azimuthdeg,PowerWatt(i,:),Axial_ForceN(i,:)] = AeroPower(filename, startRow, endRow);
+end
 
-chdir(working_dir);  % Come back to the working directory
-
+figure
+plot(Times,PowerWatt,'linewidth',2)
+title('Power (Watt)')
+figure
+plot(Times,Axial_ForceN,'linewidth',2)
+title('Axial Force (N)')
+chdir(workingDir)

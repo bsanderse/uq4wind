@@ -1,7 +1,7 @@
 function c = getControlPoints(x,S,t,n)
 %% This routine computes control points c for B-splines that corresponds to sampled data.
 % Input arguments:
-% 'x' is locations of known values of curve (e.g. locations where values of chord or twist are sampled)
+% 'x' is locations of known values of curve. Should be normalized between [0,1]
 % 'S' known function values at x
 % 't' is the knot vector
 % 'n' is the NURBS order: 2 for linear B-splines, 3 for Quadratic, so on. The polynomial degree of B-spline is n-1.
