@@ -52,5 +52,12 @@ writeAeroModuleInput(AEROMODEL,TURBINETYPE,vectorLength,...
                               BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, RPM, ...
                               PITCHANGLE, TIMESTEP, XNAC2HUB, TEND, YAWANGLE,...
                               NROFBEMELEMENTS, ZNAC2HUB, folder)
+                          
+working_dir = pwd; % Store the current working directory
+chdir(folder); % Go to the AERO module directory
+system('ECNAero.exe') % Run the executable
+chdir('output/') % Go the the output directory
+% read output from the AERO module
 
+chdir(working_dir);  % Come back to the working directory
 
