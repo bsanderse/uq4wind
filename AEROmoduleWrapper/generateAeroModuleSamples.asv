@@ -49,7 +49,7 @@ TILTANGLE = 0.0;
 PITCHANGLE = 0.15;
 XNAC2HUB = -4.03;
 RPM = 12.3;
-TEND = 60;
+TEND = 30;
 TIMESTEP = 0.135501355;
 
 %[TIMESTEP,TEND] = wakepoints(RPM); 
@@ -94,21 +94,17 @@ writeAeroModuleInput(AEROMODEL,TURBINETYPE,vectorLength,...
 system('ECNAero.exe') % Run the executable
 [Times,Azimuthdeg,ref_PowerWatt,ref_Axial_ForceN] = AeroPower(filename, startRow, endRow);
 
+
 figure % Plot the samples of Power
 plot(Times,PowerWatt','linewidth',1,'color','k','HandleVisibility','off')
 hold on
 plot(Times,ref_PowerWatt','linewidth',2)
 title('Samples of power (Watt)')
-legend('Baseline power')
-xlabel('Times (sec)')
-ylabel('Power (Watt)')
 
 figure % Plot the samples of Axial force
 plot(Times,Axial_ForceN','linewidth',1,'color','k','HandleVisibility','off')
 hold on
 plot(Times,ref_Axial_ForceN','linewidth',2)
 title('Samples of axial force (N)')
-xlabel('Times (sec)')
-ylabel('Axial force (N)')
-legend('Baseline axial force')
+
 chdir(workingDir)
