@@ -92,10 +92,8 @@ if (find(strcmp(methods,'MC')))
     if (compare_std == 1)
         err_std_MC = abs((mean(std_MC,1)-std_exact)/std_ref);
     end
-    
+ 
 end
-
-
 %% Polynomial Chaos with quadrature
 
 if (find(strcmp(methods,'PCE_Quad')))

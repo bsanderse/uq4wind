@@ -1,23 +1,29 @@
 %% model description 
 
 % name of Matlab file representing the model
-Model.mHandle = @airfoil_lift;
+Model.mHandle = @aero_module;
 
 % optionally, one can pass parameters to the model
 P = [1;1]; % density and chord, see airfoil.m
 Model.Parameters = P;
-   
+
+% Add paths for dependent routines located in the directories 'NURBS',
+% 'AEROmoduleWrapper' and 'Geometry'
+addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\AEROmoduleWrapper\')
+addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\NURBS\')
+addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\Geometry\')
+
 %% list of UQ methods to be used for analysis
 
 % specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
-methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+methods = {'PCE_Quad','PCE_OLS','PCE_LARS'};
 
-% for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
-% graphs
-MC_repeat = 1;
-% number of samples with MC
-NsamplesMC = [1e1 1e2 1e3 1e4];
+% % for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
+% % graphs
+% MC_repeat = 1;
+% % number of samples with MC
+% NsamplesMC = [1e1 1e2 1e3 1e4];
 
 % for PCE-Quad, specify the polynomial degrees to be tested
 DegreesQuad = 1:8; %[1 2 3 4 5 6];
