@@ -1,10 +1,11 @@
 function P = getParameterAeroModule()
-% This routine returns the deterministic parameters for the input file of
-% AEROmodule software.
+% This routine returns the deterministic parameters set 'P' for the input
+% file of AERO module software.
 
 % Define parameter set as empty cell for the uq_lab
-P ={};  
-% Variables of input file extracted from reference test case from DANAERO
+P ={}; 
+
+%% Variables of input file extracted from reference test case from DANAERO
 % turbuine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -40,16 +41,35 @@ XNAC2HUB = -4.03;
 RPM = 12.3;
 TEND = 30;
 TIMESTEP = 0.135501355;
-%[TIMESTEP,TEND] = wakepoints(RPM); % Routine to compute the TIMESTEP and TEND 
+%[TIMESTEP,TEND] = wakepoints(RPM); % Routine to compute the TIMESTEP and  TEND using RPM
 YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
 
+%% Other parameters
 % Top and the end of AeroPower.dat file
 startRow = 2;
 endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
+% Location where the AERO module is stored
+folder ='C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\';
 
-% The order of element in the Cell P is important
+%% Define properties of uncerain input
+% Number of control points twist and chord. Set heuristically.
+NRCP_TWIST = 10;
+NRCP_CHORD = 9; 
+
+% fraction of perturbation for each control points, 0.1 corresponds to plus
+% minus 5% perturbation on the baseline values
+PERTURBATION_TWIST = 0.1*ones(1,NRCP_TWIST);  
+PERTURBATION_CHORD = 0.1*ones(1,NRCP_CHORD);  
+
+% Index at which we want to introduce the uncertainty. This is to control
+% the number of uncertain paramters. We only introduce uncertainties in the
+% "important" control points.
+INDEX_TWIST = [2 3 4]; % INDEX_TWIST = 1:NRCP_TWIST
+INDEX_CHORD = [2 3 4]; % INDEX_CHORD = 1:NRCP_CHORD
+
+%% Populate the elements of P. The order of elements in P should not be changed
 P{1} = AEROMODEL; 
 P{2} = TURBINETYPE;
 P{3} = zB;
@@ -74,5 +94,11 @@ P{21} = NROFBEMELEMENTS;
 P{22} = ZNAC2HUB;
 P{23} = startRow;
 P{24} = endRow;
-
+P{25} = folder;
+P{26} = NRCP_TWIST;
+P{27} = NRCP_CHORD;
+P{28} = PERTURBATION_TWIST;
+P{29} = PERTURBATION_CHORD;
+P{30} = INDEX_TWIST;
+P{31} = INDEX_CHORD;
 
