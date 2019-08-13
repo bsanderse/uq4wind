@@ -4,7 +4,7 @@
 Model.mHandle = @aero_module;
 
 % optionally, one can pass parameters to the model
-P = [1;1]; % density and chord, see airfoil.m
+P = getParameterAeroModule(); % Get values of deterministic parameters used in AERO module
 Model.Parameters = P;
 
 % Add paths for dependent routines located in the directories 'NURBS',

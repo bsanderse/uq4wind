@@ -1,4 +1,4 @@
-function S = perturbNURBS(t0,n,xu,c, pc,samples)
+function S = perturbNURBS(t0,n,xu,c, pc,samples, randVec)
 % This routine perturbs (using a uniform distribution) the control points 
 % obtained from the baseline curves and generates perturbed smooth curves
 
@@ -9,6 +9,7 @@ function S = perturbNURBS(t0,n,xu,c, pc,samples)
 % 'pc' vector containing perturbation fraction for each control points
 % 'xu' discrete query points
 % 'samples' number of samples of 
+% 'randVec' a samples-by-numel(c) matrix of random numbers
 
 % Output arguments:
 % 'S' a samples-by-numel(xu) matrix where elements in each row corresponds to one sample 
@@ -20,6 +21,6 @@ S = zeros(samples,numel(xu));
 for k = 1:samples
     for i = 1:numel(j)
         [y,xu] = bspline_basis(j(i),n,t,xu);
-        S(k,:) = S(k,:) + (c(i)+ pc(i).*c(i)*(rand(1)-0.5))*y;
+        S(k,:) = S(k,:) + (c(i)+ pc(i).*c(i)*(randVec(k,i)))*y;
     end
 end

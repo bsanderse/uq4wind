@@ -4,6 +4,7 @@ function P = getParameterAeroModule()
 
 % Define parameter set as empty cell for the uq_lab
 P ={};  
+
 % Variables of input file extracted from reference test case from DANAERO
 % turbuine NM80
 AEROMODEL = 1;
@@ -38,16 +39,12 @@ TILTANGLE = 0.0;
 PITCHANGLE = 0.15;
 XNAC2HUB = -4.03;
 RPM = 12.3;
-TEND = 30;
+TEND = 60;
 TIMESTEP = 0.135501355;
 %[TIMESTEP,TEND] = wakepoints(RPM); % Routine to compute the TIMESTEP and TEND 
 YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
-
-% Top and the end of AeroPower.dat file
-startRow = 2;
-endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
 
 % The order of element in the Cell P is important
 P{1} = AEROMODEL; 
@@ -62,17 +59,5 @@ P{9} = yB;
 P{10} = vectorLength;
 P{11} = BLADELENGTH;
 P{12} = BLADEROOT;
-P{13} = HUBHEIGHT;
-P{14} = TILTANGLE;
-P{15} = PITCHANGLE;
-P{16} = XNAC2HUB;
-P{17} = RPM;
-P{18} = TEND;
-P{19} = TIMESTEP;
-P{20} = YAWANGLE;
-P{21} = NROFBEMELEMENTS;
-P{22} = ZNAC2HUB;
-P{23} = startRow;
-P{24} = endRow;
 
 
