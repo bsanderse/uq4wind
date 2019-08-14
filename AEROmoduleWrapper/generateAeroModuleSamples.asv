@@ -56,12 +56,9 @@ ZNAC2HUB = 1.6;
 %% Get the random samples of twist and chord
 samples = 10; % Number of samples 
 Chord_pc = 0.1*ones(1,9); % Amount of perturbation for each control point for chord curve. The number of control points is 9 (set heristically, see computeChord.m)
-Twist_pc = 0.1*ones(1,10); % same as above.
-randVecChord = rand(samples,9) - 0.5; % Uniformly distributed random numbers to generate chord samples
-randVecTwist = rand(samples,10) - 0.5; % same as above
-plotSamples = 1; % 1 to plot samples, 0 for not.
-chord = computeChord(samples,randVecChord,Chord_pc, plotSamples); % computeChord routine uses the specifications of NM80 turbine using default arguments. See computeChord.m for details.
-twist = computeTwist(samples,randVecTwist, Twist_pc, plotSamples); % computeTwist routine uses the specifications of NM80 turbine using default arguments. See computeTwist.m for details.
+Twist_pc = 0.1*ones(1,10);
+chord = computeChord(samples,rand(samples,9) - 0.5,Chord_pc, plotSamples); % computeChord routine uses the specifications of NM80 turbine using default arguments. See computeChord.m for details.
+twist = computeTwist(samples,rand(samples,10) - 0.5,Twist_pc, plotSamples); % computeTwist routine uses the specifications of NM80 turbine using default arguments. See computeTwist.m for details.
 
 %% Top and the end of AeroPower.dat file
 startRow = 2;
