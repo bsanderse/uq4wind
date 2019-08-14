@@ -11,7 +11,7 @@ function S = perturbNURBS(t0,n,xu,c, pc,samples, randVec)
 % 'samples' number of samples of 
 % 'randVec' a samples-by-numel(c) matrix of random numbers
 
-% Output:
+% Output arguments:
 % 'S' a samples-by-numel(xu) matrix where elements in each row corresponds to one sample 
 
 t = [t0(1)*ones(1,n-1) t0 t0(end)*ones(1,n-1)]; % padded knot vector obtained by padding n-1 elements at front and end. 

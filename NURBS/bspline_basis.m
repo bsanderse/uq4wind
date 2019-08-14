@@ -14,7 +14,8 @@ function [y,x] = bspline_basis(j,n,t,x)
 % Output arguments:
 % y:
 %    B-spline basis function value, nonzero for a knot span of n
-% Inspired by Levente Hunyadi from https://nl.mathworks.com/matlabcentral/fileexchange/27374-b-splines
+
+% This code is inspired by Levente Hunyadi from https://nl.mathworks.com/matlabcentral/fileexchange/27374-b-splines
 
 validateattributes(j, {'numeric'}, {'nonnegative','integer','scalar'});
 validateattributes(n, {'numeric'}, {'positive','integer','scalar'});

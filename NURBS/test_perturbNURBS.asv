@@ -29,7 +29,7 @@ end
 plot(xu,Sxu,'linewidth',2,'color','r')
 samples=10;
 pc = 0.1*ones(numel(j),1); % Amount of purturbation for each control points, for example, 0.1 corresponds to plus-minus 5% of perturbation.
-randVec = rand(samples,numel(j)) - 0.5; % Uniform distribution between [-0.5,0.5]
+randVec = rand(samples,numel(j)) - 0.5;
 S = perturbNURBS(t0,n,xu,c, pc,samples, randVec);
 plot(xu,S','color','k','linestyle','--','HandleVisibility','off')
 plot(xu,S(1,:),'color','k','linestyle','--')
