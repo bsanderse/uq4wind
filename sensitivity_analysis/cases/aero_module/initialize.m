@@ -17,7 +17,7 @@ addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\Geometry\')
 % specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 % methods = {'PCE_Quad','PCE_OLS','PCE_LARS'};
- methods = {'PCE_OLS'};
+ methods = {'PCE_OLS','PCE_LARS'};
 % % for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % % graphs
 % MC_repeat = 1;
@@ -28,12 +28,12 @@ addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\Geometry\')
 % DegreesQuad = 1:8; %[1 2 3 4 5 6];
 
 % for PCE-OLS:
-NsamplesOLS = [5 10]; % if not specified, the number of samples from Quad is taken
+NsamplesOLS = [5 10 20]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
 
 % % for PCE-LARS:
-% NsamplesLARS = [5 10]; % if not specified, the number of samples from Quad is taken
-% LARS_repeat = 1; % like MC_repeat
+NsamplesLARS = [5 10 20]; % if not specified, the number of samples from Quad is taken
+LARS_repeat = 1; % like MC_repeat
 
 
 %% input description
