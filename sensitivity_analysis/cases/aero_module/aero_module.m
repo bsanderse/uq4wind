@@ -6,7 +6,8 @@ workingDir = pwd;
 randVecTwist = zeros(1,P{26}); 
 randVecTwist(P{30}) = X(1:length(P{30}));
 randVecChord = zeros(1,P{27});
-randVecTwist(P{31}) = X(length(P{30})+1:end);
+randVecChord(P{31}) = X(length(P{30})+1:end);
+
 twist = computeTwist(1, randVecTwist, P{28}, 0); % computeTwist routine uses the specifications of NM80 turbine by default
 chord = computeChord(1, randVecChord, P{29}, 0); % computeChord routine uses the specifications of NM80 turbine by default
 
@@ -16,7 +17,7 @@ writeAeroModuleInput(P{1},P{2},P{10}, P{3}, chord, ...
                      P{5},  twist, P{7},  P{8},  P{9},... 
                      P{11}, P{12}, P{13}, P{14}, P{17}, ...
                      P{15}, P{19}, P{16}, P{18}, P{20},...
-                     P{21}, P{22}, folder)
+                     P{21}, P{22}, P{25})
 %% Run the Aero module executable                            
 chdir(P{25}); % Go to the AERO module directory
 system('ECNAero.exe') % Run the executable
@@ -26,4 +27,4 @@ filename = [P{25},'output\AeroPower.dat']; % location of the AeroPower.dat outpu
 chdir(workingDir)
 % return output 
 Y = PowerWatt;
-% Y = Axial_ForceN;
+% Y = Axial_ForceN;  

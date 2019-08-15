@@ -1,12 +1,11 @@
 function P = getParameterAeroModule()
-% This routine returns the deterministic parameters set 'P' for the input
-% file of AERO module software.
+% This routine returns the deterministic parameters stores in a matlab cell
+% variable 'P'. The meaning of each element in 'P' is the described in the
+% code. NOTE: The order of element in P should not be changed.
 
-% Define parameter set as empty cell for the uq_lab
 P ={}; 
 
-%% Variables of input file extracted from reference test case from DANAERO
-% turbuine NM80
+%% Variables of input file extracted from reference test case from DANAERO turbuine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
 
@@ -54,20 +53,20 @@ endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
 folder ='C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\';
 
 %% Define properties of uncerain input
-% Number of control points twist and chord. Set heuristically.
+% Number of control points for twist and chord. Set heuristically.
 NRCP_TWIST = 10;
 NRCP_CHORD = 9; 
 
 % fraction of perturbation for each control points, 0.1 corresponds to plus
 % minus 5% perturbation on the baseline values
-PERTURBATION_TWIST = 0.1*ones(1,NRCP_TWIST);  
-PERTURBATION_CHORD = 0.1*ones(1,NRCP_CHORD);  
+PERTURBATION_TWIST = 0.2*ones(1,NRCP_TWIST);  
+PERTURBATION_CHORD = 0.2*ones(1,NRCP_CHORD);  
 
 % Index at which we want to introduce the uncertainty. This is to control
 % the number of uncertain paramters. We only introduce uncertainties in the
 % "important" control points.
-INDEX_TWIST = [2 3 4]; % INDEX_TWIST = 1:NRCP_TWIST
-INDEX_CHORD = [2 3 4]; % INDEX_CHORD = 1:NRCP_CHORD
+INDEX_TWIST = [2 4 6 8]; % INDEX_TWIST = 1:NRCP_TWIST
+INDEX_CHORD = [2 4 6 8]; % INDEX_CHORD = 1:NRCP_CHORD
 
 %% Populate the elements of P. The order of elements in P should not be changed
 P{1} = AEROMODEL; 
