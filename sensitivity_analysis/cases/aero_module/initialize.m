@@ -6,6 +6,7 @@ Model.mHandle = @aero_module;
 % optionally, one can pass parameters to the model
 P = getParameterAeroModule(); % Get values of deterministic parameters used in AERO module
 Model.Parameters = P;
+Model.isVectorized = false;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
 addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\AEROmoduleWrapper\')

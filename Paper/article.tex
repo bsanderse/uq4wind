@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\title{Referee report}
+\author{}
+%\date
+\begin{document}
+\maketitle
+This paper presents a numerical procedure to estimate the sampling error of the Multigrid Multilevel Monte Carlo estimator (MG-MLMC) proposed by Kumar et al. (2017). The key idea behind the MG-MLMC estimator is to use coarse grid solutions from the full multigrid (FMG) solver as samples for the MLMC estimator. The computation of the sampling error for the MG-MLMC estimator is not straightforward as estimators appearing in the MLMC telescopic sum are no longer uncorrelated. The paper employs multiple Quasi-Monte Carlo estimators to numerically approximate this sampling variance. Numerical results are presented using Darcy flow problem with different permeability parameters. 
+
+The paper is very well-written and well-structured, presenting the ideas in a very clear way. In my opinion, the sampling error estimator proposed for the Multigrid Multilevel (Quasi-) Monte Carlo estimator is a very nice contribution. However, I have some suggestions and comments which should be addressed in my opinion:
+
+\begin{enumerate}
+    \item On page 7, line 248, the assumption (A2) should be $V_\ell \leq h^{\beta}_{\ell}$?
+    \item Are constants $c_\alpha,c_\beta,c_\gamma,c_\lambda$ dependent on the rates $\alpha,\beta,\gamma,\lambda}$ respectively ?  If not then consider changing the notation to avoid any confusion.
+    
+    \item On page 10, instead of explaining the two grid correction scheme, consider describing the FMG algorithm and specifying the inter-grid operators as well as the FMG-interpolation operator that is used to transfer solution field to the next finer level. 
+    
+    \item On page 10, you say typical values for number of relaxation steps are $\mu_1=2$ and $\mu_2=1$. This is not correct. They are problem dependent parameters and can be decided using Local Fourier analysis, see ref 30 of your paper.
+    
+    \item There is no explanation on how the coarse grid operators for FMG $\mathbf{A}_{\ell-1},\mathbf{A}_{\ell-2},$ etc. are  computed. Is it by direct-discretization or using Galerkin appraoach, $A_{\ell-1} =R_{\ell}^{\ell-1}A_\ell I^{\ell}_{\ell-1}$?  
+    
+    \item Related to the previous comment, you did not mention how do you upscale the random field from the finest grid level to all the coarser grids. This should be done in a way such that the statistical properties of the random field does not change. If you employ direct discretization then using the KL-expansion can avoid this problem. In case of Galerkin approach this is not so trivial. Similar problem will arise if you use an algebraic multigrid solver.
+    
+    \item How do you ensure that solutions on the coarser FMG levels converge to respective discretization accuracies? In page 11, you introduce the number of multilevel correction cycles $\mu_0$ but it is not clearly explained whether this parameter is a constant or varies depending on the grid level? Usually, the number of cycles needed for convergence depends on the grid as well as the Mat\'ern parameter as shown in this article:
+    
+    Kumar, P., Rodrigo, C., Gaspar, F. J., & Oosterlee, C. W. (2018). On cell-centered multigrid methods and Local Fourier Analysis for PDEs with random coefficients. arXiv preprint arXiv:1803.08864.
+    
+    Alternately, the number of multilevel correction cycles can be determined by monitoring residuals on different FMG levels. 
+    
+    \item On page 14, based on what criteria did you decide the number of random shifts? For smaller tolerances $\epsilon$, $R=20$ may not be enough to approximate $V[\overline{\mathcal{Q}}^{QMC}_{L,R,reuse}]$.
+    
+    \item On page 22, line 532, the percentage of recycled samples should be $\frac{N_{\ell+1}}{N_\ell}\cdot 100$ ?
+    
+\end{enumerate}
+$$
+k(x,y) =
+\left\{
+\begin{array}{l}
+10^4, \quad {\mbox {\rm if} } \quad (x,y) \in \left(
+\frac{2}{128}\frac{5}{128}\right)\times\left(\frac{2}{128},\frac{3}{128}\right)\cup\left(
+\frac{2}{128},\frac{3}{128}\right)\times\left( \frac{2}{128}\frac{5}{128}\right), \\
+1, \quad {\mbox {\rm otherwise}}.
+\end{array}
+\right.
+$$
+\end{document}

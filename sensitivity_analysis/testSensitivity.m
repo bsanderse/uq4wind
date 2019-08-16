@@ -383,7 +383,7 @@ bar_vec   = 1:n_methods;
 coords    = (bar_vec - mean(bar_vec))*bar_width;
 k         = 1;
 if (find(strcmp(methods,'MC')))
-    uq_bar((1:ndim)+coords(k), SobolResults_MC.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+coords(k), Sobol_MC_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_Quad')))

@@ -10,8 +10,6 @@ randVecChord(P{31}) = X(length(P{30})+1:end);
 
 twist = computeTwist(1, randVecTwist, P{28}, 1); % computeTwist routine uses the specifications of NM80 turbine by default
 chord = computeChord(1, randVecChord, P{29}, 1); % computeChord routine uses the specifications of NM80 turbine by default
-
-
 %% Write the random data into the input file of AERO module
 writeAeroModuleInput(P{1},P{2},P{10}, P{3}, chord, ...
                      P{5},  twist, P{7},  P{8},  P{9},... 
