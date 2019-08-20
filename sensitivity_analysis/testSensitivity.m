@@ -4,9 +4,7 @@ clc
 close all
 clearvars
 
-input_file = 'aero_module'; % specify directory which contains test case settings and model
-
-
+input_file = 'airfoil_lift'; % specify directory which contains test case settings and model
 %% Sobol options
 
 SobolOpts.Type        = 'Sensitivity';
@@ -58,8 +56,7 @@ if (find(strcmp(methods,'MC')))
     
     % perform multiple runs to decrease effect of random sampling
     for k = 1:MC_repeat
-        
-        
+ 
         for i=1:N_MC
             
             disp(NsamplesMC(i));
@@ -387,28 +384,28 @@ if (find(strcmp(methods,'MC')))
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    uq_bar((1:ndim)+coords(k), SobolResults_Quad.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+coords(k), Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_OLS')))
-    uq_bar((1:ndim)+coords(k), SobolResults_OLS.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+coords(k), Sobol_OLS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_LARS')))
-    uq_bar((1:ndim)+coords(k), SobolResults_LARS.FirstOrder, bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+coords(k), Sobol_LARS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 
 % uq_bar((1:ndim)+0.25, mySobolResultsLRA.Total, 0.25,...
 %     'FaceColor', cm(64,:), 'EdgeColor', 'none')
 % uq_setInterpreters(gca)
-set(gca, 'XTick', 1:length(Input.Marginals),...
-    'XTickLabel', SobolResults_Quad.VariableNames, 'FontSize', 14)
-uq_legend({...
-    sprintf('MC based (%.0e simulations)', NsamplesMC(end)),...
-    sprintf('PCE-based (%d simulations)', myPCE_Quad.ExpDesign.NSamples)})
-ylabel('Total order Sobol index');
-ylim([0 1])
+% set(gca, 'XTick', 1:length(Input.Marginals),...
+%     'XTickLabel', SobolResults_Quad.VariableNames, 'FontSize', 14)
+% uq_legend({...
+%     sprintf('MC based (%.0e simulations)', NsamplesMC(end)),...
+%     sprintf('PCE-based (%d simulations)', myPCE_Quad.ExpDesign.NSamples)})
+% ylabel('Total order Sobol index');
+% ylim([0 1])
 
 
 
@@ -447,7 +444,7 @@ if (find(strcmp(methods,'PCE_Quad')))
         
         % select which parameters to plot
         p1 = 1;
-        p2 = 2;
+        p2 = 2; 
         p3 = 3; % we will use mean for p3
         
         % create regular grid of points where surrogate model will be evaluated

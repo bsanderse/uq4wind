@@ -4,7 +4,7 @@ function writeAeroModuleInput(AEROMODEL,TURBINETYPE,vectorLength,...
                               PITCHANGLE, TIMESTEP, XNAC2HUB, TEND, YAWANGLE,...
                               NROFBEMELEMENTS, ZNAC2HUB, folder)
 
-filename = [folder,'input.txt'];
+filename = [folder,'input.txt']
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
@@ -22,7 +22,7 @@ fprintf(fid,'!------------------------------------------------------------------
 fprintf(fid,'AEROPROPS\n');
 fprintf(fid,'!zB [m] chord [m] t/c [-] twist [deg]  C14 [%%c] xB [m] yB [m]\n');
 for i = 1:vectorLength
-    fprintf(fid,'	%f	%f	%f	%f	%f	%f	%f	\n', zB(i), chord(i), t_by_c(i), twist(i), C14(i), xB(i), yB(i));
+    fprintf(fid,'%f    %f    %f    %f    %f    %f    %f \n', zB(i), chord(i), t_by_c(i), twist(i), C14(i), xB(i), yB(i));
 end
 fprintf(fid,'BLADELENGTH                     %f\n',BLADELENGTH);
 fprintf(fid,'BLADEROOT                       %f\n',BLADEROOT);
