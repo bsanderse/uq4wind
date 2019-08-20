@@ -4,7 +4,7 @@ function writeAeroModuleInput(AEROMODEL,TURBINETYPE,vectorLength,...
                               PITCHANGLE, TIMESTEP, XNAC2HUB, TEND, YAWANGLE,...
                               NROFBEMELEMENTS, ZNAC2HUB, folder)
 
-filename = [folder,'input.txt']
+filename = [folder,'input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
