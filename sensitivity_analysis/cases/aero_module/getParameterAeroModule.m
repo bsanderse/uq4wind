@@ -66,7 +66,7 @@ PERTURBATION_CHORD = 0.2*ones(1,NRCP_CHORD);
 % the number of uncertain paramters. We only introduce uncertainties in the
 % "important" control points.
 INDEX_TWIST = []; % INDEX_TWIST = 1:NRCP_TWIST
-INDEX_CHORD = [2 4]; % INDEX_CHORD = 1:NRCP_CHORD
+INDEX_CHORD = [2 4 6 8]; % INDEX_CHORD = 1:NRCP_CHORD
 
 %% Populate the elements of P. The order of elements in P should not be changed
 P{1} = AEROMODEL; 

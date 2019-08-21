@@ -347,27 +347,31 @@ figure
 cmap = get(gca,'ColorOrder');
 
 if (find(strcmp(methods,'MC')))
-    semilogx(NsamplesMC', Sobol_MC_Total, 'x-','Linewidth', 2, 'Color', cmap(1,:));
-    hold on
+    semilogx(NsamplesMC', Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+     hold on
+    semilogx(NsamplesMC', Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));
+   
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    semilogx(NsamplesQuad', Sobol_Quad_Total, 's-','Linewidth', 2,'Color', cmap(2,:));
+    semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
     hold on
+    semilogx(NsamplesQuad', Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
 end
 if (find(strcmp(methods,'PCE_OLS')))
-    loglog(NsamplesOLS, Sobol_OLS_Total, 'o-','Linewidth', 2,'Color', cmap(3,:));
+    semilogx(NsamplesOLS, Sobol_OLS_Total(:, 1:end-1), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
     hold on
+    semilogx(NsamplesOLS, Sobol_OLS_Total(:, end), 'o-','Linewidth', 2,'Color', cmap(3,:));
 end
 if (find(strcmp(methods,'PCE_LARS')))
-    loglog(NsamplesLARS, Sobol_LARS_Total, 'd-','Linewidth', 2,'Color', cmap(4,:));
+    semilogx(NsamplesLARS, Sobol_LARS_Total(:, 1:end-1), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
     hold on
+    semilogx(NsamplesLARS, Sobol_LARS_Total(:,end), 'd-','Linewidth', 2,'Color', cmap(4,:));
 end
 xlabel('N') % Add proper labelling and a legend
-% legend({'Monte Carlo','PCE - quadrature','PCE - least squares','PCE - LARS'})
+legend(methods, 'Interpreter', 'none')
 ylabel('Total index');
 grid on;
 title('Comparison of Sobol indices')
-
 
 %% bar chart of Sobol indices
 figure
@@ -400,9 +404,13 @@ end
 % uq_setInterpreters(gca)
 set(gca, 'XTick', 1:length(Input.Marginals),...
     'XTickLabel', SobolResults_Quad.VariableNames, 'FontSize', 14)
+
 % uq_legend({...
 %     sprintf('MC based (%.0e simulations)', NsamplesMC(end)),...
 %     sprintf('PCE-based (%d simulations)', myPCE_Quad.ExpDesign.NSamples)})
+
+% uq_legend({sprintf('PCE-based (%d simulations)', myPCE_Quad.ExpDesign.NSamples)})
+legend(methods, 'Interpreter', 'none')
 ylabel('Total order Sobol index');
 ylim([0 1])
 
