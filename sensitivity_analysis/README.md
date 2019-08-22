@@ -2,7 +2,7 @@
 
 ## Comparison of results from PCE Quad, OLS and LARS
 
-NsamplesQuad = [16 81 256 625]
+NsamplesQuad = [16,81,256,625]
 
 NsamplesOLS = [8,16,32,64]
 
