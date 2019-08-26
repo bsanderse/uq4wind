@@ -2,4 +2,4 @@
 
 This repository contains matlab routines to perform UQ of wind turbine models.
 
-<img src="workflow_windtrue.png" width="656" height="244">
+<img src="workflow_windtrue.png" width="800" height="450">
