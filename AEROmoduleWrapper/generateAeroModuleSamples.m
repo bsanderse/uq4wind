@@ -3,7 +3,6 @@
 close all
 clearvars
 clc
-
 workingDir = pwd; % Store the current working directory
 
 %% Add paths for dependent routines located in the directories 'NURBS',
@@ -55,8 +54,8 @@ ZNAC2HUB = 1.6;
 
 %% Get the random samples of twist and chord
 samples = 10; % Number of samples 
-Chord_pc = 0.1*ones(1,9); % Amount of perturbation for each control point for chord curve. The number of control points is 9 (set heristically, see computeChord.m)
-Twist_pc = 0.1*ones(1,10); % same as above.
+Chord_pc = 0.2*ones(1,9); % Amount of perturbation for each control point for chord curve. The number of control points is 9 (set heristically, see computeChord.m)
+Twist_pc = 0.2*ones(1,10); % same as above.
 randVecChord = rand(samples,9) - 0.5; % Uniformly distributed random numbers to generate chord samples
 randVecTwist = rand(samples,10) - 0.5; % same as above
 plotSamples = 1; % 1 to plot samples, 0 for not.

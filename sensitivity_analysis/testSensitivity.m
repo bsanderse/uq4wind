@@ -142,8 +142,6 @@ if (find(strcmp(methods,'PCE_Quad')))
     end
     
 end
-
-
 %% Polynomial Chaos with ordinary least squares (OLS)
 
 if (find(strcmp(methods,'PCE_OLS')))
