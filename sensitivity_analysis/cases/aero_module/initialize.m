@@ -32,20 +32,19 @@ methods = {'PCE_LARS'};
 % OLS_repeat = 1; % like MC_repeat
 % 
 % % % for PCE-LARS:
-NsamplesLARS = [8 16 32 64 128]; % if not specified, the number of samples from Quad is taken
-LARS_repeat = 5; % like MC_repeat
+NsamplesLARS = [8 16 32]; % if not specified, the number of samples from Quad is taken
+LARS_repeat = 2; % like MC_repeat
 
-%% input description
-% X1: CL
-% X2: V
-
-% number of random variables
-ndim = length(P{31}) + length(P{30}); % Number of random control points for chord and twist
+%% number of random variables
+ndim = length(P{31}) + length(P{30}) +1; % Number of random control points for chord and twist
 
 % marginal distributions for each control points
-for i = 1:ndim
+for i = 1:ndim-1
     Input.Marginals(i).Name = ['CP',num2str(i)];
     Input.Marginals(i).Type = 'Uniform'; 
     Input.Marginals(i).Parameters = [-0.5 0.5];
     Input.Marginals(i).Bounds = [-0.5 0.5]; 
 end
+
+Input.Marginals(ndim).Type = 'Gaussian'; 
+Input.Marginals(ndim).Parameters = [P{20}, P{32}];
