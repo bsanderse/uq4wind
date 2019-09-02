@@ -1,46 +1,124 @@
-\documentclass{article}
+
+\documentclass[review]{elsarticle}
+\usepackage{lineno,hyperref}
+\modulolinenumbers[5]
+\journal{ }
+\usepackage{microtype}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[a4paper, total={6.2in, 9in}]{geometry}
+\usepackage[a4paper]{geometry}
+\renewcommand{\baselinestretch}{1.2} 
+\usepackage{color}
+\usepackage[x11names]{xcolor}
 \usepackage[utf8]{inputenc}
-\title{Referee report}
-\author{}
-%\date
+\usepackage{amsmath}
+\usepackage{tabularx,ragged2e,booktabs,caption}
+\renewcommand{\figurename}{{Figure}}
+\usepackage[labelfont=bf]{caption}
+\usepackage[font=footnotesize]{caption}
+\usepackage{amssymb,latexsym}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{relsize}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{cases}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage[toc,page]{appendix}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}[section]
+\numberwithin{equation}{section}
+\usepackage{tabularx,ragged2e,booktabs,caption}
+\newcommand{\footremember}[2]{%
+    \footnote{#2}
+    \newcounter{#1}
+    \setcounter{#1}{\value{footnote}}%
+}
+\newcommand{\footrecall}[1]{%
+    \footnotemark[\value{#1}]%
+}
+\usepackage[toc]{appendix}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\newcommand{\lnorm}{\left|\left|}
+\newcommand{\rnorm}{\right|\right|}
+\newcommand{\Ld}{L^2(\mathcal{D})}
+\newcommand{\Lomtd}{L^2(\Omega;\mathcal{T};\mathcal{D})}
+%\newcommand{\Lomd}{L^2(\Omega;L^2(\mathcal{D}))}
+\newcommand{\Lomd}{L^2(\Omega,\mathcal{D})}
+\newcommand{\myreferences}{../Bibliography/references}
+\bibliographystyle{elsarticle-num}
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{tabularx,ragged2e,booktabs,caption}
+\renewcommand{\figurename}{{Fig.}}
+\usepackage[labelfont=bf]{caption}
+\usepackage[font=footnotesize]{caption}
+\usepackage{amssymb,latexsym}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{relsize}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{cases}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage[toc,page]{appendix}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\numberwithin{equation}{section}
+\usepackage{tabularx,ragged2e,booktabs,caption}
+\graphicspath{{./images/}}
+\usepackage[toc]{appendix}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\bibliographystyle{elsarticle-num}
+\usepackage{stix2}
+\usepackage{pgfplots}
+\usepackage{appendix}
+\usepackage[labelfont=bf]{caption}
+\pgfplotsset{compat=newest}
+\pagestyle{myheadings}
+%%%%%%%%%%%%%%%%%%%%%%%
+\title{A comprehensive global sensitivity analysis study of wind turbine aeroelastic models}
 \begin{document}
-\maketitle
-This paper presents a numerical procedure to estimate the sampling error of the Multigrid Multilevel Monte Carlo estimator (MG-MLMC) proposed by Kumar et al. (2017). The key idea behind the MG-MLMC estimator is to use coarse grid solutions from the full multigrid (FMG) solver as samples for the MLMC estimator. The computation of the sampling error for the MG-MLMC estimator is not straightforward as estimators appearing in the MLMC telescopic sum are no longer uncorrelated. The paper employs multiple Quasi-Monte Carlo estimators to numerically approximate this sampling variance. Numerical results are presented using Darcy flow problem with different permeability parameters. 
-
-The paper is very well-written and well-structured, presenting the ideas in a very clear way. In my opinion, the sampling error estimator proposed for the Multigrid Multilevel (Quasi-) Monte Carlo estimator is a very nice contribution. However, I have some suggestions and comments which should be addressed in my opinion:
-
-\begin{enumerate}
-    \item On page 7, line 248, the assumption (A2) should be $V_\ell \leq h^{\beta}_{\ell}$?
-    \item Are constants $c_\alpha,c_\beta,c_\gamma,c_\lambda$ dependent on the rates $\alpha,\beta,\gamma,\lambda}$ respectively ?  If not then consider changing the notation to avoid any confusion.
-    
-    \item On page 10, instead of explaining the two grid correction scheme, consider describing the FMG algorithm and specifying the inter-grid operators as well as the FMG-interpolation operator that is used to transfer solution field to the next finer level. 
-    
-    \item On page 10, you say typical values for number of relaxation steps are $\mu_1=2$ and $\mu_2=1$. This is not correct. They are problem dependent parameters and can be decided using Local Fourier analysis, see ref 30 of your paper.
-    
-    \item There is no explanation on how the coarse grid operators for FMG $\mathbf{A}_{\ell-1},\mathbf{A}_{\ell-2},$ etc. are  computed. Is it by direct-discretization or using Galerkin appraoach, $A_{\ell-1} =R_{\ell}^{\ell-1}A_\ell I^{\ell}_{\ell-1}$?  
-    
-    \item Related to the previous comment, you did not mention how do you upscale the random field from the finest grid level to all the coarser grids. This should be done in a way such that the statistical properties of the random field does not change. If you employ direct discretization then using the KL-expansion can avoid this problem. In case of Galerkin approach this is not so trivial. Similar problem will arise if you use an algebraic multigrid solver.
-    
-    \item How do you ensure that solutions on the coarser FMG levels converge to respective discretization accuracies? In page 11, you introduce the number of multilevel correction cycles $\mu_0$ but it is not clearly explained whether this parameter is a constant or varies depending on the grid level? Usually, the number of cycles needed for convergence depends on the grid as well as the Mat\'ern parameter as shown in this article:
-    
-    Kumar, P., Rodrigo, C., Gaspar, F. J., & Oosterlee, C. W. (2018). On cell-centered multigrid methods and Local Fourier Analysis for PDEs with random coefficients. arXiv preprint arXiv:1803.08864.
-    
-    Alternately, the number of multilevel correction cycles can be determined by monitoring residuals on different FMG levels. 
-    
-    \item On page 14, based on what criteria did you decide the number of random shifts? For smaller tolerances $\epsilon$, $R=20$ may not be enough to approximate $V[\overline{\mathcal{Q}}^{QMC}_{L,R,reuse}]$.
-    
-    \item On page 22, line 532, the percentage of recycled samples should be $\frac{N_{\ell+1}}{N_\ell}\cdot 100$ ?
-    
-\end{enumerate}
-$$
-k(x,y) =
-\left\{
-\begin{array}{l}
-10^4, \quad {\mbox {\rm if} } \quad (x,y) \in \left(
-\frac{2}{128}\frac{5}{128}\right)\times\left(\frac{2}{128},\frac{3}{128}\right)\cup\left(
-\frac{2}{128},\frac{3}{128}\right)\times\left( \frac{2}{128}\frac{5}{128}\right), \\
-1, \quad {\mbox {\rm otherwise}}.
-\end{array}
-\right.
-$$
+\begin{frontmatter}
+%\address[cwi]{CWI - Centrum Wiskunde \& Informatica, Amsterdam, The Netherlands}
+%\address[aero]{Faculty of Aerospace Engineering, Delft University of Technology, Delft, The Netherlands.}
+%\author[cwi,aero]{Prashant~Kumar}
+\author[]{Prashant~Kumar}
+\ead{pkumar@cwi.nl}
+\begin{abstract}
+\end{abstract}
+\begin{keyword}
+Wind energy, global sensitivity analysis, UQ, aeroelastic models 
+\end{keyword}
+\end{frontmatter}
+\linenumbers
+\section{Introduction}
+\section{BEM model}
+\section{Global sensitivity analysis}
+\subsection{PCE Ordinary Least Square (PCE\_OLS)}
+\subsection{PCE Least Angle Regression (PCE\_LAR)}
+\section{Parametrization of uncertain inputs in the BEM model}
+\subsection{Geometric uncertainty}
+\subsubsection{NURBS based parametrization}
+\subsection{Model uncertainty}
+\subsection{Wind velocity}
+\section{Description of test case}
+\section{Numerical experiment}
+\section{Interpretation of global sensitivity analysis result}
+\section{Conclusions}
+\section*{Acknowledgements}
 \end{document}
