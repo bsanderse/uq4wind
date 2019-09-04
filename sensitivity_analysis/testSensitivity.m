@@ -163,7 +163,7 @@ if (find(strcmp(methods,'PCE_OLS')))
     % specify array of possible degrees;
     % the degree with the lowest Leave-One-Out cross-validation error (LOO error)
     % is automatically selected:
-    metamodelOLS.Degree    = 1:6;
+    metamodelOLS.Degree    = 1:4;
     
     % if there are issues with LOO, try the following: metamodelOLS.OLS.ModifiedLOO = 0;
     % note that default sampling is LHS, this can be changed (see below)
@@ -232,7 +232,7 @@ if (find(strcmp(methods,'PCE_LARS')))
     metamodelLARS.Type      = 'Metamodel';
     metamodelLARS.MetaType  = 'PCE';
     metamodelLARS.Method    = 'LARS';
-    metamodelLARS.Degree    = 1:6; % this automatically switches on degree adaptive PCE
+    metamodelLARS.Degree    = 1:4; % this automatically switches on degree adaptive PCE
     metamodelLARS.TruncOptions.qNorm = 0.75;
     
     % as there is randomness in the experimental design, we can 
@@ -255,7 +255,7 @@ if (find(strcmp(methods,'PCE_LARS')))
             % moments of solution            
             mean_LARS(k,i) = myPCE_LARS.PCE.Moments.Mean;
             std_LARS(k,i)  = sqrt(myPCE_LARS.PCE.Moments.Var);
-
+ 
             % Sobol analysis
             % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
             SobolAnalysis_LARS    = uq_createAnalysis(SobolOpts);

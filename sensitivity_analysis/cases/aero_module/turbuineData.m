@@ -1,7 +1,8 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
-    BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-    RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, NRCP_TWIST, ...
-    NRCP_CHORD, PERTURBATION_TWIST, PERTURBATION_CHORD, INDEX_TWIST,INDEX_CHORD, YAW_VARIANCE]  = turbuineDataNM80()
+          BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
+          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, NRCP_TWIST, ...
+          NRCP_CHORD,NRCP_THICKNESS, PERTURBATION_TWIST, PERTURBATION_CHORD, ...
+          PERTURBATION_THICKNESS, INDEX_TWIST,INDEX_CHORD,INDEX_THICKNESS, YAW_VARIANCE]  = turbuineData()
 %% Variables of input file extracted from reference test case from DANAERO turbuine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -42,23 +43,23 @@ YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
 
-%% Define properties of uncertain input for chord and twist
+%% Define properties of uncertain input for twist, chord and thickness
 % Number of control points for twist and chord. Set heuristically.
 NRCP_TWIST = 10;
 NRCP_CHORD = 9; 
+NRCP_THICKNESS = 9; 
 
 % fraction of perturbation for each control points, 0.2 corresponds to plus
 % minus 10% perturbation on the baseline values
 PERTURBATION_TWIST = 0.2*ones(1,NRCP_TWIST);  
 PERTURBATION_CHORD = 0.2*ones(1,NRCP_CHORD);  
+PERTURBATION_THICKNESS = 0.2*ones(1,NRCP_THICKNESS);
 
 % Index at which we want to introduce the uncertainty. This is to control
 % the number of uncertain paramters. We only introduce uncertainties in the
 % "important" control points.
 INDEX_TWIST = [2 4 6 8 10]; % INDEX_TWIST = 1:NRCP_TWIST
 INDEX_CHORD = [2 4 6 8]; % INDEX_CHORD = 1:NRCP_CHORD
-
+INDEX_THICKNESS = [2 4 6 8]; % INDEX_THICKNESS = 1:PERTURBATION_THICKNESS
 %% Variance for Yaw angle, assuming a gaussian distribution, the mean is equal to nominal YAWANGLE value
-YAW_VARIANCE = 1;
-
-
+YAW_VARIANCE = 2;
