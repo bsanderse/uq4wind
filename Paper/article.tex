@@ -26,7 +26,6 @@
 \usepackage{mathtools}
 \usepackage{relsize}
 \usepackage[T1]{fontenc}
-\usepackage{float}
 \usepackage{cases}
 \usepackage{amsthm}
 \usepackage{subcaption}
@@ -55,29 +54,6 @@
 \newcommand{\Lomd}{L^2(\Omega,\mathcal{D})}
 \newcommand{\myreferences}{../Bibliography/references}
 \bibliographystyle{elsarticle-num}
-\usepackage{color}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}
-\usepackage{tabularx,ragged2e,booktabs,caption}
-\renewcommand{\figurename}{{Fig.}}
-\usepackage[labelfont=bf]{caption}
-\usepackage[font=footnotesize]{caption}
-\usepackage{amssymb,latexsym}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{amsfonts}
-\usepackage{tikz}
-\usepackage{float}
-\usepackage{array}
-\usepackage{mathtools}
-\usepackage{relsize}
-\usepackage[T1]{fontenc}
-\usepackage{float}
-\usepackage{cases}
-\usepackage{amsthm}
-\usepackage{subcaption}
-\usepackage[toc,page]{appendix}
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
 \numberwithin{equation}{section}
 \usepackage{tabularx,ragged2e,booktabs,caption}
 \graphicspath{{./images/}}
@@ -91,7 +67,7 @@
 \pgfplotsset{compat=newest}
 \pagestyle{myheadings}
 %%%%%%%%%%%%%%%%%%%%%%%
-\title{A comprehensive global sensitivity analysis study of wind turbine aeroelastic models}
+\title{A Global Sensitivity Analysis of Wind Turbine Aeroelastic Models}
 \begin{document}
 \begin{frontmatter}
 %\address[cwi]{CWI - Centrum Wiskunde \& Informatica, Amsterdam, The Netherlands}
@@ -107,16 +83,46 @@ Wind energy, global sensitivity analysis, UQ, aeroelastic models
 \end{frontmatter}
 \linenumbers
 \section{Introduction}
-\section{BEM model}
+\section{Aeroelastic models}
+\subsection{BEM models}
+\subsection{Input parameters of aeroelastic models}
 \section{Global sensitivity analysis}
-\subsection{PCE Ordinary Least Square (PCE\_OLS)}
-\subsection{PCE Least Angle Regression (PCE\_LAR)}
+\subsection{Sobol' indices}
+\subsubsection{PCE Ordinary Least Square (PCE\_OLS)}
+\subsubsection{PCE Least Angle Regression (PCE\_LAR)}
 \section{Parametrization of uncertain inputs in the BEM model}
 \subsection{Geometric uncertainty}
-\subsubsection{NURBS based parametrization}
+We use Non-Uniform Rational Basis Splines (NURBS) \cite{nurbs_book} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves using a very limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
+
+\subsubsection{NURBS based perturbation}
+The value of NURBS curve at each location $x$ is computed using a weighted sum of $N$ basis functions (or B-splines):
+\begin{equation}\label{NURB_curve}
+S(x)  = \sum_{i=0}^{N-1} c_iB_{i,p}(x),
+\end{equation}
+where $S(x)$ is the value of the curve at location $x$, $c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to  the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N= m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
+
+The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-spline ($p=2$) using the linear B-spline ($p=1$), cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_0,t_1,...,t_{m-1}$, the B-spline of degree 0 is defined as:
+\begin{equation}\label{linearBspline}
+B_{i,0}(x) :=
+\begin{cases}
+1\quad t_i\leq x < t_{i+1},\\
+0\quad\text{elsewhere.}
+\end{cases} 
+\end{equation}
+Higher order B-splines can be then derived using the recurrence relation\cite{deBoor}:
+\begin{equation}\label{NURBS_recurrence}
+B_{i,p}(x):= \frac{x-t_i}{t_{i+p} - t_i}B_{i,p-1}(x) + \frac{t_{i+p+1}  - x}{t_{i+p+1}  - t_{i+1} }B_{i+1,p-1}(x).
+\end{equation}
+These B-splines can be constructed efficiently using the De Boor's algorithm \cite{deBoor}.
+In Fig. \ref{B-splines}, we show the linear, quadratic and cubic spline for $x\in[0,1]$. At the interval boundaries these B-splines go smoothly to zero. 
+
+Next, we describe steps to generate perturbed samples of chord from a given reference chord using NURBS based parametrization. 
+
+
 \subsection{Model uncertainty}
 \subsection{Wind velocity}
 \section{Description of test case}
+\section{Sensitivity analysis workflow}
 \section{Numerical experiment}
 \section{Interpretation of global sensitivity analysis result}
 \section{Conclusions}
