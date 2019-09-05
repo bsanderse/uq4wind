@@ -28,11 +28,11 @@ methods = {'PCE_OLS','PCE_LARS'};
 % DegreesQuad = 1:4; %[1 2 3 4 5 6];
 
 % % for PCE-OLS:
-NsamplesOLS = [8 16]; % if not specified, the number of samples from Quad is taken
+NsamplesOLS = [256 512 1024]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
 % 
 % % % for PCE-LARS:
-NsamplesLARS = [8 16]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [256 512 1024]; % if not specified, the number of samples from Quad is taken
 LARS_repeat = 1; % like MC_repeat
 
 %% number of random variables
