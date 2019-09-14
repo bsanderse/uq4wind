@@ -76,6 +76,7 @@
 \author[]{Prashant~Kumar}
 \ead{pkumar@cwi.nl}
 \begin{abstract}
+Wind turbines are a complex multi-physics systems. The performance and life-cycle of turbine is influenced by a large number
 \end{abstract}
 \begin{keyword}
 Wind energy, global sensitivity analysis, UQ, aeroelastic models 
@@ -101,7 +102,7 @@ S(x)  = \sum_{i=0}^{N-1} c_iB_{i,p}(x),
 \end{equation}
 where $S(x)$ is the value of the curve at location $x$, $c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to  the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N= m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
 
-The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-spline ($p=2$) using the linear B-spline ($p=1$), cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_0,t_1,...,t_{m-1}$, the B-spline of degree 0 is defined as:
+The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-spline ($p=2$) using the linear B-spline ($p=1$); cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_0,t_1,...,t_{m-1}$, the B-spline of degree 0 is defined as:
 \begin{equation}\label{linearBspline}
 B_{i,0}(x) :=
 \begin{cases}
@@ -109,15 +110,25 @@ B_{i,0}(x) :=
 0\quad\text{elsewhere.}
 \end{cases} 
 \end{equation}
-Higher order B-splines can be then derived using the recurrence relation\cite{deBoor}:
+Higher order B-splines can then be derived using the recurrence relation \cite{deBoor}:
 \begin{equation}\label{NURBS_recurrence}
-B_{i,p}(x):= \frac{x-t_i}{t_{i+p} - t_i}B_{i,p-1}(x) + \frac{t_{i+p+1}  - x}{t_{i+p+1}  - t_{i+1} }B_{i+1,p-1}(x).
+B_{i,p}(x) := \frac{x-t_i}{t_{i+p} - t_i}B_{i,p-1}(x) + \frac{t_{i+p+1}  -  x}{t_{i+p+1}  -  t_{i+1}}B_{i+1,p-1}(x).
 \end{equation}
-These B-splines can be constructed efficiently using the De Boor's algorithm \cite{deBoor}.
-In Fig. \ref{B-splines}, we show the linear, quadratic and cubic spline for $x\in[0,1]$. At the interval boundaries these B-splines go smoothly to zero. 
+These B-splines can be constructed efficiently using the De Boor's algorithm \cite{deBoor}. In Fig. \ref{B-splines}, we show the linear, quadratic and cubic spline for $x\in[0,1]$. At the interval boundaries these B-splines go smoothly to zero. 
 
-Next, we describe steps to generate perturbed samples of chord from a given reference chord using NURBS based parametrization. 
+Next, we describe steps to generate perturbed samples of chord from a given reference chord, $S_{ref}(x)$, using NURBS based parametrization. The first step is to approximate the given reference chord using a NURBS curve with a fixed degree $p$. For this, we sample $S_{ref}(x)$ at $N$ locations $\{x_i\}_{i=0}^N$ and
 
+
+ perform inversion to compute $\{c_i\}_{i=0}^N$ by solving the $N\times N$ linear system:
+\begin{equation}\label{nurbs_inversion}
+\mathbf{B}\mathbf{c} = \mathbf{S},
+\end{equation}
+where $\mathbf{B}\in \mathbb{R}^{N\times N}$ with elements $\mathbf{B}_{ij} = B_{}()$
+
+with a \emph{limited} number of control points. The number of control points are decided based on an error threshold criteria between the approximated and the reference chord. 
+\begin{remark}
+How to chose $x$
+\end{remark}
 
 \subsection{Model uncertainty}
 \subsection{Wind velocity}

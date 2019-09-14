@@ -58,7 +58,7 @@ if plotSamples == 1
     hold on
     plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
     plot(sampledLocations,sampledValues,'marker','x','markersize',8,'linestyle','none','linewidth',2) % plot sampled points
-    plot(interpolationLocations,samplesChord,'linewidth',2,'color','g')
+    plot(interpolationLocations,samplesChord,'linewidth',2,'color','b')
 end
 samplesChord = perturbNURBS(t0,n,interpolationLocations,c, pc,samples,randVec);
 

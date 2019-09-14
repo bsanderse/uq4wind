@@ -45,7 +45,7 @@ ZNAC2HUB = 1.6;
 
 %% Define properties of uncertain input for twist, chord and thickness
 % Number of control points for twist and chord. Set heuristically.
-NRCP_TWIST = 10;
+NRCP_TWIST = 12;
 NRCP_CHORD = 9; 
 NRCP_THICKNESS = 9; 
 
@@ -58,8 +58,8 @@ PERTURBATION_THICKNESS = 0.2*ones(1,NRCP_THICKNESS);
 % Index at which we want to introduce the uncertainty. This is to control
 % the number of uncertain paramters. We only introduce uncertainties in the
 % "important" control points.
-INDEX_TWIST = [2 4 6 8 10]; % INDEX_TWIST = 1:NRCP_TWIST
+INDEX_TWIST = [2 3 4 5 6 7]; % INDEX_TWIST = 1:NRCP_TWIST
 INDEX_CHORD = [2 4 6 8]; % INDEX_CHORD = 1:NRCP_CHORD
-INDEX_THICKNESS = [2 4 6 8]; % INDEX_THICKNESS = 1:PERTURBATION_THICKNESS
+INDEX_THICKNESS = [2 3 4 5]; % INDEX_THICKNESS = 1:PERTURBATION_THICKNESS
 %% Variance for Yaw angle, assuming a gaussian distribution, the mean is equal to nominal YAWANGLE value
 YAW_VARIANCE = 2;

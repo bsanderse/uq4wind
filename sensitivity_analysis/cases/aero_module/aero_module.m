@@ -39,5 +39,5 @@ filename = [P{25},'output\AeroPower.dat']; % location of the AeroPower.dat outpu
 [Times,Azimuthdeg,PowerWatt,Axial_ForceN] = AeroPower(filename, P{23}, P{24});
 chdir(workingDir)
 % return output 
-Y = mean(PowerWatt);
-% Y = Axial_ForceN;  
+% Y = mean(PowerWatt);
+Y = mean(Axial_ForceN);  

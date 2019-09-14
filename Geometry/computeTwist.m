@@ -28,10 +28,12 @@ if nargin < 5 % Default function argument values corresponding to NM80 turbine
     referenceTwist = [0 5.37 6.69 7.9 9.11 10.19 9.39 7.16 5.45 4.34 3.5 2.86 ... 
                  2.31 1.77 1.28 0.9 0.55 0.23 0.03 0.02 0.93 2.32 6.13]; 
              
-    t0 = [0 0.051 0.154 0.257 0.309 0.412 0.515 0.721 0.963 1]; 
+% Linear B splines
+    t0 = [0 0.051 0.154 0.257 0.309 0.412 0.515 0.721 0.876 0.953 0.979 1]; 
     n = 2;
-    sampledLocations = [0 2 6 10 12 16 20 28 37 38.8]; 
-    sampledValues = [0 5.37 7.9 10.19 9.39 5.45 3.5 1.28 0.02 6.13]; 
+    sampledLocations =interpolationLocations([1 2 4 6 7 9 11 15 18 20 21 23]); 
+    sampledValues = referenceTwist([1 2 4 6 7 9 11 15 18 20 21 23]); 
+
     %pc = 0.1*ones(numel(sampledLocations),1);
 end
 
@@ -56,9 +58,9 @@ if plotSamples == 1
     figure
     plot(interpolationLocations,referenceTwist,'linewidth',2) 
     hold on
-    plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
+%     plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
     plot(sampledLocations,sampledValues,'marker','x','markersize',8,'linestyle','none','linewidth',2) % plot sampled points
-    plot(interpolationLocations,samplesTwist,'linewidth',2,'color','g')
+%     plot(interpolationLocations,samplesTwist,'linewidth',2,'color','g')
 end
 samplesTwist = perturbNURBS(t0,n,interpolationLocations,c, pc,samples,randVec);
 

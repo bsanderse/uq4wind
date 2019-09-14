@@ -48,3 +48,4 @@ end
 
 Input.Marginals(ndim).Type = 'Gaussian'; 
 Input.Marginals(ndim).Parameters = [P{20}, P{35}];
+Input.Marginals(ndim).Bounds = [-10 10]; 

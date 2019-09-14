@@ -17,7 +17,7 @@ addpath('C:\Users\pkumar\Dropbox\WindTrue\windtrue\Geometry\')
 
 % specify a list of options from the following list:
 % methods = {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
-methods = {'PCE_OLS','PCE_LARS'};
+methods = {'PCE_LARS'};
 % % for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % % graphs
 % MC_repeat = 1;
@@ -27,12 +27,12 @@ methods = {'PCE_OLS','PCE_LARS'};
 % % for PCE-Quad, specify the polynomial degrees to be tested
 % DegreesQuad = 1:4; %[1 2 3 4 5 6];
 
-% % for PCE-OLS:
-NsamplesOLS = [256 512 1024]; % if not specified, the number of samples from Quad is taken
-OLS_repeat = 1; % like MC_repeat
+% % % for PCE-OLS:
+% NsamplesOLS = [16]; % if not specified, the number of samples from Quad is taken
+% OLS_repeat = 1; % like MC_repeat
 % 
 % % % for PCE-LARS:
-NsamplesLARS = [256 512 1024]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [256 512 1024 2048]; % if not specified, the number of samples from Quad is taken
 LARS_repeat = 1; % like MC_repeat
 
 %% number of random variables
@@ -46,5 +46,7 @@ for i = 1:ndim-1
     Input.Marginals(i).Bounds = [-0.5 0.5]; 
 end
 
+Input.Marginals(i).Name = 'YAW';
 Input.Marginals(ndim).Type = 'Gaussian'; 
 Input.Marginals(ndim).Parameters = [P{20}, P{35}];
+Input.Marginals(ndim).Bounds = [-10 10]; 
