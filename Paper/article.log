@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.29)  11 SEP 2019 14:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.29)  17 SEP 2019 11:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1361,18 +1361,18 @@ s been generated with the most recent feature set (\pgfplotsset{compat=1.16}).
 LaTeX Font Info:    Font shape `T1/stix2/bx/n' in size <10> not available
 (Font)              Font shape `T1/stix2/b/n' tried instead on input line 78.
 LaTeX Font Info:    Try loading font information for LS1+stix2scr on input line
- 83.
+ 84.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2scr.fd
 File: ls1stix2scr.fd 2018/04/02 v2.0.0-latex stix2 script LS1 font definitions
 )
 LaTeX Font Info:    Try loading font information for LS2+stix2ex on input line 
-83.
+84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2ex.fd
 File: ls2stix2ex.fd 2018/04/02 v2.0.0-latex stix2 extentions LS2 font definitio
 ns
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 83.
+LaTeX Font Info:    Try loading font information for U+msa on input line 84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1380,7 +1380,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2018/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 83.
+LaTeX Font Info:    Try loading font information for U+msb on input line 84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1388,47 +1388,47 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2018/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 83.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
 LaTeX Font Info:    Try loading font information for LS1+stix2frak on input lin
-e 83.
+e 84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2frak.fd
 File: ls1stix2frak.fd 2018/04/02 v2.0.0-latex stix2 fraktur LS1 font definition
 s
 )
 LaTeX Font Info:    Try loading font information for LS1+stix2bb on input line 
-83.
+84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2bb.fd
 File: ls1stix2bb.fd 2018/04/02 v2.0.0-latex stix2 blackboard LS1 font definitio
 ns
 )
 LaTeX Font Info:    Try loading font information for LS2+stix2cal on input line
- 83.
+ 84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2cal.fd
 File: ls2stix2cal.fd 2018/04/02 v2.0.0-latex stix2 calligraphic LS2 font defini
 tions
 )
 LaTeX Font Info:    Try loading font information for LS1+stix2sf on input line 
-83.
+84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2sf.fd
 File: ls1stix2sf.fd 2018/04/02 v2.0.0-latex stix2 sans-serif LS1 font definitio
 ns
 )
 LaTeX Font Info:    Try loading font information for LS2+stix2tt on input line 
-83.
+84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2tt.fd
 File: ls2stix2tt.fd 2018/04/02 v2.0.0-latex stix2 typewriter LS2 font definitio
 ns
 )
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 83.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 84.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
@@ -1440,9 +1440,9 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <7.5> not available
-(Font)              size <7> substituted on input line 83.
+(Font)              size <7> substituted on input line 84.
 
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 85.
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 86.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
@@ -1452,8 +1452,12 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 
 
+Package natbib Warning: Citation `ralphSmith' on page 1 undefined on input line
+ 93.
+
+
 Package natbib Warning: Citation `nurbs_book' on page 1 undefined on input line
- 95.
+ 100.
 
 
 Overfull \hbox (1.56999pt too wide) has occurred while \output is active
@@ -1465,30 +1469,38 @@ Overfull \hbox (1.56999pt too wide) has occurred while \output is active
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 112
+Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 117
 .
 
 
-Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 116
+Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 122
 .
 
 
-LaTeX Warning: Reference `B-splines' on page 2 undefined on input line 116.
+LaTeX Warning: Reference `B-splines' on page 2 undefined on input line 122.
 
+
+Package natbib Warning: Citation `adaptiveNurbs' on page 2 undefined on input l
+ine 129.
+
+
+LaTeX Warning: Reference `' on page 2 undefined on input line 139.
+
+LaTeX Font Info:    Font shape `T1/stix2/m/sl' in size <10> not available
+(Font)              Font shape `T1/stix2/m/it' tried instead on input line 142.
+
+[2]
 
 Package natbib Warning: There were undefined citations.
 
-LaTeX Font Info:    Font shape `T1/stix2/m/sl' in size <10> not available
-(Font)              Font shape `T1/stix2/m/it' tried instead on input line 140.
-
-[2]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 140.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 140.
+[3]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
  (./article.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 140.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 140.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 148.
 Package rerunfilecheck Info: File `article.out' has not changed.
-(rerunfilecheck)             Checksum: 30DDB81B0322C88E061E19CD4D790313;1258.
+(rerunfilecheck)             Checksum: E9BC3E04D98738337A0C164F893AE4A6;1272.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1497,25 +1509,22 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 140.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 148.
  ) 
 Here is how much of TeX's memory you used:
- 33627 strings out of 492649
- 753968 string characters out of 6129621
- 1016977 words of memory out of 5000000
- 36857 multiletter control sequences out of 15000+600000
- 113986 words of font info for 119 fonts, out of 8000000 for 9000
+ 33638 strings out of 492649
+ 754110 string characters out of 6129621
+ 1017977 words of memory out of 5000000
+ 36858 multiletter control sequences out of 15000+600000
+ 114614 words of font info for 123 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  78i,9n,136p,724b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/texmf-local/fonts/enc/stix2-mathbb.enc}{/usr/local/texliv
 e/texmf-local/fonts/enc/stix2-mathrm-bold.enc}{/usr/local/texlive/texmf-local/f
-onts/enc/stix2-mathcal.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/
-cm-super/cm-super-t1.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathex
-.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathrm.enc}{/usr/local/tex
-live/texmf-local/fonts/enc/stix2-mathit.enc}{/usr/local/texlive/texmf-local/fon
+onts/enc/stix2-mathcal.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-math
+ex.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathrm.enc}{/usr/local/t
+exlive/texmf-local/fonts/enc/stix2-mathit.enc}{/usr/local/texlive/2018/texmf-di
+st/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/local/texlive/texmf-local/fon
 ts/enc/stix2-t1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix
 2/STIX2Math.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix2/ST
 IX2Text-Bold.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix2/S
@@ -1523,10 +1532,10 @@ TIX2Text-Italic.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix
 2/STIX2Text-Regular.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
 cm-super/sfss0500.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm
 -super/sftt0800.pfb>
-Output written on article.pdf (2 pages, 697361 bytes).
+Output written on article.pdf (3 pages, 701903 bytes).
 PDF statistics:
- 147 PDF objects out of 1000 (max. 8388607)
- 135 compressed objects within 2 object streams
- 27 named destinations out of 1000 (max. 500000)
+ 153 PDF objects out of 1000 (max. 8388607)
+ 140 compressed objects within 2 object streams
+ 29 named destinations out of 1000 (max. 500000)
  11933 words of extra memory for PDF output out of 12000 (max. 10000000)
 

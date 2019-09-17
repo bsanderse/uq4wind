@@ -76,7 +76,7 @@
 \author[]{Prashant~Kumar}
 \ead{pkumar@cwi.nl}
 \begin{abstract}
-Wind turbines are a complex multi-physics systems. The performance and life-cycle of turbine is influenced by a large number
+Wind turbines are a complex multi-physics systems. As the performance and the life span of a turbine is highly dependent on  manufacturing, meteorological and operational factors, it is very important to quantify the impact of each of these parameter in the output of interest.  
 \end{abstract}
 \begin{keyword}
 Wind energy, global sensitivity analysis, UQ, aeroelastic models 
@@ -88,54 +88,61 @@ Wind energy, global sensitivity analysis, UQ, aeroelastic models
 \subsection{BEM models}
 \subsection{Input parameters of aeroelastic models}
 \section{Global sensitivity analysis}
+The main objective of sensitivity analysis is to quantify the relative significance of individual inputs (or their combinations) and how variations in input parameters (or their combinations) affects the output of interest. In engineering, sensitivity analysis can be employed for a number of reasons. It can be used to determine the stability and robustness of a computational model with respect to input parameters. Sensitivity analysis can be used for simplification of stochastic models by fixing the insensitive parameters. It can also be further used to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters.
+
+Sensitivity analysis techniques can be broadly classified as local and global methods, see \cite{ralphSmith}. Within local sensitivity analysis, individual parameters are perturbed around their nominal values allowing for the description of output variability in a small neighbourhood of nominal input values. % Global sensitivity analysis, on the other hand, 
+
 \subsection{Sobol' indices}
 \subsubsection{PCE Ordinary Least Square (PCE\_OLS)}
 \subsubsection{PCE Least Angle Regression (PCE\_LAR)}
 \section{Parametrization of uncertain inputs in the BEM model}
 \subsection{Geometric uncertainty}
-We use Non-Uniform Rational Basis Splines (NURBS) \cite{nurbs_book} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves using a very limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
+We use Non-Uniform Rational Basis Splines (NURBS) \cite{nurbs_book} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves with a limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
 
 \subsubsection{NURBS based perturbation}
 The value of NURBS curve at each location $x$ is computed using a weighted sum of $N$ basis functions (or B-splines):
 \begin{equation}\label{NURB_curve}
-S(x)  = \sum_{i=0}^{N-1} c_iB_{i,p}(x),
+S(x)  = \sum_{i=1}^{N} c_iB_{i,p}(x),
 \end{equation}
-where $S(x)$ is the value of the curve at location $x$, $c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to  the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N= m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
+where $S(x)$ is the value of the curve at location $x$, $c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N = m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
 
-The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-spline ($p=2$) using the linear B-spline ($p=1$); cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_0,t_1,...,t_{m-1}$, the B-spline of degree 0 is defined as:
+The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-spline ($p=2$) using the linear B-spline ($p=1$); cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_1, t_2, ..., t_{m}$, the B-spline of degree 0 is defined as:
 \begin{equation}\label{linearBspline}
 B_{i,0}(x) :=
 \begin{cases}
-1\quad t_i\leq x < t_{i+1},\\
+1\quad t_i\leq x < t_{i+1},\quad i = 1,2,...,m,\\
 0\quad\text{elsewhere.}
 \end{cases} 
 \end{equation}
 Higher order B-splines can then be derived using the recurrence relation \cite{deBoor}:
 \begin{equation}\label{NURBS_recurrence}
-B_{i,p}(x) := \frac{x-t_i}{t_{i+p} - t_i}B_{i,p-1}(x) + \frac{t_{i+p+1}  -  x}{t_{i+p+1}  -  t_{i+1}}B_{i+1,p-1}(x).
-\end{equation}
-These B-splines can be constructed efficiently using the De Boor's algorithm \cite{deBoor}. In Fig. \ref{B-splines}, we show the linear, quadratic and cubic spline for $x\in[0,1]$. At the interval boundaries these B-splines go smoothly to zero. 
+B_{i,p}(x) := \frac{x-t_i}{t_{i+p} - t_i}B_{i,p-1}(x) + \frac{t_{i+p+1}  -  x}{t_{i+p+1}  -  t_{i+1}}B_{i+1,p-1}(x),\quad p\geq1, i = 1,2,...,m.
+\end{equation} 
+Something about padding...
+These B-splines can be constructed efficiently using the De Boor's algorithm \cite{deBoor}. In Fig. \ref{B-splines}, we show linear, quadratic and cubic splines for $x\in[0,1]$. At the interval boundaries these B-splines go to zero smoothly. The domain of influence of a given control point depends on the respective B-spline (rephrase)??
 
-Next, we describe steps to generate perturbed samples of chord from a given reference chord, $S_{ref}(x)$, using NURBS based parametrization. The first step is to approximate the given reference chord using a NURBS curve with a fixed degree $p$. For this, we sample $S_{ref}(x)$ at $N$ locations $\{x_i\}_{i=0}^N$ and
-
-
- perform inversion to compute $\{c_i\}_{i=0}^N$ by solving the $N\times N$ linear system:
+Next, we describe steps to generate perturbed samples of chord from a given reference chord, $S_{ref}(x)$, using NURBS based parametrization. The first step is to approximate the given reference chord using a NURBS curve with a fixed degree $p$. For this, we need to sample $S_{ref}(x)$ at $N$ locations $\{x_j\}_{j=1}^N$ and compute $B_{i,p}(x_j), \text{ for }i, j = 1,2, ..., N$, such that we can compute the set of control points $\mathbf{c}=\{c_i\}_{i=0}^N$ by solving the following linear system:
 \begin{equation}\label{nurbs_inversion}
 \mathbf{B}\mathbf{c} = \mathbf{S},
 \end{equation}
-where $\mathbf{B}\in \mathbb{R}^{N\times N}$ with elements $\mathbf{B}_{ij} = B_{}()$
-
-with a \emph{limited} number of control points. The number of control points are decided based on an error threshold criteria between the approximated and the reference chord. 
+where $\mathbf{S}\in \mathbb{R}^{N}$ is a vector containing sampled values of the reference curve and $\mathbf{B}\in \mathbb{R}^{N\times N}$ is a matrix with $j$-th row consisting of B-splines values at $x_j$ locations, i.e., $B_{i,p}(x_j), i= 1, 2,..., N$. 
+Once the control points are obtained, we can derive the approximate reference curve $S_N(x)$ using \eqref{NURB_curve}. Note that the accuracy of the approximated curve is dependent on the sample locations $x_j$ as well as the degree $p$ and can be set heuristically \cite{adaptiveNurbs}. The number of sampled locations $N$ can be adaptively increased until the following tolerance criteria is met:
+\begin{equation}
+\frac{||S_N - S_{ref}||}{||S_{ref}||} <\varepsilon.
+\end{equation}
+More advanced approaches, monotonicity preserving methods, etc??
 \begin{remark}
-How to chose $x$
+How to chose $x$?
 \end{remark}
+The final step is to introduce uncertainty in the above computed control points by associating a probability distribution.
 
+The steps to obtained perturbed samples from a given reference curve is outlined in Fig. \ref{}.
 \subsection{Model uncertainty}
 \subsection{Wind velocity}
 \section{Description of test case}
 \section{Sensitivity analysis workflow}
 \section{Numerical experiment}
-\section{Interpretation of global sensitivity analysis result}
+\subsection{Interpretation of global sensitivity analysis result}
 \section{Conclusions}
 \section*{Acknowledgements}
 \end{document}
