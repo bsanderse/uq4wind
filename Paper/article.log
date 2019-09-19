@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.29)  17 SEP 2019 11:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.29)  19 SEP 2019 10:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1456,10 +1456,6 @@ Package natbib Warning: Citation `ralphSmith' on page 1 undefined on input line
  93.
 
 
-Package natbib Warning: Citation `nurbs_book' on page 1 undefined on input line
- 100.
-
-
 Overfull \hbox (1.56999pt too wide) has occurred while \output is active
 [] 
  []
@@ -1469,38 +1465,39 @@ Overfull \hbox (1.56999pt too wide) has occurred while \output is active
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 117
+Package natbib Warning: Citation `nurbs_book' on page 2 undefined on input line
+ 109.
+
+
+Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 126
 .
 
 
-Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 122
+Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 131
 .
 
 
-LaTeX Warning: Reference `B-splines' on page 2 undefined on input line 122.
-
-
-Package natbib Warning: Citation `adaptiveNurbs' on page 2 undefined on input l
-ine 129.
-
-
-LaTeX Warning: Reference `' on page 2 undefined on input line 139.
+LaTeX Warning: Reference `B-splines' on page 2 undefined on input line 131.
 
 LaTeX Font Info:    Font shape `T1/stix2/m/sl' in size <10> not available
-(Font)              Font shape `T1/stix2/m/it' tried instead on input line 142.
+(Font)              Font shape `T1/stix2/m/it' tried instead on input line 136.
 
 [2]
+
+Package natbib Warning: Citation `adaptiveNurbs' on page 3 undefined on input l
+ine 138.
+
 
 Package natbib Warning: There were undefined citations.
 
 [3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 157.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 157.
  (./article.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 148.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 157.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 157.
 Package rerunfilecheck Info: File `article.out' has not changed.
-(rerunfilecheck)             Checksum: E9BC3E04D98738337A0C164F893AE4A6;1272.
+(rerunfilecheck)             Checksum: D3103CDA29AB6FD4408335F26C666E90;1272.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1509,22 +1506,22 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 148.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 157.
  ) 
 Here is how much of TeX's memory you used:
- 33638 strings out of 492649
- 754110 string characters out of 6129621
- 1017977 words of memory out of 5000000
- 36858 multiletter control sequences out of 15000+600000
- 114614 words of font info for 123 fonts, out of 8000000 for 9000
+ 33644 strings out of 492649
+ 754215 string characters out of 6129621
+ 1018977 words of memory out of 5000000
+ 36859 multiletter control sequences out of 15000+600000
+ 114928 words of font info for 125 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 78i,9n,136p,724b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathbb.enc}{/usr/local/texliv
-e/texmf-local/fonts/enc/stix2-mathrm-bold.enc}{/usr/local/texlive/texmf-local/f
-onts/enc/stix2-mathcal.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-math
-ex.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathrm.enc}{/usr/local/t
-exlive/texmf-local/fonts/enc/stix2-mathit.enc}{/usr/local/texlive/2018/texmf-di
-st/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/local/texlive/texmf-local/fon
+ 78i,9n,136p,793b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathex.enc}{/usr/local/texliv
+e/texmf-local/fonts/enc/stix2-mathbb.enc}{/usr/local/texlive/texmf-local/fonts/
+enc/stix2-mathcal.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-su
+per/cm-super-t1.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathrm-bold
+.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathit.enc}{/usr/local/tex
+live/texmf-local/fonts/enc/stix2-mathrm.enc}{/usr/local/texlive/texmf-local/fon
 ts/enc/stix2-t1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix
 2/STIX2Math.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix2/ST
 IX2Text-Bold.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix2/S
@@ -1532,10 +1529,10 @@ TIX2Text-Italic.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix
 2/STIX2Text-Regular.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
 cm-super/sfss0500.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm
 -super/sftt0800.pfb>
-Output written on article.pdf (3 pages, 701903 bytes).
+Output written on article.pdf (3 pages, 704289 bytes).
 PDF statistics:
- 153 PDF objects out of 1000 (max. 8388607)
- 140 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
+ 154 PDF objects out of 1000 (max. 8388607)
+ 141 compressed objects within 2 object streams
+ 30 named destinations out of 1000 (max. 500000)
  11933 words of extra memory for PDF output out of 12000 (max. 10000000)
 

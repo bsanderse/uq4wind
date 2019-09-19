@@ -88,11 +88,20 @@ Wind energy, global sensitivity analysis, UQ, aeroelastic models
 \subsection{BEM models}
 \subsection{Input parameters of aeroelastic models}
 \section{Global sensitivity analysis}
-The main objective of sensitivity analysis is to quantify the relative significance of individual inputs (or their combinations) and how variations in input parameters (or their combinations) affects the output of interest. In engineering, sensitivity analysis can be employed for a number of reasons. It can be used to determine the stability and robustness of a computational model with respect to input parameters. Sensitivity analysis can be used for simplification of stochastic models by fixing the insensitive parameters. It can also be further used to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters.
+The main objective of sensitivity analysis is to quantify the relative significance of individual inputs (or in combination) and how variations in input values affects the output of interest. In engineering, sensitivity analysis can be employed for a number of reasons: to determine the stability and robustness of a computational model with respect to input parameters, for simplification of stochastic models by fixing the insensitive parameters, and to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters.
 
-Sensitivity analysis techniques can be broadly classified as local and global methods, see \cite{ralphSmith}. Within local sensitivity analysis, individual parameters are perturbed around their nominal values allowing for the description of output variability in a small neighbourhood of nominal input values. % Global sensitivity analysis, on the other hand, 
+Sensitivity analysis techniques can be classified as local and global methods, see \cite{ralphSmith}. In local sensitivity analysis, individual parameters are perturbed around their nominal values --- allowing for the description of output variability only in a small neighbourhood of nominal input values. Although, local approaches are widely employed due to their ease of implementation and low computational cost, they are unable to quantify global behavior of nonlinearly parametrized models such as aeroelastic models. Global sensitivity approaches, on the other hand, consider the entire range of input values to compute output sensitivities. Therefore, global sensitivity analysis is more suitable for aeroelastic models considered in this work.  
 
-\subsection{Sobol' indices}
+\subsection{Sobol analysis}
+In this work, we employ variance-based Sobol decomposition to perform global sensitivity analysis. One of the advantages of this method is that the relative importance of input parameters is quantified on a scale of $[0,1]$ known as \emph{Sobol indices}. The main idea of Sobol analysis is to decompose the total variance of the output in term of contributions from individual parameters and their contribution. For the ease of exposition, let us consider a nonlinear model:
+\begin{equation}\label{nonlinear_model}
+Y = f(\mathbf{Z}),
+\end{equation}
+where $\mathbf{Z} = [z_1, z_2, ..., z_M]\in \mathcal{D}_{\mathbf{Z}}\in \mathbb{R}^M$ is the input vector. For simplicity, we assume input parameters are uniformly distributed i.e. $z_i \sim \mathcal{U}(0,1)$ and the support of input set is $\mathcal{D}_\mathbf{Z}  =  [0,1]^M$ where $M$ is the total number input parameters. The Sobol decomposition is defined as:
+\begin{equation}\label{sobol_decomp}
+f(z_1, z_2, ..., z_M) = f_0+\sum_{i=1}^M f_i(z_i) + \sum_{1\leq<i<j\leq M} f_{ij}(z_i,z_j) + ... + f_{1, 2, ..., M}(z_1, z_2, ..., z_M),
+\end{equation}
+The above decomposition is only valid for independent input parameters. 
 \subsubsection{PCE Ordinary Least Square (PCE\_OLS)}
 \subsubsection{PCE Least Angle Regression (PCE\_LAR)}
 \section{Parametrization of uncertain inputs in the BEM model}
@@ -102,11 +111,11 @@ We use Non-Uniform Rational Basis Splines (NURBS) \cite{nurbs_book} to perturb t
 \subsubsection{NURBS based perturbation}
 The value of NURBS curve at each location $x$ is computed using a weighted sum of $N$ basis functions (or B-splines):
 \begin{equation}\label{NURB_curve}
-S(x)  = \sum_{i=1}^{N} c_iB_{i,p}(x),
+S(x)  = \sum_{i=1}^{N} c_i B_{i,p}(x),
 \end{equation}
-where $S(x)$ is the value of the curve at location $x$, $c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N = m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
+where $S(x)$ is the value of the curve at location $x, c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N = m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
 
-The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-spline ($p=2$) using the linear B-spline ($p=1$); cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_1, t_2, ..., t_{m}$, the B-spline of degree 0 is defined as:
+The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-splines ($p=2$) using linear B-splines ($p=1$), cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_1, t_2, ..., t_{m}$, the B-spline of degree 0 is defined as:
 \begin{equation}\label{linearBspline}
 B_{i,0}(x) :=
 \begin{cases}
@@ -131,12 +140,12 @@ Once the control points are obtained, we can derive the approximate reference cu
 \frac{||S_N - S_{ref}||}{||S_{ref}||} <\varepsilon.
 \end{equation}
 More advanced approaches, monotonicity preserving methods, etc??
-\begin{remark}
-How to chose $x$?
-\end{remark}
-The final step is to introduce uncertainty in the above computed control points by associating a probability distribution.
-
-The steps to obtained perturbed samples from a given reference curve is outlined in Fig. \ref{}.
+%\begin{remark}
+%How to chose $x$?
+%\end{remark}
+%The final step is to introduce uncertainty in the above computed control points by associating a probability distribution.
+%
+%The steps to obtained perturbed samples from a given reference curve is outlined in Fig. \ref{}.
 \subsection{Model uncertainty}
 \subsection{Wind velocity}
 \section{Description of test case}
