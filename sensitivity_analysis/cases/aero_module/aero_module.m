@@ -24,7 +24,7 @@ thickness = computeThickness(1, randVecThickness, P{31}, 0); % computeThickness 
 
 
 %% Get one random samples for YAWANGLE
-YAWANGLE = P{20} + P{35}.*X(end);
+YAWANGLE = X(end);
 %% Write the random data into the input file of AERO module
 writeAeroModuleInput(P{1},  P{2},  P{10}, P{3},  chord, ...
                      thickness./chord,  twist, P{7},  P{8},  P{9}, ... 

@@ -12,7 +12,7 @@ SobolOpts.Sobol.Order = 1;
 
 %% initialize UQlab
 % add path
-addpath(genpath('../../UQLabCore_Rel1.0.0/'));
+addpath(genpath([pwd,'/UQLabCore_Rel1.0.0/']));
 % start uqlab
 uqlab
 %% process input files
@@ -55,9 +55,10 @@ if (find(strcmp(methods,'MC')))
             
             disp(NsamplesMC(i));
             % get random samples ('experimental design')
-            X_ED = uq_getSample(NsamplesMC(i), 'MC') ;
+            X_ED = uq_getSample(NsamplesMC(i), 'MC');
+            
             % evaluate model at sample
-            Y_ED = uq_evalModel(myModel,X_ED) ;
+            Y_ED = uq_evalModel(myModel,X_ED);
             
             % moments of solution
             mean_MC(k,i) = mean(Y_ED);
@@ -68,10 +69,10 @@ if (find(strcmp(methods,'MC')))
             SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);
             SobolResults_MC            = SobolAnalysis_MC.Results;
             Sobol_MC_FirstOrder(k,i,1:ndim) = SobolResults_MC.FirstOrder;
-            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;
-            
+            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;         
         end
-    end   
+    end
+    
     % take average over first dimension (multiple MC runs)
     AVG_Sobol_MC_FirstOrder = squeeze(mean(Sobol_MC_FirstOrder,1));
     AVG_Sobol_MC_Total      = squeeze(mean(Sobol_MC_Total,1));

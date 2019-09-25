@@ -7,16 +7,14 @@ P ={};
 %% Get turbine data and uncertain input specifications
 [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, NRCP_TWIST, ...
-          NRCP_CHORD,NRCP_THICKNESS, PERTURBATION_TWIST, PERTURBATION_CHORD, ...
-          PERTURBATION_THICKNESS, INDEX_TWIST,INDEX_CHORD,INDEX_THICKNESS, YAW_VARIANCE]  = turbuineData();
+          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI]  = turbuineData();
 
 %% Other parameters related to AERO module software
 % Top and the end of AeroPower.dat file
 startRow = 2;
 endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
 % Location where the AERO module is stored
-folder ='C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\';
+folder =[pwd,'\ECNAero2CWI\'];
 
 %% Populate the elements of P. The order of elements in P should not be changed
 P{1} = AEROMODEL; 
@@ -44,13 +42,6 @@ P{22} = ZNAC2HUB;
 P{23} = startRow;
 P{24} = endRow;
 P{25} = folder;
-P{26} = NRCP_TWIST;
-P{27} = NRCP_CHORD;
-P{28} = NRCP_THICKNESS;
-P{29} = PERTURBATION_TWIST;
-P{30} = PERTURBATION_CHORD;
-P{31} = PERTURBATION_THICKNESS;
-P{32} = INDEX_TWIST;
-P{33} = INDEX_CHORD;
-P{34} = INDEX_THICKNESS;
-P{35} = YAW_VARIANCE;
+P{26} = Input;
+P{27} = uncertain_params;
+P{28} = QoI;

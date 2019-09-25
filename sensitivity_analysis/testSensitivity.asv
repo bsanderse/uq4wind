@@ -12,7 +12,7 @@ SobolOpts.Sobol.Order = 1;
 
 %% initialize UQlab
 % add path
-addpath(genpath('../../UQLabCore_Rel1.0.0/'));
+addpath(genpath([pwd,'/UQLabCore_Rel1.0.0/']));
 % start uqlab
 uqlab
 %% process input files
@@ -68,10 +68,10 @@ if (find(strcmp(methods,'MC')))
             SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);
             SobolResults_MC            = SobolAnalysis_MC.Results;
             Sobol_MC_FirstOrder(k,i,1:ndim) = SobolResults_MC.FirstOrder;
-            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;
-            
+            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;         
         end
-    end   
+    end
+    
     % take average over first dimension (multiple MC runs)
     AVG_Sobol_MC_FirstOrder = squeeze(mean(Sobol_MC_FirstOrder,1));
     AVG_Sobol_MC_Total      = squeeze(mean(Sobol_MC_Total,1));
@@ -163,7 +163,7 @@ if (find(strcmp(methods,'PCE_OLS')))
     % specify array of possible degrees;
     % the degree with the lowest Leave-One-Out cross-validation error (LOO error)
     % is automatically selected:
-    metamodelOLS.Degree    = 1:6;
+    metamodelOLS.Degree    = 1:4;
     
     % if there are issues with LOO, try the following: metamodelOLS.OLS.ModifiedLOO = 0;
     % note that default sampling is LHS, this can be changed (see below)
@@ -232,7 +232,7 @@ if (find(strcmp(methods,'PCE_LARS')))
     metamodelLARS.Type      = 'Metamodel';
     metamodelLARS.MetaType  = 'PCE';
     metamodelLARS.Method    = 'LARS';
-    metamodelLARS.Degree    = 1:6; % this automatically switches on degree adaptive PCE
+    metamodelLARS.Degree    = 1:4; % this automatically switches on degree adaptive PCE
     metamodelLARS.TruncOptions.qNorm = 0.75;
     
     % as there is randomness in the experimental design, we can 
@@ -255,7 +255,7 @@ if (find(strcmp(methods,'PCE_LARS')))
             % moments of solution            
             mean_LARS(k,i) = myPCE_LARS.PCE.Moments.Mean;
             std_LARS(k,i)  = sqrt(myPCE_LARS.PCE.Moments.Var);
-
+ 
             % Sobol analysis
             % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
             SobolAnalysis_LARS    = uq_createAnalysis(SobolOpts);
@@ -338,30 +338,29 @@ end
 
 
 %% Convergence of Sobol indices
-
 figure
 cmap = get(gca,'ColorOrder');
 
 if (find(strcmp(methods,'MC')))
-    semilogx(NsamplesMC', Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+    semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
      hold on
-    semilogx(NsamplesMC', Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));
+    semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));
    
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
+    semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
     hold on
-    semilogx(NsamplesQuad', Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
+    semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
 end
 if (find(strcmp(methods,'PCE_OLS')))
-    semilogx(NsamplesOLS, Sobol_OLS_Total(:, 1:end-1), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
+    semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
     hold on
-    semilogx(NsamplesOLS, Sobol_OLS_Total(:, end), 'o-','Linewidth', 2,'Color', cmap(3,:));
+    semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, end), 'o-','Linewidth', 2,'Color', cmap(3,:));
 end
 if (find(strcmp(methods,'PCE_LARS')))
-    semilogx(NsamplesLARS, Sobol_LARS_Total(:, 1:end-1), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
+    semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
     hold on
-    semilogx(NsamplesLARS, Sobol_LARS_Total(:,end), 'd-','Linewidth', 2,'Color', cmap(4,:));
+    semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:,end), 'd-','Linewidth', 2,'Color', cmap(4,:));
 end
 xlabel('N') % Add proper labelling and a legend
 legend(methods, 'Interpreter', 'none')
@@ -379,27 +378,27 @@ bar_vec   = 1:n_methods;
 coords    = (bar_vec - mean(bar_vec))*bar_width;
 k         = 1;
 if (find(strcmp(methods,'MC')))
-    uq_bar((1:ndim)+coords(k), Sobol_MC_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    uq_bar((1:ndim)+coords(k), Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+ coords(k), AVG_Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_OLS')))
-    uq_bar((1:ndim)+coords(k), Sobol_OLS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 if (find(strcmp(methods,'PCE_LARS')))
-    uq_bar((1:ndim)+coords(k), Sobol_LARS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 
 % uq_bar((1:ndim)+0.25, mySobolResultsLRA.Total, 0.25,...
 %     'FaceColor', cm(64,:), 'EdgeColor', 'none')
 % uq_setInterpreters(gca)
-set(gca, 'XTick', 1:length(Input.Marginals),...
-    'XTickLabel', SobolResults_Quad.VariableNames, 'FontSize', 14)
+% set(gca, 'XTick', 1:length(Input.Marginals),...
+%     'XTickLabel', SobolResults_Quad.VariableNames, 'FontSize', 14)
 
 % uq_legend({...
 %     sprintf('MC based (%.0e simulations)', NsamplesMC(end)),...
