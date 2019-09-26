@@ -1,16 +1,47 @@
-function writeAeroModuleInput(AEROMODEL,TURBINETYPE,vectorLength,...
-                              zB, chord, t_by_c, twist, C14, xB, yB,... 
-                              BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, RPM, ...
-                              PITCHANGLE, TIMESTEP, XNAC2HUB, TEND, YAWANGLE,...
-                              NROFBEMELEMENTS, ZNAC2HUB, folder)
+function writeAeroModuleInput(X,P)
+% This routine add the random input to the input.txt file used for Aero module. 
+%% ===========Get Twist samples===================
+ndim = length(P{26});
+TWIST_INDEX = [];
+X_TWIST = [];
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'Twist'))
+        TWIST_INDEX = [TWIST_INDEX P{26}{i}{2}];
+        X_TWIST = [X_TWIST X(i)];
+    end
+end
+twist = computeTwist(1, X_TWIST, 0.2*ones(X_TWIST), 0); % computeTwist routine uses the specifications of NM80 turbine by default
 
+%% ===========Get Chord samples===================
+CHORD_INDEX = [];
+X_CHORD = [];
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'Chord'))
+        CHORD_INDEX = [CHORD_INDEX P{26}{i}{2}];
+        X_CHORD = [X_CHORD X(i)];
+    end
+end
+chord = computeChord(1, X_CHORD, 0.2*ones(X_CHORD), 0); % computeTwist routine uses the specifications of NM80 turbine by default
+
+%% ===========Get Thickness samples===============
+THICKNESS_INDEX = [];
+X_THICKNESS = [];
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'Thicknes'))
+        THICKNESS_INDEX = [THICKNESS_INDEX P{26}{i}{2}];
+        X_THICKNESS = [X_THICKNESS X(i)];
+    end
+end
+thickness = computeThickness(1, X_THICKNESS, 0.2*ones(X_THICKNESS), 0); % computeTwist routine uses the specifications of NM80 turbine by default
+
+                          
 filename = [folder,'input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
-fprintf(fid,'AEROMODEL                        %d	! 1:BEM 2: AWSM\n', AEROMODEL); 
-fprintf(fid,'!TURBINETYPE                     %d	! 1:HAWT 2: VAWT\n', TURBINETYPE);
+fprintf(fid,'AEROMODEL                        %d	! 1:BEM 2: AWSM\n', P{1}); 
+fprintf(fid,'!TURBINETYPE                     %d	! 1:HAWT 2: VAWT\n', P{2});
 fprintf(fid,'!INCLUDE                         specialist_input.txt\n');
 fprintf(fid,'!INTERPOL                        2  	! 1:Linear 2: Spline\n');
 fprintf(fid,'LOGFILENAME                      logfile.dat\n');
@@ -22,25 +53,25 @@ fprintf(fid,'!------------------------------------------------------------------
 fprintf(fid,'AEROPROPS\n');
 fprintf(fid,'!zB [m] chord [m] t/c [-] twist [deg]  C14 [%%c] xB [m] yB [m]\n');
 for i = 1:vectorLength
-    fprintf(fid,'%f    %f    %f    %f    %f    %f    %f \n', zB(i), chord(i), t_by_c(i), twist(i), C14(i), xB(i), yB(i));
+    fprintf(fid,'%f    %f    %f    %f    %f    %f    %f \n', P{3}(i), chord(i), thickness(i)/chord(i), twist(i), P{7}(i), P{8}(i), P{9}(i));
 end
-fprintf(fid,'BLADELENGTH                     %f\n',BLADELENGTH);
-fprintf(fid,'BLADEROOT                       %f\n',BLADEROOT);
+fprintf(fid,'BLADELENGTH                     %f\n',P{11});
+fprintf(fid,'BLADEROOT                       %f\n',P{12});
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! Stand alone  -------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'CONEANGLE                       0.0\n');
-fprintf(fid,'HUBHEIGHT                       %f\n',HUBHEIGHT);
+fprintf(fid,'HUBHEIGHT                       %f\n',P{13});
 fprintf(fid,'NROFBLADES                      3\n');     
-fprintf(fid,'PITCHANGLE                      %f\n',PITCHANGLE);
-fprintf(fid,'RPM                             %f\n',RPM);
+fprintf(fid,'PITCHANGLE                      %f\n',P{15});
+fprintf(fid,'RPM                             %f\n',P{17});
 fprintf(fid,'TBEGIN                          0.0\n');
-fprintf(fid,'TEND                            %6.15f		!~3D\n',TEND);
-fprintf(fid,'TILTANGLE                       %f\n', TILTANGLE);
-fprintf(fid,'TIMESTEP                        %6.15f	!10deg\n',TIMESTEP);
-fprintf(fid,'XNAC2HUB                       %f\n', XNAC2HUB);
-fprintf(fid,'YAWANGLE                        %f\n', YAWANGLE);
-fprintf(fid,'ZNAC2HUB                        %f\n', ZNAC2HUB);
+fprintf(fid,'TEND                            %6.15f		!~3D\n',P{18});
+fprintf(fid,'TILTANGLE                       %f\n', P{14});
+fprintf(fid,'TIMESTEP                        %6.15f	!10deg\n',P{19});
+fprintf(fid,'XNAC2HUB                        %f\n', P{16});
+fprintf(fid,'YAWANGLE                        %f\n', P{20});
+fprintf(fid,'ZNAC2HUB                        %f\n', P{22});
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! Airfoil data -------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');              
@@ -72,7 +103,7 @@ fprintf(fid,'!------------------------------------------------------------------
 % fprintf(fid,'DEBUGFILE                       1\n');
 % fprintf(fid,'DYNINFLOW                       1\n');
 % fprintf(fid,'INDUCTIONDRAG                   0\n');
-fprintf(fid,'NROFBEMELEMENTS                   %d\n', NROFBEMELEMENTS);
+fprintf(fid,'NROFBEMELEMENTS                   %d\n', P{21});
 % fprintf(fid,'PRANDTLROOT                     1\n');             
 % fprintf(fid,'PRANDTLTIP                      1\n');                                         
 % fprintf(fid,'!---------------------------------------------------------------------\n');

@@ -14,8 +14,6 @@ P ={};
 startRow = 2;
 endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
 % Location where the AERO module is stored
-folder =[pwd,'\ECNAero2CWI\'];
-
 %% Populate the elements of P. The order of elements in P should not be changed
 P{1} = AEROMODEL; 
 P{2} = TURBINETYPE;
@@ -41,7 +39,6 @@ P{21} = NROFBEMELEMENTS;
 P{22} = ZNAC2HUB;
 P{23} = startRow;
 P{24} = endRow;
-P{25} = folder;
-P{26} = Input;
-P{27} = uncertain_params;
-P{28} = QoI;
+P{25} = Input;
+P{26} = uncertain_params;
+P{27} = QoI;

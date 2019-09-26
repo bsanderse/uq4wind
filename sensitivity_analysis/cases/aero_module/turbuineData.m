@@ -99,29 +99,16 @@ Input.Marginals(counter).Type = 'Gaussian';
 Input.Marginals(counter).Parameters = [YAWANGLE, YAW_Std];
 Input.Marginals(counter).Bounds = [YAW_LB YAW_UB]; 
 
+%%=======================PITCH==================
+%%=======================RPM====================
+%%=======================WINDSPEED==============
 
-% Specify uncertain parameters to consider in the sensitivity analysis
-uncertain_params = {'Twist2','Twist3','Twist4','Twist5','Twist6','Twist7','Chord2','Chord4','Chord6','Chord8', ...
-                    'Thickness2','Thickness3','Thickness4','Thickness5','YAW'};
+% Specify uncertain parameters {name,index}to consider in the sensitivity analysis
+uncertain_params = {{'Twist',2},{'Twist',3},{'Twist',4},{'Twist',5},{'Twist',6},{'Twist',7},{'Chord',2},{'Chord',4},{'Chord',6},{'Chord',8}, ...
+                    {'Thickness',2},{'Thickness',3},{'Thickness',4},{'Thickness',5},{'YAW',0}};
 
 % Specify quantity of interest
 QoI = 'Power'; % 'Axial_Force'
 
-
-% % fraction of perturbation for each control points, 0.2 corresponds to plus
-% % minus 10% perturbation on the baseline values
-% PERTURBATION_TWIST = 0.2*ones(1,NRCP_TWIST);  
-% PERTURBATION_CHORD = 0.2*ones(1,NRCP_CHORD);  
-% PERTURBATION_THICKNESS = 0.2*ones(1,NRCP_THICKNESS);
-% 
-% % Index at which we want to introduce the uncertainty. This is to control
-% % the number of uncertain paramters. We only introduce uncertainties in the
-% % selected control points given by INDEX_xyz variables 
-% 
-% INDEX_TWIST = [2 3 4 5 6 7]; % INDEX_TWIST = 1:NRCP_TWIST
-% INDEX_CHORD = [2 4 6 8]; % INDEX_CHORD = 1:NRCP_CHORD
-% INDEX_THICKNESS = [2 3 4 5]; % INDEX_THICKNESS = 1:PERTURBATION_THICKNESS
-% % Variance for Yaw angle, assuming a gaussian distribution, the mean is equal to nominal YAWANGLE value
-% YAW_VARIANCE = 2;
 
 
