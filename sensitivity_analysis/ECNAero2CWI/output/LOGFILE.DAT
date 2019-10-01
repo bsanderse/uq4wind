@@ -1,17 +1,17 @@
 ************************************************************
 ************************************************************
 **** ECN Aero-Module version nr    252_CWI Windows 64-bit       
-**** Calculation started at DD-MM-YY hh:mm 14-09-19 13:22
+**** Calculation started at DD-MM-YY hh:mm 01-10-19 15:38
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
-INPUTFILENAME            C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\input.txt
-INCLUDEFILENAME          C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\
-WINDFILENAME             C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\WIND.DAT
-COEFFFILENAME            C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\AIRFOILS.DAT
-LOGFILENAME              C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\output\LOGFILE.DAT
-AERORESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\output\aeroresultsout.dat
-GEOMRESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\ECNAero2CWI\output\geomresultsout.dat
+INPUTFILENAME            C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\input.txt
+INCLUDEFILENAME          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\
+WINDFILENAME             C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\WIND.DAT
+COEFFFILENAME            C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\AIRFOILS.DAT
+LOGFILENAME              C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\output\LOGFILE.DAT
+AERORESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\output\aeroresultsout.dat
+GEOMRESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\ECNAero2CWI\output\geomresultsout.dat
  ----------------GeneralData-----------------------------
 AEROMODEL                  1
 TURBINETYPE                1
@@ -22,7 +22,7 @@ DEBUGFILE                  1
 SUBITERFLAG                1
 BLADELENGTH               38.8000
 BLADEROOT                  1.2400
-AEROROOT                   4.6948
+AEROROOT                   4.1306
  ----------------AeroData--------------------------------
 AOAEVAL                    1
 CORR3DTYPE                 0
@@ -93,47 +93,47 @@ TEND                      30.0000
 TILTANGLE                  0.0000
 TIMESTEP                   0.1355
 XNAC2HUB                  -4.0300
-YAWANGLE                  -4.5114
+YAWANGLE                  -3.9581
 ZNAC2HUB                   1.6000
  ----------------AeroProp Table-----------------------------
           zB [m]       chord [m]   thickness [-]     twist [deg] pitch axis [%c]          xB [m]          yB [m]      rCurvi [m]     Alpha [deg]      Beta [deg]
            0.000           2.420           1.000           0.000         -25.000           0.000           0.000           0.605          -0.000           0.000
-           2.000           2.429           0.958           4.967         -25.000           0.001           0.015           2.614          -0.750           0.088
-           4.000           2.536           0.842           6.540         -25.000           0.006           0.052           4.618          -1.062           0.159
-           6.000           2.739           0.672           8.105         -25.000           0.013           0.090           6.619          -1.058           0.209
-           8.000           2.919           0.524           8.984         -25.000           0.021           0.126           8.619          -1.048           0.062
-          10.000           2.993           0.423           9.834         -25.000           0.017           0.163          10.618          -1.005          -0.330
-          12.000           2.960           0.353           8.659         -25.000          -0.002           0.196          12.612          -0.561          -0.781
-          14.000           2.860           0.301           7.009         -25.000          -0.038           0.202          14.607          -0.155          -1.076
-          16.000           2.713           0.264           5.364         -25.000          -0.077           0.207          16.608          -0.148          -1.230
-          18.000           2.519           0.240           4.364         -25.000          -0.124           0.212          18.608          -0.080          -1.444
-          20.000           2.279           0.232           3.368         -25.000          -0.178           0.213          20.608           0.037          -1.723
-          22.000           2.063           0.230           2.846         -25.000          -0.244           0.210          22.609           0.154          -2.081
-          24.000           1.915           0.222           2.323         -25.000          -0.324           0.202          24.609           0.258          -2.510
-          26.000           1.838           0.208           1.800         -25.000          -0.419           0.192          26.611           0.321          -2.999
-          28.000           1.818           0.191           1.280         -25.000          -0.533           0.180          28.614           0.345          -3.550
-          30.000           1.757           0.180           0.930         -25.000          -0.667           0.168          30.619           0.347          -4.157
-          32.000           1.634           0.175           0.579         -25.000          -0.824           0.155          32.625           0.381          -4.797
-          34.000           1.447           0.179           0.230         -25.000          -1.003           0.141          34.632           0.529          -5.411
-          36.000           1.162           0.181           0.076         -25.000          -1.203           0.118          36.641           0.996          -5.949
-          37.000           0.971           0.175           0.020         -25.000          -1.309           0.098          37.645           1.610          -6.089
-          38.000           0.586           0.169           0.930         -25.000          -1.416           0.062          38.653           2.771          -6.167
-          38.400           0.351           0.166           3.530         -25.000          -1.459           0.041          39.057           4.422          -6.151
-          38.800           0.070           0.148           6.130         -25.000          -1.502           0.000          39.465           5.779          -6.112
+           2.000           2.517           0.879           5.413         -25.000           0.001           0.015           2.614          -0.750           0.088
+           4.000           2.679           0.744           6.519         -25.000           0.006           0.052           4.618          -1.062           0.159
+           6.000           2.905           0.605           7.625         -25.000           0.013           0.090           6.620          -1.058           0.209
+           8.000           3.075           0.494           8.746         -25.000           0.021           0.126           8.620          -1.048           0.062
+          10.000           3.105           0.414           9.847         -25.000           0.017           0.163          10.619          -1.005          -0.330
+          12.000           2.997           0.353           9.462         -25.000          -0.002           0.196          12.613          -0.561          -0.781
+          14.000           2.837           0.303           7.259         -25.000          -0.038           0.202          14.608          -0.155          -1.076
+          16.000           2.667           0.264           5.065         -25.000          -0.077           0.207          16.609          -0.148          -1.230
+          18.000           2.490           0.236           4.187         -25.000          -0.124           0.212          18.609          -0.080          -1.444
+          20.000           2.304           0.223           3.312         -25.000          -0.178           0.213          20.609           0.037          -1.723
+          22.000           2.138           0.216           2.804         -25.000          -0.244           0.210          22.609           0.154          -2.081
+          24.000           2.011           0.207           2.295         -25.000          -0.324           0.202          24.610           0.258          -2.510
+          26.000           1.923           0.196           1.787         -25.000          -0.419           0.192          26.611           0.321          -2.999
+          28.000           1.866           0.184           1.280         -25.000          -0.533           0.180          28.614           0.345          -3.550
+          30.000           1.775           0.177           0.930         -25.000          -0.667           0.168          30.619           0.347          -4.157
+          32.000           1.635           0.175           0.579         -25.000          -0.824           0.155          32.625           0.381          -4.797
+          34.000           1.446           0.179           0.230         -25.000          -1.003           0.141          34.633           0.529          -5.411
+          36.000           1.183           0.177           0.076         -25.000          -1.203           0.118          36.641           0.996          -5.949
+          37.000           1.014           0.168           0.020         -25.000          -1.309           0.098          37.645           1.610          -6.089
+          38.000           0.625           0.159           0.930         -25.000          -1.416           0.062          38.652           2.771          -6.167
+          38.400           0.374           0.156           3.530         -25.000          -1.459           0.041          39.057           4.422          -6.151
+          38.800           0.070           0.148           6.130         -25.000          -1.502           0.000          39.467           5.779          -6.112
  ----------------Used variables at 1st iteration--------------------------
                             B1        B2        B3
-     Yaw angle [deg]     -4.51     -4.51     -4.51
-    Tilt angle [deg]      0.00     -0.00      0.00
+     Yaw angle [deg]     -3.96     -3.96     -3.96
+    Tilt angle [deg]      0.00     -0.00     -0.00
     Cone angle [deg]      0.00      0.00      0.00
  Azimuth angle [deg]      0.00   -120.00    120.00
-Aero root radius [m]      5.33      5.33      5.33
+Aero root radius [m]      4.76      4.76      4.76
      Root radius [m]      1.24      1.24      1.24
       Tip radius [m]     40.04     40.04     40.04
   Rotorspeed [rad/s]      1.29      1.29      1.29
        Hubheight [m]     57.19     57.19     57.19
  
                              u         v         w
- Windspeed@hub [m/s]      6.10      0.00      0.00
+ Windspeed@hub [m/s]      5.11      0.00      0.00
                              x         y         z
       Tower base [m]      0.00      0.00      0.00
        Tower top [m]      0.00      0.00     55.59

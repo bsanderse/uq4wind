@@ -3,39 +3,71 @@ function writeAeroModuleInput(X,P)
 %% ===========Get Twist samples===================
 ndim = length(P{26});
 TWIST_INDEX = [];
+TWIST_PERTURB = [];
 X_TWIST = [];
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'Twist'))
         TWIST_INDEX = [TWIST_INDEX P{26}{i}{2}];
+        TWIST_PERTURB = [TWIST_PERTURB P{26}{i}{3}];
         X_TWIST = [X_TWIST X(i)];
     end
 end
-twist = computeTwist(1, X_TWIST, 0.2*ones(X_TWIST), 0); % computeTwist routine uses the specifications of NM80 turbine by default
 
+if(length(TWIST_PERTURB)>1)
+    twist = computeTwist(1, TWIST_INDEX, X_TWIST, TWIST_PERTURB, 0); % computeTwist routine uses the specifications of NM80 turbine by default
+else
+    twist = P{6};
+end
 %% ===========Get Chord samples===================
 CHORD_INDEX = [];
+CHORD_PERTURB = [];
 X_CHORD = [];
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'Chord'))
         CHORD_INDEX = [CHORD_INDEX P{26}{i}{2}];
+        CHORD_PERTURB = [CHORD_PERTURB P{26}{i}{3}];
         X_CHORD = [X_CHORD X(i)];
     end
 end
-chord = computeChord(1, X_CHORD, 0.2*ones(X_CHORD), 0); % computeTwist routine uses the specifications of NM80 turbine by default
-
+if(length(CHORD_PERTURB)>1)
+    chord = computeChord(1,CHORD_INDEX, X_CHORD, CHORD_PERTURB, 0); % computeChord routine uses the specifications of NM80 turbine by default
+else
+    chord = P{4};
+end
 %% ===========Get Thickness samples===============
 THICKNESS_INDEX = [];
+THICKNESS_PERTURB = [];
 X_THICKNESS = [];
 for i=1:ndim
-    if(strcmp(P{26}{i}{1},'Thicknes'))
+    if(strcmp(P{26}{i}{1},'Thickness'))
         THICKNESS_INDEX = [THICKNESS_INDEX P{26}{i}{2}];
+        THICKNESS_PERTURB = [THICKNESS_PERTURB P{26}{i}{3}];
         X_THICKNESS = [X_THICKNESS X(i)];
     end
 end
-thickness = computeThickness(1, X_THICKNESS, 0.2*ones(X_THICKNESS), 0); % computeTwist routine uses the specifications of NM80 turbine by default
+if(length(THICKNESS_INDEX)>1)
+    thickness = computeThickness(1, THICKNESS_INDEX, X_THICKNESS, THICKNESS_PERTURB, 0); % computeThickness routine uses the specifications of NM80 turbine by default
+else
+    thickness =P{5}*P{4};
+end
 
-                          
-filename = [folder,'input.txt'];
+%% ===========Get YAW sample===============
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'YAW'))
+        X_YAW = X(i);
+    end
+end
+
+
+%% ===========Get YAW sample===============
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'WINDSPEED'))
+        X_WindSpeed = X(i);
+    end
+end
+%% Write to the input.txt file for aeromodule
+
+filename = [pwd,'\ECNAero2CWI\input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
@@ -52,7 +84,7 @@ fprintf(fid,'! Blade definition ------------------------------------------------
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'AEROPROPS\n');
 fprintf(fid,'!zB [m] chord [m] t/c [-] twist [deg]  C14 [%%c] xB [m] yB [m]\n');
-for i = 1:vectorLength
+for i = 1:P{10}
     fprintf(fid,'%f    %f    %f    %f    %f    %f    %f \n', P{3}(i), chord(i), thickness(i)/chord(i), twist(i), P{7}(i), P{8}(i), P{9}(i));
 end
 fprintf(fid,'BLADELENGTH                     %f\n',P{11});
@@ -70,7 +102,7 @@ fprintf(fid,'TEND                            %6.15f		!~3D\n',P{18});
 fprintf(fid,'TILTANGLE                       %f\n', P{14});
 fprintf(fid,'TIMESTEP                        %6.15f	!10deg\n',P{19});
 fprintf(fid,'XNAC2HUB                        %f\n', P{16});
-fprintf(fid,'YAWANGLE                        %f\n', P{20});
+fprintf(fid,'YAWANGLE                        %f\n', X_YAW);
 fprintf(fid,'ZNAC2HUB                        %f\n', P{22});
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! Airfoil data -------------------------------------------------------\n');
@@ -135,5 +167,15 @@ fprintf(fid,'NROFBEMELEMENTS                   %d\n', P{21});
 % fprintf(fid,'GROUNDFLAG                      0   !0: off 1: on\n');
 % fprintf(fid,'PRSCRBWAKE               	    0\n');
 % fprintf(fid,'CONVECFACTOR			        0\n');
+fclose(fid);
+
+%% Change windspeed file
+filename = [pwd,'\ECNAero2CWI\wind.dat'];
+fid = fopen(filename,'w');
+fprintf(fid,'!time [s]  u [m/s]  v [m/s]  w [m/s]\n');
+fprintf(fid,'%f    %f    %f    %f\n', 0.0,  X_WindSpeed, 0.0, 0.0);
+fprintf(fid,'%f    %f    %f    %f\n', 5.0,  X_WindSpeed, 0.0, 0.0);
+fprintf(fid,'%f    %f    %f    %f\n', 10.0, X_WindSpeed, 0.0, 0.0);
+fprintf(fid,'%f    %f    %f    %f\n', 20.0, X_WindSpeed, 0.0, 0.0);
 fclose(fid);
 end

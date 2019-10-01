@@ -10,9 +10,14 @@ SobolOpts.Type        = 'Sensitivity';
 SobolOpts.Method      = 'Sobol';
 SobolOpts.Sobol.Order = 1;
 
+%% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
+addpath([pwd,'\AEROmoduleWrapper\']);
+addpath([pwd,'\NURBS\']);
+addpath([pwd,'\Geometry\']);
+
 %% initialize UQlab
 % add path
-addpath(genpath([pwd,'/UQLabCore_Rel1.0.0/']));
+addpath(genpath([pwd,'/UQLabCore_Rel1.3.0/']));
 % start uqlab
 uqlab
 %% process input files
