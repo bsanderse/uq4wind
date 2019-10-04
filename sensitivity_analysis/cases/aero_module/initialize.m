@@ -18,17 +18,17 @@ methods = {'PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 % graphs
 MC_repeat = 1;
 % number of samples with MC
-NsamplesMC = [1e1 1e2 1e3 1e4];
+NsamplesMC = [1e1];
 
 % for PCE-Quad, specify the polynomial degrees to be tested
 DegreesQuad = 1:4; %[1 2 3 4 5 6];
 
 % % for PCE-OLS:
-NsamplesOLS = [16 32 64]; % if not specified, the number of samples from Quad is taken
+NsamplesOLS = [16]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [16 32]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [8192]; % if not specified, the number of samples from Quad is taken
 LARS_repeat = 1; % like MC_repeat
 
 %% Assemble the Input.Marginal for sensitivity analysis by text comparison

@@ -7,14 +7,14 @@ P ={};
 %% Get turbine data and uncertain input specifications
 [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI]  = turbineData();
+          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED]  = turbineData();
 
 %% Other parameters related to AERO module software
 % Top and the end of AeroPower.dat file
 startRow = 2;
 endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
 % Location where the AERO module is stored
-%% Populate the elements of P. The order of elements in P should not be changed
+%% Populate the elements of P. The order of elements in P should not be changed!
 P{1} = AEROMODEL; 
 P{2} = TURBINETYPE;
 P{3} = zB;
@@ -42,3 +42,4 @@ P{24} = endRow;
 P{25} = Input;
 P{26} = uncertain_params;
 P{27} = QoI;
+P{28} = WINDSPEED;

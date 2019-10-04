@@ -283,8 +283,7 @@ if (find(strcmp(methods,'PCE_LARS')))
     end
     
 end
-
-%% postprocessing
+%% ================================== PLOTTING and POSTPROCESSING =========================
 % uq_figure('Position', [50 50 500 400]);
 % myColors = uq_cmap(2);
 
@@ -348,24 +347,31 @@ figure
 cmap = get(gca,'ColorOrder');
 
 if (find(strcmp(methods,'MC')))
-    semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
-     hold on
-    semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));
-   
+    if(size(AVG_Sobol_MC_Total,2)>1)
+        semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+        hold on
+    end
+    semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));  
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
-    hold on
+    if(size(AVG_Sobol_Quad_Total,2)>1)
+        semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
+        hold on
+    end
     semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
 end
 if (find(strcmp(methods,'PCE_OLS')))
-    semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
-    hold on
+    if(size(AVG_Sobol_OLS_Total,2)>1)
+        semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
+        hold on
+    end
     semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, end), 'o-','Linewidth', 2,'Color', cmap(3,:));
 end
 if (find(strcmp(methods,'PCE_LARS')))
-    semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
-    hold on
+    if(size(AVG_Sobol_LARS_Total,2)>1)
+        semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
+        hold on
+    end
     semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:,end), 'd-','Linewidth', 2,'Color', cmap(4,:));
 end
 xlabel('N') % Add proper labelling and a legend
@@ -384,19 +390,34 @@ bar_vec   = 1:n_methods;
 coords    = (bar_vec - mean(bar_vec))*bar_width;
 k         = 1;
 if (find(strcmp(methods,'MC')))
-    uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    if(length(NsamplesMC)==1)
+        uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    else
+        uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    end
     k = k+1;
 end
+
 if (find(strcmp(methods,'PCE_Quad')))
     uq_bar((1:ndim)+ coords(k), AVG_Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
+
 if (find(strcmp(methods,'PCE_OLS')))
-    uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    if(length(NsamplesOLS)==1)
+        uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    else
+       uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none') 
+    end    
     k = k+1;
 end
+
 if (find(strcmp(methods,'PCE_LARS')))
-    uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    if(length(NsamplesLARS)==1)
+        uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    else
+        uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    end
     k = k+1;
 end
 

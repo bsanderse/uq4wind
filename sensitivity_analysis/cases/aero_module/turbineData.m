@@ -1,6 +1,6 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI]  = turbineData()
+          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED]  = turbineData()
 %% Variables of input file extracted from reference test case from DANAERO turbine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -40,7 +40,7 @@ TIMESTEP = 0.135501355;
 YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
-
+WINDSPEED = 6.1;
 %% Define properties of uncertain input in the UQLab format. 
 % We define this for all possible uncertain inputs and finally in the 
 % variable "uncertain_params" we specify which variables to be considered                                    
@@ -89,9 +89,9 @@ end
 
 %% =======================YAW====================
 % Truncated Gaussian
-YAW_Std = 2;  % Standard deviation
-YAW_LB = -10; % Lower bound of trucated Gaussian distribution
-YAW_UB = 10;  % Upper bound of trucated Gaussian distribution
+YAW_Std = 5;  % Standard deviation
+YAW_LB = -30; % Lower bound of trucated Gaussian distribution
+YAW_UB = 30;  % Upper bound of trucated Gaussian distribution
 counter = counter+1;
 Input.Marginals(counter).Name = 'YAW';
 Input.Marginals(counter).Index = ''; % Empty for scalar
@@ -100,12 +100,33 @@ Input.Marginals(counter).Parameters = [YAWANGLE, YAW_Std];
 Input.Marginals(counter).Bounds = [YAW_LB YAW_UB]; 
 
 %% =======================PITCH==================
+% Truncated Gaussian
+PITCHANGLE_Std = 1;  % Standard deviation
+PITCHANGLE_LB = -2; % Lower bound of trucated Gaussian distribution
+PITCHANGLE_UB = 2;  % Upper bound of trucated Gaussian distribution
+counter = counter+1;
+Input.Marginals(counter).Name = 'PITCHANGLE'; 
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [PITCHANGLE, PITCHANGLE_Std];
+Input.Marginals(counter).Bounds = [PITCHANGLE_LB PITCHANGLE_UB];
+
 
 %% =======================RPM====================
+% Truncated Gaussian
+RPM_Std = 1;  % Standard deviation
+RPM_LB = 10; % Lower bound of trucated Gaussian distribution
+RPM_UB = 14;  % Upper bound of trucated Gaussian distribution
+counter = counter+1;
+Input.Marginals(counter).Name = 'RPM';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [RPM, RPM_Std];
+Input.Marginals(counter).Bounds = [RPM_LB RPM_UB]; 
 
 %% =======================WINDSPEED==============
-WindSpeed_scale = 6;
-WindSpeed_shape = 18;
+WindSpeed_scale = 6.1;
+WindSpeed_shape = 50;
 counter = counter + 1;
 Input.Marginals(counter).Name = 'WINDSPEED';
 Input.Marginals(counter).Index = ''; % Empty for scalar
@@ -117,13 +138,18 @@ Input.Marginals(counter).Bounds = ''; % No bound needed for Weibull
 % parameter should be defined in the following format {name,index,rel_perturbation} where
 % rel_pertubation defines the amount of relative perturbation for B-spline curves
 
+
+% uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
+%                 {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
+%                 {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
+%                 {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
+
 uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
-                    {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
-                    {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
-                    {'YAW','',''},{'WINDSPEED','',''}};
+                 {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
+                 {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2}};
 
 % Specify quantity of interest
-QoI = 'Power'; % 'Axial_Force'
+QoI = 'Axial_Force'; % 'Axial_Force' or  'Power'
 
 
 

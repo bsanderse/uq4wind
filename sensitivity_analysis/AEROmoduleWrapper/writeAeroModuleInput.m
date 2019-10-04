@@ -48,10 +48,11 @@ end
 if(length(THICKNESS_INDEX)>1)
     thickness = computeThickness(1, THICKNESS_INDEX, X_THICKNESS, THICKNESS_PERTURB, 0); % computeThickness routine uses the specifications of NM80 turbine by default
 else
-    thickness =P{5}*P{4};
+    thickness =P{5}.*P{4};
 end
 
 %% ===========Get YAW sample===============
+X_YAW = P{20}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'YAW'))
         X_YAW = X(i);
@@ -59,12 +60,30 @@ for i=1:ndim
 end
 
 
-%% ===========Get YAW sample===============
+%% ===========Get windspeed sample===============
+X_WindSpeed = P{28}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'WINDSPEED'))
         X_WindSpeed = X(i);
     end
 end
+
+%% ===========Get RPM sample===============
+X_RPM = P{17}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'RPM'))
+        X_RPM = X(i);
+    end
+end
+
+%% ===========Get RPM sample===============
+X_PITCHANGLE = P{15}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'PITCHANGLE'))
+        X_PITCHANGLE = X(i);
+    end
+end
+
 %% Write to the input.txt file for aeromodule
 
 filename = [pwd,'\ECNAero2CWI\input.txt'];
@@ -95,9 +114,9 @@ fprintf(fid,'!------------------------------------------------------------------
 fprintf(fid,'CONEANGLE                       0.0\n');
 fprintf(fid,'HUBHEIGHT                       %f\n',P{13});
 fprintf(fid,'NROFBLADES                      3\n');     
-fprintf(fid,'PITCHANGLE                      %f\n',P{15});
-fprintf(fid,'RPM                             %f\n',P{17});
-fprintf(fid,'TBEGIN                          0.0\n');
+fprintf(fid,'PITCHANGLE                      %f\n',X_PITCHANGLE);
+fprintf(fid,'RPM                             %f\n',X_RPM);
+fprintf(fid,'TBEGIN                          0.0\n'); 
 fprintf(fid,'TEND                            %6.15f		!~3D\n',P{18});
 fprintf(fid,'TILTANGLE                       %f\n', P{14});
 fprintf(fid,'TIMESTEP                        %6.15f	!10deg\n',P{19});
