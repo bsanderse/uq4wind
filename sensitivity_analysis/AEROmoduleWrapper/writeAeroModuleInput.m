@@ -86,7 +86,7 @@ end
 
 %% Write to the input.txt file for aeromodule
 
-filename = [pwd,'\ECNAero2CWI\input.txt'];
+filename = [pwd,'\AEROmodule\input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
@@ -189,7 +189,7 @@ fprintf(fid,'NROFBEMELEMENTS                   %d\n', P{21});
 fclose(fid);
 
 %% Change windspeed file
-filename = [pwd,'\ECNAero2CWI\wind.dat'];
+filename = [pwd,'\AEROmodule\wind.dat'];
 fid = fopen(filename,'w');
 fprintf(fid,'!time [s]  u [m/s]  v [m/s]  w [m/s]\n');
 fprintf(fid,'%f    %f    %f    %f\n', 0.0,  X_WindSpeed, 0.0, 0.0);

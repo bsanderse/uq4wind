@@ -1,7 +1,0 @@
-UQLabBeta V0.92 => UQLabCore 1.0.0 stable
-Stable release of UQLabCore. 
-
-*New features*
-- Added UQLabCore auto-updater to automatically download the latest version of 
-  UQLabCore as well as the open source UQLabModules
-- Added command line help for most UQLabCore functions

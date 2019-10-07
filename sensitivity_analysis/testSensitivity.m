@@ -17,7 +17,7 @@ addpath([pwd,'\Geometry\']);
 
 %% initialize UQlab
 % add path
-addpath(genpath([pwd,'/UQLabCore_Rel1.3.0/']));
+addpath(genpath([pwd,'/UQLab/']));
 % start uqlab
 uqlab
 %% process input files
