@@ -1,4 +1,7 @@
 %% Sobol indices computed with Monte Carlo and PCE-type methods
+clc
+close all
+clearvars 
 
 caseName = 'aero_module'; % 'airfoil_lift';
 input_file = caseName; % specify directory which contains test case settings and model
