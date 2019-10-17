@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.29)  24 SEP 2019 15:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.29)  17 OCT 2019 08:45
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1083,170 +1083,46 @@ LaTeX Info: Redefining \vdots on input line 1517.
 LaTeX Info: Redefining \cdots on input line 1521.
 LaTeX Info: Redefining \not on input line 2141.
 )
-(/usr/local/texlive/2018/texmf-dist/tex/latex/pgfplots/pgfplots.sty
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
-Package: pgfplots 2018/03/28 v1.16 Data Visualization (1.16)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
-\t@pgfplots@toka=\toks50
-\t@pgfplots@tokb=\toks51
-\t@pgfplots@tokc=\toks52
-\pgfplots@tmpa=\dimen276
-\c@pgfplots@coordindex=\count176
-\c@pgfplots@scanlineindex=\count177
-
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric
-.code.tex))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.c
-ode.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplot
-soldpgfsupp_loader.code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.cod
-e.tex)
-Package pgfplots: loading complementary arithmetics for your pgf version...
-
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplot
-soldpgfsupp_pgflibraryfpu.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplot
-soldpgfsupp_pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count178
-)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplot
-soldpgfsupp_leq.code.tex))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code
-.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/liststructure/pgfplots
-liststructure.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/liststructure/pgfplots
-liststructureext.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/liststructure/pgfplots
-array.code.tex
-\c@pgfplotsarray@tmp=\count179
-)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/liststructure/pgfplots
-matrix.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstable
-shared.code.tex
-\c@pgfplotstable@counta=\count180
-\t@pgfplotstable@a=\toks53
-)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/liststructure/pgfplots
-deque.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.co
-de.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.da
-ta.code.tex))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb
-.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplot
-s.surfshading.code.tex
-\c@pgfplotslibrarysurf@no=\count181
-
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots
-.surfshading.pgfsys-pdftex.def)))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.
-code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.cod
-e.tex))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.c
-ode.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.c
-ode.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandle
-r.code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.
-code.tex)))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.
-tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessin
-g.code.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.cod
-e.tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.
-tex)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex
-)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.te
-x)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
-s/tikzlibrarydecorations.code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/modules/pgfmoduledecoration
-s.code.tex
-\pgfdecoratedcompleteddistance=\dimen277
-\pgfdecoratedremainingdistance=\dimen278
-\pgfdecoratedinputsegmentcompleteddistance=\dimen279
-\pgfdecoratedinputsegmentremainingdistance=\dimen280
-\pgf@decorate@distancetomove=\dimen281
-\pgf@decorate@repeatstate=\count182
-\pgfdecorationsegmentamplitude=\dimen282
-\pgfdecorationsegmentlength=\dimen283
-)
-\tikz@lib@dec@box=\box48
-)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
-s/tikzlibrarydecorations.pathmorphing.code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/libraries/decorations/pgfli
-brarydecorations.pathmorphing.code.tex))
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
-s/tikzlibrarydecorations.pathreplacing.code.tex
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/libraries/decorations/pgfli
-brarydecorations.pathreplacing.code.tex))
-\pgfplots@numplots=\count183
-\pgfplots@xmin@reg=\dimen284
-\pgfplots@xmax@reg=\dimen285
-\pgfplots@ymin@reg=\dimen286
-\pgfplots@ymax@reg=\dimen287
-\pgfplots@zmin@reg=\dimen288
-\pgfplots@zmax@reg=\dimen289
-)
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
-s/tikzlibraryplotmarks.code.tex
-File: tikzlibraryplotmarks.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
-
-(/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmar
-ks.code.tex
-File: pgflibraryplotmarks.code.tex 2015/08/03 v3.0.1a (rcs-revision 1.14)
-))) (./article.aux)
+(./article.aux)
 \openout1 = `article.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 71.
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 71.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 71.
-
-(/usr/local/texlive/2018/texmf-dist/tex/latex/base/ts1cmr.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 69.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 69.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for LS1/stix2/m/n on input line 71.
-LaTeX Font Info:    Try loading font information for LS1+stix2 on input line 71
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for LS1/stix2/m/n on input line 69.
+LaTeX Font Info:    Try loading font information for LS1+stix2 on input line 69
 .
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2.fd
 File: ls1stix2.fd 2018/04/02 v2.0.0-latex stix2 LS1 font definitions
 )
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Checking defaults for LS2/stix2/m/n on input line 71.
-LaTeX Font Info:    Try loading font information for LS2+stix2 on input line 71
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for LS2/stix2/m/n on input line 69.
+LaTeX Font Info:    Try loading font information for LS2+stix2 on input line 69
 .
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2.fd
 File: ls2stix2.fd 2018/04/02 v2.0.0-latex stix2 LS2 font definitions
 )
-LaTeX Font Info:    ... okay on input line 71.
-LaTeX Font Info:    Try loading font information for T1+stix2 on input line 71.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Try loading font information for T1+stix2 on input line 69.
 
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/t1stix2.fd
@@ -1254,17 +1130,17 @@ File: t1stix2.fd 2018/04/02 v2.0.0-latex stix2 T1 font definitions
 )
 (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count184
-\scratchdimen=\dimen290
-\scratchbox=\box49
-\nofMPsegments=\count185
-\nofMParguments=\count186
-\everyMPshowfont=\toks54
-\MPscratchCnt=\count187
-\MPscratchDim=\dimen291
-\MPnumerator=\count188
-\makeMPintoPDFobject=\count189
-\everyMPtoPDFconversion=\toks55
+\scratchcounter=\count176
+\scratchdimen=\dimen276
+\scratchbox=\box48
+\nofMPsegments=\count177
+\nofMParguments=\count178
+\everyMPshowfont=\toks50
+\MPscratchCnt=\count179
+\MPscratchDim=\dimen277
+\MPnumerator=\count180
+\makeMPintoPDFobject=\count181
+\everyMPtoPDFconversion=\toks51
 ) (/usr/local/texlive/2018/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -1282,8 +1158,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box50
-Package hyperref Info: Link coloring OFF on input line 71.
+\AtBeginShipoutBox=\box49
+Package hyperref Info: Link coloring OFF on input line 69.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -1291,17 +1167,17 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2018/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count190
+\c@section@level=\count182
 )
-LaTeX Info: Redefining \ref on input line 71.
-LaTeX Info: Redefining \pageref on input line 71.
-LaTeX Info: Redefining \nameref on input line 71.
+LaTeX Info: Redefining \ref on input line 69.
+LaTeX Info: Redefining \pageref on input line 69.
+LaTeX Info: Redefining \nameref on input line 69.
 
 (./article.out) (./article.out)
 \@outlinefile=\write5
 \openout5 = `article.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 71.
+LaTeX Info: Redefining \microtypecontext on input line 69.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -1351,28 +1227,26 @@ Package microtype Info: Loading generic protrusion settings for font family
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 71.
+LaTeX Info: Redefining \selectfont on input line 69.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  ABD: EveryShipout initializing macros
-Package pgfplots notification 'compat/show suggested version=true': document ha
-s been generated with the most recent feature set (\pgfplotsset{compat=1.16}).
-
 LaTeX Font Info:    Font shape `T1/stix2/bx/n' in size <10> not available
-(Font)              Font shape `T1/stix2/b/n' tried instead on input line 78.
+(Font)              Font shape `T1/stix2/b/n' tried instead on input line 76.
 LaTeX Font Info:    Try loading font information for LS1+stix2scr on input line
- 84.
+ 82.
+
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2scr.fd
 File: ls1stix2scr.fd 2018/04/02 v2.0.0-latex stix2 script LS1 font definitions
 )
 LaTeX Font Info:    Try loading font information for LS2+stix2ex on input line 
-84.
+82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2ex.fd
 File: ls2stix2ex.fd 2018/04/02 v2.0.0-latex stix2 extentions LS2 font definitio
 ns
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 84.
+LaTeX Font Info:    Try loading font information for U+msa on input line 82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1380,7 +1254,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2018/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 84.
+LaTeX Font Info:    Try loading font information for U+msb on input line 82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1388,47 +1262,47 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2018/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 84.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
 LaTeX Font Info:    Try loading font information for LS1+stix2frak on input lin
-e 84.
+e 82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2frak.fd
 File: ls1stix2frak.fd 2018/04/02 v2.0.0-latex stix2 fraktur LS1 font definition
 s
 )
 LaTeX Font Info:    Try loading font information for LS1+stix2bb on input line 
-84.
+82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2bb.fd
 File: ls1stix2bb.fd 2018/04/02 v2.0.0-latex stix2 blackboard LS1 font definitio
 ns
 )
 LaTeX Font Info:    Try loading font information for LS2+stix2cal on input line
- 84.
+ 82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2cal.fd
 File: ls2stix2cal.fd 2018/04/02 v2.0.0-latex stix2 calligraphic LS2 font defini
 tions
 )
 LaTeX Font Info:    Try loading font information for LS1+stix2sf on input line 
-84.
+82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls1stix2sf.fd
 File: ls1stix2sf.fd 2018/04/02 v2.0.0-latex stix2 sans-serif LS1 font definitio
 ns
 )
 LaTeX Font Info:    Try loading font information for LS2+stix2tt on input line 
-84.
+82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/stix2/ls2stix2tt.fd
 File: ls2stix2tt.fd 2018/04/02 v2.0.0-latex stix2 typewriter LS2 font definitio
 ns
 )
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 84.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 82.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
@@ -1440,9 +1314,9 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <7.5> not available
-(Font)              size <7> substituted on input line 84.
+(Font)              size <7> substituted on input line 82.
 
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 86.
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 84.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
@@ -1452,12 +1326,8 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 
 
-Package natbib Warning: Citation `HandBook' on page 1 undefined on input line 8
-7.
-
-
-Package natbib Warning: Citation `ralphSmith' on page 1 undefined on input line
- 94.
+Package natbib Warning: Citation `DANAERO' on page 1 undefined on input line 89
+.
 
 
 Overfull \hbox (1.56999pt too wide) has occurred while \output is active
@@ -1469,37 +1339,30 @@ Overfull \hbox (1.56999pt too wide) has occurred while \output is active
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-Package natbib Warning: Citation `nurbs_book' on page 2 undefined on input line
- 110.
-
-
-Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 127
-.
-
-
-Package natbib Warning: Citation `deBoor' on page 2 undefined on input line 132
-.
-
-
-LaTeX Warning: Reference `B-splines' on page 2 undefined on input line 132.
+Package natbib Warning: Citation `rogers2000' on page 2 undefined on input line
+ 112.
 
 LaTeX Font Info:    Font shape `T1/stix2/m/sl' in size <10> not available
-(Font)              Font shape `T1/stix2/m/it' tried instead on input line 133.
+(Font)              Font shape `T1/stix2/m/it' tried instead on input line 118.
 
 [2]
 
-Package natbib Warning: Citation `adaptiveNurbs' on page 3 undefined on input l
-ine 139.
+LaTeX Warning: Reference `B-splines' on page 3 undefined on input line 134.
 
+
+Package natbib Warning: Citation `adaptiveNurbs' on page 3 undefined on input l
+ine 141.
+
+[3] (./article.bbl)
 
 Package natbib Warning: There were undefined citations.
 
-[3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 158.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 158.
+[4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 161.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 161.
  (./article.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 158.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 158.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 161.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 161.
 Package rerunfilecheck Info: File `article.out' has not changed.
 (rerunfilecheck)             Checksum: D3103CDA29AB6FD4408335F26C666E90;1272.
 
@@ -1510,16 +1373,16 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 158.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 161.
  ) 
 Here is how much of TeX's memory you used:
- 33648 strings out of 492649
- 754271 string characters out of 6129621
- 1017977 words of memory out of 5000000
- 36859 multiletter control sequences out of 15000+600000
- 115242 words of font info for 127 fonts, out of 8000000 for 9000
+ 23893 strings out of 492649
+ 422430 string characters out of 6129621
+ 523105 words of memory out of 5000000
+ 27219 multiletter control sequences out of 15000+600000
+ 116340 words of font info for 133 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 78i,9n,136p,793b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,9n,54p,1415b,409s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/texmf-local/fonts/enc/stix2-mathex.enc}{/usr/local/texliv
 e/texmf-local/fonts/enc/stix2-mathbb.enc}{/usr/local/texlive/texmf-local/fonts/
 enc/stix2-mathcal.enc}{/usr/local/texlive/texmf-local/fonts/enc/stix2-mathrm-bo
@@ -1532,11 +1395,12 @@ IX2Text-Bold.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix2/S
 TIX2Text-Italic.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/stix
 2/STIX2Text-Regular.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
 cm-super/sfss0500.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm
--super/sftt0800.pfb>
-Output written on article.pdf (3 pages, 704774 bytes).
+-super/sftt0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-s
+uper/sftt1000.pfb>
+Output written on article.pdf (4 pages, 735014 bytes).
 PDF statistics:
- 154 PDF objects out of 1000 (max. 8388607)
- 141 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 11933 words of extra memory for PDF output out of 12000 (max. 10000000)
+ 190 PDF objects out of 1000 (max. 8388607)
+ 175 compressed objects within 2 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 12445 words of extra memory for PDF output out of 14400 (max. 10000000)
 

@@ -52,7 +52,7 @@
 \newcommand{\Lomtd}{L^2(\Omega;\mathcal{T};\mathcal{D})}
 %\newcommand{\Lomd}{L^2(\Omega;L^2(\mathcal{D}))}
 \newcommand{\Lomd}{L^2(\Omega,\mathcal{D})}
-\newcommand{\myreferences}{../Bibliography/references}
+\newcommand{\myreferences}{./Bibliography/references}
 \bibliographystyle{elsarticle-num}
 \numberwithin{equation}{section}
 \usepackage{tabularx,ragged2e,booktabs,caption}
@@ -61,13 +61,11 @@
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
 \bibliographystyle{elsarticle-num}
 \usepackage{stix2}
-\usepackage{pgfplots}
 \usepackage{appendix}
 \usepackage[labelfont=bf]{caption}
-\pgfplotsset{compat=newest}
 \pagestyle{myheadings}
 %%%%%%%%%%%%%%%%%%%%%%%
-\title{A Global Sensitivity Analysis of Wind Turbine Aeroelastic Models}
+\title{A global sensitivity analysis of wind turbine aeroelastic models}
 \begin{document}
 \begin{frontmatter}
 %\address[cwi]{CWI - Centrum Wiskunde \& Informatica, Amsterdam, The Netherlands}
@@ -76,7 +74,7 @@
 \author[]{Prashant~Kumar}
 \ead{pkumar@cwi.nl}
 \begin{abstract}
-Wind turbines are a complex multi-physics systems. As the performance and the life span of a turbine is highly dependent on  manufacturing, meteorological and operational factors, it is very important to quantify the impact of each of these parameter in the output of interest.  
+Wind turbines are a complex multi-physics systems whose performance and life span is highly dependent on manufacturing, meteorological and operational factors. It is therefore important to quantify the impact of these parameters on the turbine response. We perform comprehensive sensitivity analysis of aeroelastic models typically employed to compute turbine response. This paper also seeks to quantify sensitivities due to manufacturing tolerance in the turbine blades. We propose a non-uniform rational basis splines approach to parametrize the geometry of the blade and further utilize this for quantifying geometric sensitivities at different radial locations. [Some important results]
 \end{abstract}
 \begin{keyword}
 Global sensitivity analysis, UQ, Sobol indices, aeroelastic models
@@ -84,17 +82,21 @@ Global sensitivity analysis, UQ, Sobol indices, aeroelastic models
 \end{frontmatter}
 \linenumbers
 \section{Introduction}
-Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBook} play a critical role in the design, development and optimization of modern wind turbines. In particular, BEM models are employed to predict turbine response such as the structural loads and power outputs. A number of parameters describing meteorological and operational conditions as well as manufacturing specifications are needed as input to simulate BEM models. In this work, we seek to quantify the sensitivities of these input parameters for different turbine responses.
+Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBook} play a critical role in the design, development and optimization of modern wind turbines. In particular, BEM models are employed to predict turbine response such as the structural loads and power outputs. A number of parameters describing meteorological and operational conditions as well as manufacturing specifications are needed as inputs for BEM simulations. In this work, we seek to quantify the sensitivities of these input parameters for different turbine responses. In the past a number of sensitivity studies have been performed to understand the influence of input parameters on different turbine response, for e.g. \cite{moriarty2002effect, eggers2003wind, McKay2014, dykes2014sensitivity, Robertson2018}. Many studies have confirmed that the wind parameters especially the wind speed and wind speed standard deviation have the most influence on aerodynamical performance of turbines. For example, in the of an upstream turbine, the wind speed is most sensitive to power production. Furthermore, wind speed in combination with wind speed standard deviation has a large influence on the power production of turbines operating in the wake of an upstream turbine. Among operational factors, the rotor RPM is the most sensitive to power production. [More on parameter sensitivities on structural loads]
+
+In this work, we also study the effect of manufacturing tolerances on the turbine response. Usually, there are some discrepancy between the  manufactured and nominally prescribed design of the turbine blade leading to a suboptimal performance. For BEM models, the turbine shape is described as a series of airfoils along the span of the blade where each airfoil shape is computed using the three quantities: chord length, thickness and twist. We perturb these three quantities to obtain a perturbed turbine blade and analyze with sections that have more influence on output quantities. 
+
+To compute parameter sensitivities we use the Sobol expansion approach, which decomposes the total variance of the quantity of interest into contributions from individual parameters and their combinations. To perform Sobol analysis, we use Matlab-based general purpose uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}. \texttt{UQLab}'s modular structure allows for easy integration with available BEM codes. As our test wind turbine, we use the 2MW NM80 turbine (with an 80m rotor) from the DANAERO project \cite{DANAERO}.
 \section{Aeroelastic models}
 \subsection{BEM models}
 \subsection{Input parameters of aeroelastic models}
 \section{Global sensitivity analysis}
-The main objective of sensitivity analysis is to quantify the relative significance of individual inputs (or in combination) and how variations in input values affects the output of interest. In engineering, sensitivity analysis can be employed for a number of reasons: to determine the stability and robustness of a computational model with respect to input parameters, for simplification of stochastic models by fixing the insensitive parameters, and to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters.
-
-Sensitivity analysis techniques can be classified as local and global methods, see \cite{ralphSmith}. In local sensitivity analysis, individual parameters are perturbed around their nominal values --- allowing for the description of output variability only in a small neighbourhood of nominal input values. Although, local approaches are widely employed due to their ease of implementation and low computational cost, they are unable to quantify global behavior of nonlinearly parametrized models such as aeroelastic models. Global sensitivity approaches, on the other hand, consider the entire range of input values to compute output sensitivities. Therefore, global sensitivity analysis is more suitable for aeroelastic models considered in this work.  
+The objective of sensitivity analysis is to quantify the relative significance of individual inputs (or in combination) and how variations in input values affects the output of interest. In engineering, sensitivity analysis can be employed for a number of reasons: to determine the stability and robustness of a computational model with respect to input parameters, for simplification of stochastic models by fixing the insensitive parameters, and to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters. Sensitivity analysis techniques can be classified as local and global methods, see \cite{RSmith}. In local sensitivity analysis, individual parameters are perturbed around their nominal values allowing for the description of output variability only in a small neighbourhood of nominal input values. Although, local approaches are widely employed due to their ease of implementation and low computational cost, they are unable to quantify global behavior of nonlinearly parametrized models such as aeroelastic models. Global sensitivity approaches, on the other hand, consider the entire range of input values to compute output sensitivities. Therefore, global sensitivity analysis is more suitable for aeroelastic models considered in this work.  
 
 \subsection{Sobol analysis}
-In this work, we employ variance-based Sobol decomposition to perform global sensitivity analysis. One of the advantages of this method is that the relative importance of input parameters is quantified on a scale of $[0,1]$ known as \emph{Sobol indices}. The main idea of Sobol analysis is to decompose the total variance of the output in term of contributions from individual parameters and their contribution. For the ease of exposition, let us consider a nonlinear model:
+We employ variance-based Sobol decomposition to perform global sensitivity analysis. This approach allows for quantification of  the relative importance of the input parameters on a scale of $[0,1]$ known as \emph{Sobol indices}. 
+
+The main idea of Sobol analysis is to express the total variance of the output in term of contributions from individual parameters and their combinations. For the ease of exposition, let us consider a nonlinear model:
 \begin{equation}\label{nonlinear_model}
 Y = f(\mathbf{Z}),
 \end{equation}
@@ -107,7 +109,7 @@ The above decomposition is only valid for independent input parameters.
 \subsubsection{PCE Least Angle Regression (PCE\_LAR)}
 \section{Parametrization of uncertain inputs in the BEM model}
 \subsection{Geometric uncertainty}
-We use Non-Uniform Rational Basis Splines (NURBS) \cite{nurbs_book} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves with a limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
+We use Non-Uniform Rational Basis Splines (NURBS) \cite{rogers2000} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves with a limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
 
 \subsubsection{NURBS based perturbation}
 The value of NURBS curve at each location $x$ is computed using a weighted sum of $N$ basis functions (or B-splines):
@@ -155,4 +157,5 @@ More advanced approaches, monotonicity preserving methods, etc??
 \subsection{Interpretation of global sensitivity analysis result}
 \section{Conclusions}
 \section*{Acknowledgements}
+\bibliography{\myreferences}
 \end{document}
