@@ -111,7 +111,6 @@ Input.Marginals(counter).Type = 'Gaussian';
 Input.Marginals(counter).Parameters = [PITCHANGLE, PITCHANGLE_Std];
 Input.Marginals(counter).Bounds = [PITCHANGLE_LB PITCHANGLE_UB];
 
-
 %% =======================RPM====================
 % Truncated Gaussian
 RPM_Std = 1;  % Standard deviation
