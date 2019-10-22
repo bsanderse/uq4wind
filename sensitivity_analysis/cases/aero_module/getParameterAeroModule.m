@@ -1,13 +1,14 @@
-function P = getParameterAeroModule()
+function P = getParameterAeroModule(turbineName)
 % This routine returns the deterministic parameters stores in a matlab cell
 % variable 'P'. The meaning of each element in 'P' is the described in the
 % code. NOTE: The order of element in P should not be changed.
 
+turbineData = str2func(turbineName);
 P ={}; 
 %% Get turbine data and uncertain input specifications
 [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED]  = turbineData();
+          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED]  = turbineData();
 
 %% Other parameters related to AERO module software
 % Top and the end of AeroPower.dat file
@@ -43,3 +44,5 @@ P{25} = Input;
 P{26} = uncertain_params;
 P{27} = QoI;
 P{28} = WINDSPEED;
+P{29} = turbineName;
+P{30} = TBEGIN;

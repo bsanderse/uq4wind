@@ -86,14 +86,14 @@ end
 
 %% Write to the input.txt file for aeromodule
 
-filename = [pwd,'\AEROmodule\input.txt'];
+filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'AEROMODEL                        %d	! 1:BEM 2: AWSM\n', P{1}); 
 fprintf(fid,'!TURBINETYPE                     %d	! 1:HAWT 2: VAWT\n', P{2});
-fprintf(fid,'!INCLUDE                         specialist_input.txt\n');
+fprintf(fid,'INCLUDE                         specialist_input.txt\n');
 fprintf(fid,'!INTERPOL                        2  	! 1:Linear 2: Spline\n');
 fprintf(fid,'LOGFILENAME                      logfile.dat\n');
 fprintf(fid,'DEBUGFILE                        1\n');
@@ -116,7 +116,7 @@ fprintf(fid,'HUBHEIGHT                       %f\n',P{13});
 fprintf(fid,'NROFBLADES                      3\n');     
 fprintf(fid,'PITCHANGLE                      %f\n',X_PITCHANGLE);
 fprintf(fid,'RPM                             %f\n',X_RPM);
-fprintf(fid,'TBEGIN                          0.0\n'); 
+fprintf(fid,'TBEGIN                          %f\n',P{30}); 
 fprintf(fid,'TEND                            %6.15f		!~3D\n',P{18});
 fprintf(fid,'TILTANGLE                       %f\n', P{14});
 fprintf(fid,'TIMESTEP                        %6.15f	!10deg\n',P{19});
@@ -136,7 +136,7 @@ fprintf(fid,'!------------------------------------------------------------------
 fprintf(fid,'AIRDENSITY                      1.231\n');
 fprintf(fid,'HORSHEAR                        0.0\n');
 fprintf(fid,'SHEAREXP                        0.0\n');
-%fprintf(fid,'DYNVISC                         1.7879e-5\n');
+fprintf(fid,'DYNVISC                         1.7879e-5\n');
 %fprintf(fid,'HORSHEAR                        0.0\n');
 %fprintf(fid,'SOS                             340.3\n'); 
 %fprintf(fid,'RAMPTIME               		    0\n');
@@ -189,7 +189,7 @@ fprintf(fid,'NROFBEMELEMENTS                   %d\n', P{21});
 fclose(fid);
 
 %% Change windspeed file
-filename = [pwd,'\AEROmodule\wind.dat'];
+filename = [pwd,'\AEROmodule\',P{29},'\wind.dat'];
 fid = fopen(filename,'w');
 fprintf(fid,'!time [s]  u [m/s]  v [m/s]  w [m/s]\n');
 fprintf(fid,'%f    %f    %f    %f\n', 0.0,  X_WindSpeed, 0.0, 0.0);
