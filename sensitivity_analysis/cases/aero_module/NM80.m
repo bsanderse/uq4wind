@@ -144,7 +144,9 @@ Input.Marginals(counter).Bounds = ''; % No bound needed for Weibull
 %                 {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
 %                 {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
 
-uncertain_params = {{'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
+uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2}, ...
+                    {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
+                    {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2}};
 
 % Specify quantity of interest
 QoI = 'Axial_Force'; % 'Axial_Force' or  'Power'
