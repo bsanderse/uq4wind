@@ -59,8 +59,7 @@ for i=1:ndim
     end
 end
 
-
-%% ===========Get windspeed sample===============
+%% ===========Get WindSpeed sample===============
 X_WindSpeed = P{28}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'WINDSPEED'))
@@ -81,6 +80,29 @@ X_PITCHANGLE = P{15}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'PITCHANGLE'))
         X_PITCHANGLE = X(i);
+    end
+end
+
+%% ========== Get CL sample ==============
+CL_INDEX = [];
+CL_PERTURB = [];
+X_CL = [];
+CL =cell(P{31}{1});
+for i = 1:P{31}{1} % Loop over all possible polar files
+    CL{i} = P{31}{6+i}{1};
+end
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'CL'))
+        CL_INDEX = [CL_INDEX P{26}{i}{2}];
+        CL_PERTURB = [CL_PERTURB P{26}{i}{3}];
+        X_CL = [X_CL X(i)];
+    end
+end
+for i = 1:P{31}{1} % Loop over all possible polar files
+    for j = 1:length(CL_INDEX)
+        if(CL_INDEX(j)==i)
+            CL{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CL(i)*ones(length(P{31}{7+P{31}{1}}),1), CL_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{1}, 3, 1:length(P{31}{6}));
+        end
     end
 end
 
@@ -197,4 +219,21 @@ fprintf(fid,'%f    %f    %f    %f\n', 5.0,  X_WindSpeed, 0.0, 0.0);
 fprintf(fid,'%f    %f    %f    %f\n', 10.0, X_WindSpeed, 0.0, 0.0);
 fprintf(fid,'%f    %f    %f    %f\n', 20.0, X_WindSpeed, 0.0, 0.0);
 fclose(fid);
+
+%% Change the Polar file
+for i = 1:P{31}{1} % Loop over the polar files
+    filename = [pwd,'\AEROmodule\',P{29},'\',P{31}{2}{i}]; 
+    fid = fopen(filename,'w');
+    fprintf(fid,'! Aero mudule input file for airfoil data\n');
+    fprintf(fid,'\n');
+    fprintf(fid, 'Airfoil_Name  %s\n',P{31}{3}{i});
+    fprintf(fid,'t/c            %f         ! thickness ratio w.r.t. chord\n', P{31}{4}{i});
+    fprintf(fid,'\n');
+    fprintf(fid,'format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm\n');
+    fprintf(fid,'\n');
+    fprintf(fid,'Reynolds_Nr %f\n',P{31}{5});
+    for j = 1:length(P{31}{6})
+        fprintf(fid,'%f    %f    %f    %f\n', P{31}{6}(j), CL{i}(j), P{31}{6+i}{2}(j), P{31}{6+i}{3}(j));
+    end
+    fclose(fid);
 end

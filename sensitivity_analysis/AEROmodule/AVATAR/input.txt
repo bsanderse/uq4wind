@@ -42,14 +42,14 @@ BLADEROOT                       2.800000
 CONEANGLE                       0.0
 HUBHEIGHT                       132.700000
 NROFBLADES                      3
-PITCHANGLE                      -1.132597
-RPM                             9.122670
+PITCHANGLE                      1.724194
+RPM                             8.715470
 TBEGIN                          0.000000
 TEND                            79.806700000000006		!~3D
 TILTANGLE                       0.000000
 TIMESTEP                        0.073895084000000	!10deg
 XNAC2HUB                        -7.100000
-YAWANGLE                        2.794347
+YAWANGLE                        -0.623984
 ZNAC2HUB                        3.369000
 !---------------------------------------------------------------------
 ! Airfoil data -------------------------------------------------------

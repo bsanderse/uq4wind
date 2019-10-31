@@ -1,6 +1,6 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED]  = AVATAR()
+          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED, POLARS]  = AVATAR()
 %% Variables of input file extracted from reference test case from AVATAR turbine data
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -39,7 +39,7 @@ TIMESTEP = 0.036947542*2;
 YAWANGLE = 0.0;
 NROFBEMELEMENTS = 21;
 ZNAC2HUB = 3.369;
-WINDSPEED = 10.5;
+WINDSPEED = 6.1;
 
 %% Define properties of uncertain input in the UQLab format. 
 % We define this for all possible uncertain inputs and finally in the 
@@ -89,9 +89,9 @@ end
 
 %% =======================YAW====================
 % Truncated Gaussian
-YAW_Std = 5;  % Standard deviation
-YAW_LB = -30; % Lower bound of trucated Gaussian distribution
-YAW_UB = 30;  % Upper bound of trucated Gaussian distribution
+YAW_Std = 2 ;  % Standard deviation
+YAW_LB = -10; % Lower bound of trucated Gaussian distribution
+YAW_UB = 10;  % Upper bound of trucated Gaussian distribution
 counter = counter+1;
 Input.Marginals(counter).Name = 'YAW';
 Input.Marginals(counter).Index = ''; % Empty for scalar
@@ -134,14 +134,15 @@ Input.Marginals(counter).Index = ''; % Empty for scalar
 Input.Marginals(counter).Type = 'Weibull'; 
 Input.Marginals(counter).Parameters = [WindSpeed_scale WindSpeed_shape]; % scale and shape parameter
 Input.Marginals(counter).Bounds = ''; % No bound needed for Weibull 
+
+%% ====================Polars=====================
+POLARS ={0};
 % % To visualize above distribution, uncomment the following
 % hist(wblrnd(WindSpeed_scale,WindSpeed_shape,[10000,1]),20)
 
-
-% Specify uncertain parameters to consider in the sensitivity analysis. The
-% parameter should be defined in the following format {name,index,rel_perturbation} where
+%% Specify uncertain parameters to consider in the sensitivity analysis 
+% The parameter should be defined in the following format {name,index,rel_perturbation} where
 % rel_pertubation defines the amount of relative perturbation for B-spline curves
-
 
 % uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
 %                 {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...

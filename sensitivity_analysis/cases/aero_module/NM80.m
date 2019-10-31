@@ -1,6 +1,6 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED]  = NM80()
+          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED, POLARS]  = NM80()
 %% Variables of input file extracted from reference test case from DANAERO turbine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -42,6 +42,7 @@ YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
 WINDSPEED = 6.1;
+
 %% Define properties of uncertain input in the UQLab format. 
 % We define this for all possible uncertain inputs and finally in the 
 % variable "uncertain_params" we specify which variables to be considered                                    
@@ -90,9 +91,9 @@ end
 
 %% =======================YAW====================
 % Truncated Gaussian
-YAW_Std = 5;  % Standard deviation
-YAW_LB = -30; % Lower bound of trucated Gaussian distribution
-YAW_UB = 30;  % Upper bound of trucated Gaussian distribution
+YAW_Std = 2;  % Standard deviation
+YAW_LB = -10; % Lower bound of trucated Gaussian distribution
+YAW_UB = 10;  % Upper bound of trucated Gaussian distribution
 counter = counter+1;
 Input.Marginals(counter).Name = 'YAW';
 Input.Marginals(counter).Index = ''; % Empty for scalar
@@ -134,19 +135,68 @@ Input.Marginals(counter).Type = 'Weibull';
 Input.Marginals(counter).Parameters = [WindSpeed_scale WindSpeed_shape]; % scale and shape parameter
 Input.Marginals(counter).Bounds = ''; % No bound needed for Weibull 
 
-% Specify uncertain parameters to consider in the sensitivity analysis. The
-% parameter should be defined in the following format {name,index,rel_perturbation} where
-% rel_pertubation defines the amount of relative perturbation for B-spline curves
+%% ====================Polars=====================
+% Import the reference polar curves
+[alpha, CL_section03, CD_section03, CM_section03] = importPolars("..\..\AEROmodule\NM80\section03_ref.dat");
+[alpha, CL_section05, CD_section05, CM_section05] = importPolars("..\..\AEROmodule\NM80\section05_ref.dat");
+[alpha, CL_section08, CD_section08, CM_section08] = importPolars("..\..\AEROmodule\NM80\section08_ref.dat");
+[alpha, CL_section10, CD_section10, CM_section10] = importPolars("..\..\AEROmodule\NM80\section10_ref.dat");
 
+% Important: the format of POLARS cell defined below should not be changed 
+POLARS = {4,... % Number of polar files
+    {'section03.dat', 'section05.dat','section08.dat', 'section10.dat'}, ... % Name of polar files
+    {'Section03', 'Section05', 'Section08', 'Section10'}, ... % Airfoil_Name
+    {0.333, 0.243, 0.197, 0.187}, ... % thickness by chord ratio
+    1.0E+07, ...
+    alpha, ... % Angle of attack vector
+    {CL_section03, CD_section03, CM_section03}, ... % Cl, Cd, Cm data for section03
+    {CL_section05, CD_section05, CM_section05}, ...
+    {CL_section08, CD_section08, CM_section08}, ...
+    {CL_section10, CD_section10, CM_section10}, ...
+     49:65 ... % indices of angle of attack where the curve is perturbed
+    };
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CL';
+Input.Marginals(counter).Index = 1; % Corresponds to section 3
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CL';
+Input.Marginals(counter).Index = 2; % Corresponds to section 5
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CL';
+Input.Marginals(counter).Index = 3; % Corresponds to section 8
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CL';
+Input.Marginals(counter).Index = 4; % Corresponds to section 10
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+%% Specify uncertain parameters to be considered in the sensitivity analysis
+% The parameter should be defined in the following format {name,index,rel_perturbation} where
+% rel_pertubation defines the amount of relative perturbation for B-spline
+% curves. This parameter may not be required for other scalar random
+% variables 
 
 % uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
 %                 {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
 %                 {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
-%                 {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
+%                 {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}, ...
+%                 {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
 
-uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2}, ...
-                    {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
-                    {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2}};
+uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
 
 % Specify quantity of interest
 QoI = 'Axial_Force'; % 'Axial_Force' or  'Power'
