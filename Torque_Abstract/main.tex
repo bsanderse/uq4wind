@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[parfill]{parskip}  % no indents
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=25mm,
+ top=40mm,
+ right=25mm,
+ bottom=27mm
+ }
+
+\usepackage{natbib}  % references
+\usepackage{graphicx}  % plots
+\usepackage{scrextend}  % indent authors
+\usepackage{amsmath}  % math typesetting
+
+% typeset in sans serif to match the prompt
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+% correct the section heading size
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\raggedright  % don't stretch to right edge
+
+% =============================================
+\vspace*{80pt}
+{\LARGE \textbf{Global sensitivity analysis of model parameters in aeroelastic wind-turbine models}}
+\vspace*{28pt}
+
+\begin{addmargin}[2.5cm]{0em}% 1em left, 2em right
+\textbf{P. Kumar$^{\boldsymbol{\mathsf{1}}}$, B. Sanderse$^{\boldsymbol{\mathsf{1}}}$}
+
+$^{\mathsf{1}}$ Centrum Wiskunde \& Informatica, Science Park 123, Amsterdam.
+
+%$^{\mathsf{2}}$Address 2.
+%\vspace{12pt}
+
+Author contact email: b.sanderse@cwi.nl
+
+Keywords: aero-elastic turbine model, sensitivity analysis
+\end{addmargin}
+
+% =============================================
+\section{Introduction}
+Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBook} continue to play a critical role in the design, development and optimization of modern wind turbines. In particular, BEM models are employed to predict turbine response such as the structural loads and power outputs.
+
+A relatively large number of inputs are needed to perform BEM simulations, e.g. meteorological and operational conditions, geometric information of the, . In this work, we seek to quantify the sensitivities of these input parameters for different turbine responses. In the past a number of sensitivity studies have been performed to understand the influence of input parameters on different turbine response, for e.g. \cite{moriarty2002effect, eggers2003wind, McKay2014, dykes2014sensitivity, Robertson2018}. Many studies have confirmed that the wind parameters especially the wind speed and wind speed standard deviation have the most influence on aerodynamical performance of turbines. For example, in the of an upstream turbine, the wind speed is most sensitive to power production. Furthermore, wind speed in combination with wind speed standard deviation has a large influence on the power production of turbines operating in the wake of an upstream turbine. Among operational factors, the rotor RPM is the most sensitive to power production. [More on parameter sensitivities on structural loads]
+
+Important work from Murcia et al. \cite{Murcia2018}.
+
+[Sensitivity on the polars as novel element]
+
+[Mention this study is a part of IEA Task29 project and WindTrue.
+
+In this work, we also study the effect of manufacturing tolerances on the turbine response. Usually, there are some discrepancy between the  manufactured and nominally prescribed design of the turbine blade leading to a suboptimal performance. For BEM models, the turbine shape is described as a series of airfoils along the span of the blade where each airfoil shape is computed using the three quantities: chord length, thickness and twist. We perturb these three quantities to obtain a perturbed turbine blade and analyze with sections that have more influence on output quantities. 
+
+
+
+% =============================================
+\section{Objectives}
+The long-term objective of our study is to develop robust BEM models that give users an indication of the uncertainty associated with the predictions (loads, power, etc.) offered by the model. For this purpose, we will calibrate the model parameters present in BEM models. Examples of such model parameters are the time constant in dynamic stall models, wake correction factors, tip loss model parameters, and lift- and drag-polars. In order to limit the number of model parameters involved in the calibration process, \textit{the objective of the current study is to perform a global sensitivity study of the outputs of the BEM model towards the model parameters}.
+
+% =============================================
+\section{Methodology}
+To compute parameter sensitivities we use a global sensitivity analysis based on the Sobol expansion approach, which decomposes the total variance of the quantity of interest (model output) into contributions from individual parameters and their combinations. To perform Sobol analysis, we use the uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}. \texttt{UQLab}'s modular structure allows for easy integration with available BEM codes. The aeroelastic code that we use is the \texttt{ECN Aero-Module} \cite{Boorsma2012} of the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013}.
+
+Parameterization.
+
+% =============================================
+\section{Results}
+
+
+% =============================================
+\section{Conclusions}
+
+
+% =============================================
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

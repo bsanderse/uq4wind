@@ -1,2 +1,8 @@
 *.asv
 *.m~
+*.aux
+*.bbl
+*.log
+*.blg
+*.bak
+*.gz
