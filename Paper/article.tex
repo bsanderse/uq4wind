@@ -1,22 +1,17 @@
-
 \documentclass[review]{elsarticle}
-\usepackage{lineno,hyperref}
-\modulolinenumbers[5]
+
 \journal{ }
+
+% packages
 \usepackage{microtype}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage[a4paper, total={6.2in, 9in}]{geometry}
-\usepackage[a4paper]{geometry}
 \renewcommand{\baselinestretch}{1.2} 
 \usepackage{color}
 \usepackage[x11names]{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
-\usepackage{tabularx,ragged2e,booktabs,caption}
-\renewcommand{\figurename}{{Figure}}
-\usepackage[labelfont=bf]{caption}
-\usepackage[font=footnotesize]{caption}
 \usepackage{amssymb,latexsym}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -30,12 +25,20 @@
 \usepackage{amsthm}
 \usepackage{subcaption}
 \usepackage{multirow}
-\usepackage[toc,page]{appendix}
+\usepackage{stix2}
+\usepackage[labelfont=bf,font=footnotesize]{caption}
+\usepackage{tabularx,ragged2e,booktabs}
+\usepackage{lineno}
+\modulolinenumbers[5]
+\usepackage[toc]{appendix}
+\usepackage{hyperref}
+
+%new commands
+\renewcommand{\figurename}{{Figure}}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \newtheorem{theorem}{Theorem}
 \newtheorem{remark}{Remark}[section]
 \numberwithin{equation}{section}
-\usepackage{tabularx,ragged2e,booktabs,caption}
 \newcommand{\footremember}[2]{%
     \footnote{#2}
     \newcounter{#1}
@@ -44,7 +47,7 @@
 \newcommand{\footrecall}[1]{%
     \footnotemark[\value{#1}]%
 }
-\usepackage[toc]{appendix}
+
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
 \newcommand{\lnorm}{\left|\left|}
 \newcommand{\rnorm}{\right|\right|}
@@ -52,27 +55,32 @@
 \newcommand{\Lomtd}{L^2(\Omega;\mathcal{T};\mathcal{D})}
 %\newcommand{\Lomd}{L^2(\Omega;L^2(\mathcal{D}))}
 \newcommand{\Lomd}{L^2(\Omega,\mathcal{D})}
-\newcommand{\myreferences}{./Bibliography/references}
+
+% bibliography
+\newcommand{\myreferences}{./Bibliography/references,./Bibliography/Mendeley_refs}
 \bibliographystyle{elsarticle-num}
+
+
 \numberwithin{equation}{section}
-\usepackage{tabularx,ragged2e,booktabs,caption}
 \graphicspath{{./images/}}
-\usepackage[toc]{appendix}
+
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
-\bibliographystyle{elsarticle-num}
-\usepackage{stix2}
-\usepackage{appendix}
-\usepackage[labelfont=bf]{caption}
+
 \pagestyle{myheadings}
+
 %%%%%%%%%%%%%%%%%%%%%%%
-\title{A global sensitivity analysis of wind turbine aeroelastic models}
 \begin{document}
+
 \begin{frontmatter}
+\title{A global sensitivity analysis of wind turbine aeroelastic models}
+
 %\address[cwi]{CWI - Centrum Wiskunde \& Informatica, Amsterdam, The Netherlands}
 %\address[aero]{Faculty of Aerospace Engineering, Delft University of Technology, Delft, The Netherlands.}
 %\author[cwi,aero]{Prashant~Kumar}
-\author[]{Prashant~Kumar}
-\ead{pkumar@cwi.nl}
+\author[]{Prashant~Kumar}\ead{pkumar@cwi.nl}
+
+\author{Benjamin~Sanderse}
+
 \begin{abstract}
 Wind turbines are a complex multi-physics systems whose performance and life span is highly dependent on manufacturing, meteorological and operational factors. It is therefore important to quantify the impact of these parameters on the turbine response. We perform comprehensive sensitivity analysis of aeroelastic models typically employed to compute turbine response. This paper also seeks to quantify sensitivities due to manufacturing tolerance in the turbine blades. We propose a non-uniform rational basis splines approach to parametrize the geometry of the blade and further utilize this for quantifying geometric sensitivities at different radial locations. [Some important results]
 \end{abstract}
@@ -80,7 +88,9 @@ Wind turbines are a complex multi-physics systems whose performance and life spa
 Global sensitivity analysis, UQ, Sobol indices, aeroelastic models
 \end{keyword}
 \end{frontmatter}
+
 \linenumbers
+
 \section{Introduction}
 Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBook} play a critical role in the design, development and optimization of modern wind turbines. In particular, BEM models are employed to predict turbine response such as the structural loads and power outputs. A number of parameters describing meteorological and operational conditions as well as manufacturing specifications are needed as inputs for BEM simulations. In this work, we seek to quantify the sensitivities of these input parameters for different turbine responses. In the past a number of sensitivity studies have been performed to understand the influence of input parameters on different turbine response, for e.g. \cite{moriarty2002effect, eggers2003wind, McKay2014, dykes2014sensitivity, Robertson2018}. Many studies have confirmed that the wind parameters especially the wind speed and wind speed standard deviation have the most influence on aerodynamical performance of turbines. For example, in the of an upstream turbine, the wind speed is most sensitive to power production. Furthermore, wind speed in combination with wind speed standard deviation has a large influence on the power production of turbines operating in the wake of an upstream turbine. Among operational factors, the rotor RPM is the most sensitive to power production. [More on parameter sensitivities on structural loads]
 
@@ -91,6 +101,8 @@ Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBoo
 In this work, we also study the effect of manufacturing tolerances on the turbine response. Usually, there are some discrepancy between the  manufactured and nominally prescribed design of the turbine blade leading to a suboptimal performance. For BEM models, the turbine shape is described as a series of airfoils along the span of the blade where each airfoil shape is computed using the three quantities: chord length, thickness and twist. We perturb these three quantities to obtain a perturbed turbine blade and analyze with sections that have more influence on output quantities. 
 
 To compute parameter sensitivities we use the Sobol expansion approach, which decomposes the total variance of the quantity of interest into contributions from individual parameters and their combinations. To perform Sobol analysis, we use Matlab-based general purpose uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}. \texttt{UQLab}'s modular structure allows for easy integration with available BEM codes. For investigation the aeroelastic model of the  2MW NM80 turbine (with an 80m rotor) from the DANAERO project \cite{DANAERO} is utilized.
+
+
 
 \section{Aeroelastic models}
 \subsection{BEM models}
@@ -115,6 +127,8 @@ The above decomposition is only valid for independent input parameters.
 \section{Parametrization of uncertain inputs in the BEM model}
 \subsection{Geometric uncertainty}
 We use Non-Uniform Rational Basis Splines (NURBS) \cite{rogers2000} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves with a limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
+
+Use of NURBS in wind-turbine blades (airfoils) optimization: \cite{Ribeiro2012,Bottasso2014}.
 
 \subsubsection{NURBS based perturbation}
 The value of NURBS curve at each location $x$ is computed using a weighted sum of $N$ basis functions (or B-splines):
@@ -156,11 +170,43 @@ More advanced approaches, monotonicity preserving methods, etc??
 %The steps to obtained perturbed samples from a given reference curve is outlined in Fig. \ref{}.
 \subsection{Model uncertainty}
 \subsection{Wind velocity}
+
 \section{Description of test case}
+
 \section{Sensitivity analysis workflow}
+
 \section{Numerical experiment}
 \subsection{Interpretation of global sensitivity analysis result}
+
 \section{Conclusions}
+
 \section*{Acknowledgements}
 \bibliography{\myreferences}
+
+\appendix
+\section{Literature overview}
+List of BEM codes in \cite{Sayed2019,Vorpahl2013}.
+
+Uncertainties and corrections in BEM models \cite{Madsen2012}: complex inflow, e.g. sheared inflow.
+
+\cite{Eggers2003} study the effect of shear and turbulence on rotor loading, but not with a systematic (global) sensitivity analysis.
+
+\cite{McKay2014} perform a measurement data-only global sensitivity analysis using a neural network and a Fourier amplitude sensitivity test (a similar technique was used in \cite{Kusiak2010} for vibration analysis). The neural network is constructed based on measurement data. The output quantity of interest is the power production; several input parameters are used, including yaw angle, rotor speed, blade pitch angle, wind speed, ambient temperature, main bearing temperature, wind speed standard deviation and yaw angle standard deviation.
+
+\cite{Dykes2014} performed global sensitivity analysis of turbine costs with respect to key wind turbine configuration parameters including rotor diameter, rated power, hub height, and maximum tip speed. DAKOTA is used to calculate Sobol indices with Monte Carlo sampling.
+
+\cite{Rinker2016a} calculated the global sensitivity of wind turbine loads to wind inputs using polynomial response surfaces. She used Sobol indices, with quantity of interest the maximum blade root bending moment and as inputs four turbulence parameters: a reference mean wind speed, a reference turbulence intensity, the Kaimal length scale, and a parameter reflecting the nonstationarity. The turbine model studied is the WindPACT 5 MW reference model and the BEM model is FAST.
+
+\cite{Echeverria2017} employs a global sensitivity analysis to identify the design variables that affect wind turbine performance in order to reduce the number of variables in wind turbine design optimization. As input parameters, airfoil parameterization and chord and twist distributions are used; the outputs studied are annual energy production, maximum blade tip deflection, overall sound power level and blade mass. For example, Sobol indices are shown for the effect of chord and twist control points on the output quantities.
+
+\cite{Matthaus2017} performed uncertainty quantification including uncertainty in the aerodynamic properties; for example, the uncertainty in the lift coefficient at an airfoil section due to uncertain roughness (e.g.\ contamination) is achieved by interpolating between clean and fully rough state with a uniformly distributed random variable. Polynomial chaos and Kriging were used. See also \cite{Bortolotti2019}, in which the AVATAR turbine was analysed, using the Cp-Lambda aeroelastic model and DAKOTA as UQ toolbox. 
+
+\cite{Murcia2018} similarly considered a global sensitivity analysis with Sobol indices computed by using sparse polynomial chaos expansion. The quantities of interest considered are the energy production and lifetime equivalent fatigue loads for the DTU 10 MW reference turbine. The uncertain input is given by the turbulent inflow field, with 4 parameters: mean hub height wind speed, std. dev. of hub height wind speed, shear exponent, yaw misalignment. The dependency between these parameters (as described by the Normal Turbulence Model) is taken into account by using a Rosenblatt transformation that transforms the dependent variables to a set of independent ones. The Chaospy package is used for the analysis. Seven different model outputs are considered: power, thrust, and several damage equivalent fatigue loads (EFL), computed using a rainflow counting algorithm. The sensitivity analysis shows that the turbulent inflow realization has a bigger impact on the total distribution of equivalent fatigue loads than the shear coefficient or yaw misalignment.
+
+\cite{Sayed2019} argue that BEM models are accurate mainly for small turbines but that for large turbines, when the tip deformations exceed 10\% of the blade radius, it is questionable if they can still be applied. They compare the results of engineering models to CFD-based aeroelastic simulations. It is shown that the 2D polars commonly used in BEM require 3D corrections, and that including more polars improves the results. `Turbine power and thrust predicted from the flexible rotor were reduced compared to the rigid rotor employing a BEM-based model. A reason behind the increase in power from the CFD-based model is the spanwise force component. It is not included in the BEM-based simulations as it is one of the main assumptions of its theory. This assumption could be used for small wind turbine simulations where the edgewise deformations were insignificant. But for such large wind turbines, the spanwise force distribution over the blade radius must be taken into account in the calculation of the power output due to the large edgewise deformations. To increase the accuracy of the engineering model, it is recommended to increase the number of polars calculated by 2D CFD simulations at different sections along the blade. This is because of the significant difference in the Reynolds number for the large blade.'
+
+\cite{Velarde2019} perform a global sensitivity analysis of fatigue loads with respect to structural, geotechnical and metocean parameters for a 5MW offshore wind turbine installed on a gravity based foundation. Linear regression of Monte Carlo simulations and Morris screening are performed for three design load cases. 
+
+\cite{Robertson2018} assesses the sensitivity of different wind parameters on the loads of a wind turbine. They argue that the most common parameters considered normally in literature are the turbulence intensity variability, and the shear exponent, or wind profile, both having important influence on the turbine response. In the paper an assessment of which wind characteristics influence wind turbine structural loads is given. The correlated dependency between the individual parameters is not considered; rather, they focus on assessing the sensitivity of each parameter individually. An elementary-effects screening method (Morris screening) is used as global sensitivity method. The NREL 5MW turbine and FAST are used.
+
 \end{document}
