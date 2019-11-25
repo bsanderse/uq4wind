@@ -181,10 +181,16 @@ More advanced approaches, monotonicity preserving methods, etc??
 \section{Conclusions}
 
 \section*{Acknowledgements}
+
+\newpage
+
+\section{References}
 \bibliography{\myreferences}
 
+\newpage
+
 \appendix
-\section{Literature overview}
+\section{Literature overview of global sensitivity analysis in wind-turbine models}
 List of BEM codes in \cite{Sayed2019,Vorpahl2013}.
 
 Uncertainties and corrections in BEM models \cite{Madsen2012}: complex inflow, e.g. sheared inflow.
@@ -208,5 +214,9 @@ Uncertainties and corrections in BEM models \cite{Madsen2012}: complex inflow, e
 \cite{Velarde2019} perform a global sensitivity analysis of fatigue loads with respect to structural, geotechnical and metocean parameters for a 5MW offshore wind turbine installed on a gravity based foundation. Linear regression of Monte Carlo simulations and Morris screening are performed for three design load cases. 
 
 \cite{Robertson2018} assesses the sensitivity of different wind parameters on the loads of a wind turbine. They argue that the most common parameters considered normally in literature are the turbulence intensity variability, and the shear exponent, or wind profile, both having important influence on the turbine response. In the paper an assessment of which wind characteristics influence wind turbine structural loads is given. The correlated dependency between the individual parameters is not considered; rather, they focus on assessing the sensitivity of each parameter individually. An elementary-effects screening method (Morris screening) is used as global sensitivity method. The NREL 5MW turbine and FAST are used.
+
+\cite{Fluck2018} develop an \textit{intrusive} stochastic BEM method: `a stochastic solution for the unsteady aerodynamic loads based on a projection of the unsteady Blade Element Momentum (BEM) equations onto a stochastic space spanned by chaos exponentials'.
+
+\cite{Hubler2017} used global sensitivity analysis (as part of a four-step approach) to reduce the parameter dimension for structural behaviour computations using FAST as aeroelastic code. The methods of expert knowledge, one-at-a-time variation, and regression based on Monte Carlo sampling are used as pre-processing steps to reduce the computational expense of global sensitivity analysis.
 
 \end{document}
