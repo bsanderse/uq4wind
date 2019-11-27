@@ -139,7 +139,7 @@ Input.Marginals(counter).Bounds = ''; % No bound needed for Weibull
 POLARS ={0};
 % % To visualize above distribution, uncomment the following
 % hist(wblrnd(WindSpeed_scale,WindSpeed_shape,[10000,1]),20)
-
+ 
 %% Specify uncertain parameters to consider in the sensitivity analysis 
 % The parameter should be defined in the following format {name,index,rel_perturbation} where
 % rel_pertubation defines the amount of relative perturbation for B-spline curves

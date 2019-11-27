@@ -153,9 +153,10 @@ POLARS = {4,... % Number of polar files
     {CL_section05, CD_section05, CM_section05}, ...
     {CL_section08, CD_section08, CM_section08}, ...
     {CL_section10, CD_section10, CM_section10}, ...
-     49:65 ... % indices of angle of attack where the curve is perturbed
+     48:79 ... % indices of angle of attack where the curve is perturbed
     };
 
+% Define PDF for CL
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 1; % Corresponds to section 3
@@ -184,6 +185,64 @@ Input.Marginals(counter).Type = 'Uniform';
 Input.Marginals(counter).Parameters = [-0.5 0.5];
 Input.Marginals(counter).Bounds = [-0.5 0.5];
 
+% Define PDF for CD
+counter = counter+1;
+Input.Marginals(counter).Name = 'CD';
+Input.Marginals(counter).Index = 1; % Corresponds to section 3
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CD';
+Input.Marginals(counter).Index = 2; % Corresponds to section 5
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CD';
+Input.Marginals(counter).Index = 3; % Corresponds to section 8
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CD';
+Input.Marginals(counter).Index = 4; % Corresponds to section 10
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+% Define PDF for CM
+counter = counter+1;
+Input.Marginals(counter).Name = 'CM';
+Input.Marginals(counter).Index = 1; % Corresponds to section 3
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CM';
+Input.Marginals(counter).Index = 2; % Corresponds to section 5
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CM';
+Input.Marginals(counter).Index = 3; % Corresponds to section 8
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'CM';
+Input.Marginals(counter).Index = 4; % Corresponds to section 10
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [-0.5 0.5];
+Input.Marginals(counter).Bounds = [-0.5 0.5];
+
 %% Specify uncertain parameters to be considered in the sensitivity analysis
 % The parameter should be defined in the following format {name,index,rel_perturbation} where
 % rel_pertubation defines the amount of relative perturbation for B-spline
@@ -194,9 +253,14 @@ Input.Marginals(counter).Bounds = [-0.5 0.5];
 %                 {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
 %                 {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
 %                 {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}, ...
-%                 {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
+%                 {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2}, ...
+%                 {'CD',1, 0.2}, {'CD',2, 0.2}, {'CD',3, 0.2},{'CD',4,0.2}, ...
+%                 {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}};
 
-uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
+uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2}, ...
+                    {'Chord',3,0.2},{'Chord',4,0.2},{'Chord',5,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
+                    {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}, ...
+                    {'CD',1, 0.2}, {'CD',2, 0.2}, {'CD',3, 0.2}, {'CD',4,0.2}};
 
 % Specify quantity of interest
-QoI = 'Axial_Force'; % 'Axial_Force' or  'Power'
+QoI = 'Power'; % 'Axial_Force' or  'Power'

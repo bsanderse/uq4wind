@@ -22,7 +22,7 @@ min_X = min(interpolationLocations);
 if(min_X < 0)
     interpolationLocations = interpolationLocations - min_X;
 end
-interpolationLocations = interpolationLocations./max(interpolationLocations);  % Normalized between [0,1]
+interpolationLocations = interpolationLocations./max(interpolationLocations); % Normalized between [0,1]
 sampledLocations = interpolationLocations(sampledIndices);
 sampledValues = referenceCurve(sampledIndices);
 

@@ -77,7 +77,7 @@ end
 
 %% ===========Get RPM sample===============
 X_PITCHANGLE = P{15}; % Assign nominal value
-for i=1:ndim
+for i = 1:ndim
     if(strcmp(P{26}{i}{1},'PITCHANGLE'))
         X_PITCHANGLE = X(i);
     end
@@ -106,6 +106,52 @@ for i = 1:P{31}{1} % Loop over all possible polar files
     end
 end
 
+%% ========== Get CD sample ==============
+CD_INDEX = [];
+CD_PERTURB = [];
+X_CD = [];
+CD =cell(P{31}{1});
+for i = 1:P{31}{1} % Loop over all possible polar files
+    CD{i} = P{31}{6+i}{2};
+end
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'CD'))
+        CD_INDEX = [CD_INDEX P{26}{i}{2}];
+        CD_PERTURB = [CD_PERTURB P{26}{i}{3}];
+        X_CD = [X_CD X(i)];
+    end
+end
+for i = 1:P{31}{1} % Loop over all possible polar files
+    for j = 1:length(CD_INDEX)
+        if(CD_INDEX(j)== i)
+            CD{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CD(i)*ones(length(P{31}{7+P{31}{1}}),1), CD_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{2},3,1:length(P{31}{6}));
+        end
+    end
+end
+
+%% ========== Get CM sample ==============
+CM_INDEX = [];
+CM_PERTURB = [];
+X_CM = [];
+CM = cell(P{31}{1});
+for i = 1:P{31}{1} % Loop over all possible polar files
+    CM{i} = P{31}{6+i}{3};
+end
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'CM'))
+        CM_INDEX = [CM_INDEX P{26}{i}{2}];
+        CM_PERTURB = [CM_PERTURB P{26}{i}{3}];
+        X_CM = [X_CM X(i)];
+    end
+end
+for i = 1:P{31}{1} % Loop over all possible polar files
+    for j = 1:length(CM_INDEX)
+        if(CM_INDEX(j)==i)
+            CM{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CM(i)*ones(length(P{31}{7+P{31}{1}}),1), CM_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{3}, 3, 1:length(P{31}{6}));
+        end
+    end
+end
+
 %% Write to the input.txt file for aeromodule
 
 filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
@@ -125,6 +171,8 @@ fprintf(fid,'! Blade definition ------------------------------------------------
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'AEROPROPS\n');
 fprintf(fid,'!zB [m] chord [m] t/c [-] twist [deg]  C14 [%%c] xB [m] yB [m]\n');
+
+
 for i = 1:P{10}
     fprintf(fid,'%f    %f    %f    %f    %f    %f    %f \n', P{3}(i), chord(i), thickness(i)/chord(i), twist(i), P{7}(i), P{8}(i), P{9}(i));
 end
@@ -233,7 +281,24 @@ for i = 1:P{31}{1} % Loop over the polar files
     fprintf(fid,'\n');
     fprintf(fid,'Reynolds_Nr %f\n',P{31}{5});
     for j = 1:length(P{31}{6})
-        fprintf(fid,'%f    %f    %f    %f\n', P{31}{6}(j), CL{i}(j), P{31}{6+i}{2}(j), P{31}{6+i}{3}(j));
+        fprintf(fid,'%f    %f    %f    %f\n', P{31}{6}(j), CL{i}(j), CD{i}(j), CM{i}(j));
     end
     fclose(fid);
 end
+
+%% Uncomment to plot the random samples of chord, twist, CL, CD
+% figure(1)
+% hold on
+% plot(P{3}, chord, 'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% 
+% figure(2)
+% hold on 
+% plot(P{3}, twist, 'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% 
+% figure(3)
+% hold on
+% plot(P{31}{6}, CL{2},  'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% 
+% figure(4)
+% hold on 
+% plot( P{31}{6}, CD{2},'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
