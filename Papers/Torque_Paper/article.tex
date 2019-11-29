@@ -58,7 +58,7 @@
 
 % bibliography
 \newcommand{\myreferences}{../references,../Mendeley_refs}
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{abbrv} %elsarticle-num}
 
 
 \numberwithin{equation}{section}
@@ -118,8 +118,24 @@ This paper is structured as follows. First, in section \ref{sec:model_descriptio
 
 
 \section{Aeroelastic models}\label{sec:model_description}
-\subsection{BEM models}
-\subsection{Input parameters of aeroelastic models}
+\subsection{BEM model uncertainties}
+State-of-the-art wind-turbine models simulate the aeroelastic behavior of wind turbines by combining the concept of momentum conservation of the flow (BEM) with the equations of motion for the structure, possibly extended with hydrodynamics of the sea and control algorithms \cite{Vorpahl2013}. In this work, we only concentrate on the first aspect, namely the prediction of flow and blade forces as given by the BEM method. The particular BEM code that we use is  ECN's \texttt{Aero-Module} \cite{Boorsma2012}.
+
+For this case of a rigid turbine, with a uniform inflow field, the main model uncertainties that arise in the BEM formulation that we will discuss in this work are the following \cite{Hansen1993}:
+\begin{itemize}
+\item The use of (2D) \textit{airfoil polars}; uncertainty arises not only because the actual flow along the blade is 3D, but also because the 2D polars itself can be inaccurate, either when obtained from measurement or from 2D codes like Xfoil;
+%\item Sheared inflow
+\item The assumption of locally 2D flow along the blade is also invalid at the tip; this is typically corrected via \textit{a tip loss model};
+\item Three-dimensional flow effects also cause stall delay at the root; this is typically modelled via \textit{a dynamic stall model }and time constant;
+\item Yawed inflow is not naturally included in BEM and typically incorporated via \textit{a wake correction}.
+
+%\item Dynamic wake - Oye time lag constant
+%\item Tower shadow constants – Potential flow / Downwind Empirical model
+
+\end{itemize}
+
+%\subsection{Input parameters of aeroelastic models}
+%The main 
 
 \section{Parametrization of uncertain inputs in the BEM model}\label{sec:parameterization}
 
@@ -196,6 +212,8 @@ The above decomposition is only valid for independent input parameters.
 \section{Results}\label{sec:results}
 
 \subsection{NM80}
+ and the turbine is the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8m. The data for lift ($Cl$) and drag ($Cd$) polars are available at four locations along the blade radius at 11.87m, 17.82m, 28.97m and 35.53m. The reference value of polars are obtained from wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable. For chord and twist, we independently perturb control points at different locations as shown in Fig. \ref{fig:samples} (a) - (b). For $Cl$ and $Cd$, all control points are perturbed using a same random number.
+ 
 \subsubsection{Verification of GSA method}
 Convergence study of UQLab with increasing number of samples for Quad, OLS, LARS.
 
