@@ -9,11 +9,12 @@
  right=25mm,
  bottom=27mm
  }
-
 \usepackage{natbib}  % references
 \usepackage{graphicx}  % plots
 \usepackage{scrextend}  % indent authors
 \usepackage{amsmath}  % math typesetting
+\usepackage{graphicx}
+\usepackage{subcaption}
 
 % typeset in sans serif to match the prompt
 \usepackage{lmodern}
@@ -67,21 +68,49 @@ The long-term objective of this study is to develop calibrated BEM models that g
 
 % =============================================
 
-
 % =============================================
 \section{Methodology}
 To compute parameter sensitivities we use a global sensitivity analysis based on the Sobol expansion approach, which decomposes the total variance of the quantity of interest (model output) into contributions from individual parameters and their combinations, similar to \cite{Echeverria2017,Murcia2018,Rinker2016}. We employ the uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}, which computes the Sobol indices from a sparse polynomial chaos expansion. \texttt{UQLab}'s modular structure allows for easy integration with available BEM codes. 
 
-The geometric uncertainties currently considered are chord and twist distribution, whereas the model uncertainty enters via uncertainty in lift- and drag-polars. In order to express the chord, twist, lift and drag distributions along the turbine blade, an efficient parameterization is needed that gives flexible control over the prescribed uncertainty while limit the number of required parameters. We have chosen to use NURBS curves for this purpose, similar to \cite{Echeverria2017}. 
+The geometric uncertainties currently considered are chord and twist distribution, whereas the model uncertainty enters via uncertainty in lift- and drag-polars. In order to express the chord, twist, lift and drag distributions along the turbine blade, an efficient parameterization is needed that gives flexible control over the prescribed uncertainty while limit the number of required parameters. We have chosen to use Non-Uniform Rational Basis Splines (NURBS) for this purpose, similar to \cite{Echeverria2017}. 
 
 % =============================================
 \section{Results}
-The aeroelastic code that we use is the \texttt{ECN Aero-Module} \cite{Boorsma2012} and the turbine is the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013}.
+The aeroelastic code that we use is the \texttt{ECN Aero-Module} \cite{Boorsma2012} and the turbine is the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8m. The data for lift ($Cl$) and drag ($Cd$) polars are available at four locations along the blade radius at 11.87m, 17.82m, 28.97m and 35.53m. The reference value of polars are obtained from wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable. For chord and twist, we independently perturb control points at different locations as shown in Fig. \ref{fig:samples} (a) - (b). For $Cl$ and $Cd$, all control points are perturbed using a same random number.
 
+In Fig. \ref{fig:Sobol}, we show the total order Sobol indices as a measure of sensitivity for different geometric and model parameters on power production. The control points are named
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{Chord_samples_torque.eps}
+   % \caption{Coffee.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{Twist_samples_torque.eps}
+   % \caption{More coffee.}
+  \end{subfigure}
+  
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{Cl_samples_torque.eps}
+    %\caption{Coffee.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{Cd_samples_torque}
+    %\caption{More coffee.}
+  \end{subfigure}
+  \caption{Random realization of twist, chord, lift- and drag-polars.}
+  \label{fig:samples}
+\end{figure}
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=\linewidth]{SA_Power_Chord_Twist_CD_CL_torque.eps}
+  \caption{Total order Sobol indices for the sensitivity analysis of geometrical and model parameters.}
+   \label{fig:Sobol}
+\end{figure}
 % =============================================
 \section{Conclusions}
-
-
+Global sensitivity analysis is a powerful tool to identify important input parameters associated with aeroelastic models. Sobol indices computed using sparse polynomial expansion is very efficient and can be used to analyze large number of input parameters. In the full paper, we will present a sensitivity assessment with a more model parameters.
 % =============================================
 \bibliographystyle{plain}
 \bibliography{references,Mendeley_refs}

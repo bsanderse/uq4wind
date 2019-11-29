@@ -289,16 +289,16 @@ end
 %% Uncomment to plot the random samples of chord, twist, CL, CD
 % figure(1)
 % hold on
-% plot(P{3}, chord, 'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% plot(P{3}, chord, 'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
 % 
 % figure(2)
 % hold on 
-% plot(P{3}, twist, 'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% plot(P{3}, twist, 'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
 % 
 % figure(3)
 % hold on
-% plot(P{31}{6}, CL{2},  'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% plot(P{31}{6}, CL{2},  'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
 % 
 % figure(4)
 % hold on 
-% plot( P{31}{6}, CD{2},'color','b','linestyle','--','linewidth',1,'HandleVisibility','off')
+% plot( P{31}{6}, CD{2},'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
