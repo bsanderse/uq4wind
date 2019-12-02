@@ -1,0 +1,218 @@
+\documentclass[review]{elsarticle}
+
+\journal{ }
+
+% packages
+\usepackage{microtype}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[a4paper, total={6.2in, 9in}]{geometry}
+\renewcommand{\baselinestretch}{1.2} 
+\usepackage{color}
+\usepackage[x11names]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb,latexsym}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{relsize}
+\usepackage[T1]{fontenc}
+\usepackage{cases}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{stix2}
+\usepackage[labelfont=bf,font=footnotesize]{caption}
+\usepackage{tabularx,ragged2e,booktabs}
+\usepackage{lineno}
+\modulolinenumbers[5]
+\usepackage[toc]{appendix}
+\usepackage{hyperref}
+
+%new commands
+\renewcommand{\figurename}{{Figure}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}[section]
+\numberwithin{equation}{section}
+\newcommand{\footremember}[2]{%
+    \footnote{#2}
+    \newcounter{#1}
+    \setcounter{#1}{\value{footnote}}%
+}
+\newcommand{\footrecall}[1]{%
+    \footnotemark[\value{#1}]%
+}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\newcommand{\lnorm}{\left|\left|}
+\newcommand{\rnorm}{\right|\right|}
+\newcommand{\Ld}{L^2(\mathcal{D})}
+\newcommand{\Lomtd}{L^2(\Omega;\mathcal{T};\mathcal{D})}
+%\newcommand{\Lomd}{L^2(\Omega;L^2(\mathcal{D}))}
+\newcommand{\Lomd}{L^2(\Omega,\mathcal{D})}
+
+% bibliography
+\newcommand{\myreferences}{../references,../Mendeley_refs}
+\bibliographystyle{elsarticle-num}
+
+
+\numberwithin{equation}{section}
+\graphicspath{{./images/}}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+\pagestyle{myheadings}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{frontmatter}
+\title{A global sensitivity analysis of model uncertainty in aeroelastic wind turbine models}
+
+\address[cwi]{Centrum Wiskunde \& Informatica (CWI), Amsterdam, The Netherlands}
+%\address[aero]{Faculty of Aerospace Engineering, Delft University of Technology, Delft, The Netherlands.}
+%\author[cwi,aero]{Prashant~Kumar}
+\author[]{Prashant~Kumar}\ead{pkumar@cwi.nl}
+
+\author{Benjamin~Sanderse}
+
+\begin{abstract}
+Wind turbines are a complex multi-physics systems whose performance and life span is highly dependent on manufacturing, meteorological and operational factors. It is therefore important to quantify the impact of these parameters on the turbine response. We perform comprehensive sensitivity analysis of aeroelastic models typically employed to compute turbine response. This paper also seeks to quantify sensitivities due to manufacturing tolerance in the turbine blades. We propose a non-uniform rational basis splines approach to parametrize the geometry of the blade and further utilize this for quantifying geometric sensitivities at different radial locations. [Some important results]
+\end{abstract}
+\begin{keyword}
+BEM, global sensitivity analysis, model uncertainty, Sobol indices
+\end{keyword}
+\end{frontmatter}
+
+\linenumbers
+
+\section{Introduction}
+Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBook} play a critical role in the design, development and optimization of modern wind turbines. A large number of BEM models have been developed to predict turbine responses such as the structural loads and power output \cite{Vorpahl2013}. 
+
+As a consequence of the strong model assumptions at the basis of BEM theory, the results from BEM codes can be subject to significant inaccuracies or uncertainties. For example, the effect of sheared inflow \cite{Madsen2012} is not naturally accounted for in the theory, and needs to be incorporated via correction terms. Other major model uncertainties in BEM models are for example the time constant in dynamic stall models, the wake correction factor, the tip loss model parameter, and the lift- and drag-polars used to compute local aerodynamic forces. Especially for increasing turbine sizes, these model parameters  are foreseen to be not sufficiently accurate \cite{Sayed2019}. In other words, the uncertainty associated to the output of currently employed BEM models is rather large. 
+% iIn order to arrive at robust BEM models that include an uncertainty estimate associated 
+
+Recently, several papers have addressed the uncertainty in BEM model output by performing forward uncertainty propagation or sensitivity studies, e.g.\ \cite{Bos2019a,Echeverria2017,Matthaus2017,Murcia2018,Robertson2018}. In these studies, the focus in mainly on uncertainties in the external conditions (wind parameters) and/or uncertainty in the turbine specification (geometric parameters). Apart from understanding how uncertainty in the output is related to the different uncertain inputs, such sensitivity studies are very useful to reduce the number of parameters as needed for example in design optimization \cite{Echeverria2017}. However, the uncertainty in BEM model output as caused by uncertainty in the model formulation itself, e.g.\ through the values chosen for model parameters, has been given little attention (exceptions being the effect of aerodynamic properties studied in \cite{Matthaus2017,Bortolotti2019}).
+
+The goal of this work is to perform a systematic assessment of the uncertainty in model parameters in BEM models. We approach this by performing a global sensitivity analysis based on the Sobol expansion approach, which decomposes the total variance of the quantity of interest (model output) into contributions from individual parameters and their combinations, similar to \cite{Echeverria2017,Murcia2018,Rinker2016}. We will employ the uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}, which computes the Sobol indices based on a sparse polynomial chaos expansion. 
+
+Clearly, the main novelty of the work lies in the study of the effect of model uncertainties rather than external conditions or geometric uncertainties. The current sensitivity analysis is part of the so-called WindTrue project, in which the long-term goal is the development of calibrated BEM models, that possess a quantified level of uncertainty. Anticipating on this goal, we are using the NM80 wind turbine model from the Tjaereborg wind farm, for which extensive measurement data is available through the DanAero project \cite{Troldborg2013} and IEA Task 29. The measurement data will enable the calibration step, and our sensitivity analysis will make clear which of the model parameters should be used in the calibration step.
+
+This paper is structured as follows. First, in section \ref{sec:model_description} we give a short description of the BEM model and associated uncertainties. In section \ref{sec:parameterization} the parameterization of the uncertainties is described, and in section \ref{sec:GSA} the global sensitivity analysis methodology. Section \ref{sec:results} discusses the results of the sensitivity analysis for the NM80 turbine test case, and conclusions follow in section \ref{sec:conclusions}.
+
+%A number of parameters describing meteorological and operational conditions as well as manufacturing specifications are needed as inputs for BEM simulations. In this work, we seek to quantify the sensitivities of these input parameters for different turbine responses. In the past a number of sensitivity studies have been performed to understand the influence of input parameters on different turbine response, for e.g. \cite{moriarty2002effect, eggers2003wind, McKay2014, dykes2014sensitivity, Robertson2018}. Many studies have confirmed that the wind parameters especially the wind speed and wind speed standard deviation have the most influence on aerodynamic performance of turbines. For example, in the case of an upstream turbine, the wind speed is most sensitive to power production. Furthermore, wind speed in combination with wind speed standard deviation has a large influence on the power production of turbines operating in the wake of an upstream turbine. Among operational factors, the rotor RPM is the most sensitive to power production. [More on parameter sensitivities on structural loads]
+%
+%[Sensitivity on the polars as novel element]
+%
+%[Mention this study is a part of IEA Task29 project]
+%
+%In this work, we also study the effect of manufacturing tolerances on the turbine response. Usually, there are some discrepancy between the  manufactured and nominally prescribed design of the turbine blade leading to a suboptimal performance. For BEM models, the turbine shape is described as a series of airfoils along the span of the blade where each airfoil shape is computed using the three quantities: chord length, thickness and twist. We perturb these three quantities to obtain a perturbed turbine blade and analyze with sections that have more influence on output quantities. 
+%
+%To compute parameter sensitivities we use the Sobol expansion approach, which decomposes the total variance of the quantity of interest into contributions from individual parameters and their combinations. To perform Sobol analysis, we use Matlab-based general purpose uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}. \texttt{UQLab}'s modular structure allows for easy integration with available BEM codes. For investigation the aeroelastic model of the  2MW NM80 turbine (with an 80m rotor) from the DANAERO project \cite{DANAERO} is utilized.
+
+
+
+\section{Aeroelastic models}\label{sec:model_description}
+\subsection{BEM models}
+\subsection{Input parameters of aeroelastic models}
+
+\section{Parametrization of uncertain inputs in the BEM model}\label{sec:parameterization}
+
+\subsection{Geometric uncertainty}
+We use Non-Uniform Rational Basis Splines (NURBS) \cite{rogers2000} to perturb the geometrical parameters of the turbine blade, such as the reference chord and twist curves. The main advantage of using NURBS is that it provides great flexibility to approximate a large variety of curves with a limited number of control points. Further, the set of control points and knots can be directly manipulated to control the smoothness and curvature.
+
+Use of NURBS in wind-turbine blades (airfoils) optimization: \cite{Ribeiro2012,Bottasso2014}.
+
+\subsubsection{NURBS based perturbation}
+The value of NURBS curve at each location $x$ is computed using a weighted sum of $N$ basis functions (or B-splines):
+\begin{equation}\label{NURB_curve}
+S(x)  = \sum_{i=1}^{N} c_i B_{i,p}(x),
+\end{equation}
+where $S(x)$ is the value of the curve at location $x, c_i$ is the weight of control point $i$ and $B_{i,p}(x)$ is the value of B-spline corresponding to the $i$-th control point at $x$. The subscript $p$ denote the polynomial degree of the NURBS curve. The total number of control points $N = m+p+1$ where $m$ is the number of knots  and the degree of NURBS curve. The above definition can be easily extended to higher dimensions. 
+
+The B-splines are recursive in polynomial degree, for example, we can derive quadratic B-splines ($p=2$) using linear B-splines ($p=1$), cubic ($p=3$) from quadratic B-splines and so on. Given $m$ knot locations $t_1, t_2, ..., t_{m}$, the B-spline of degree 0 is defined as:
+\begin{equation}\label{linearBspline}
+B_{i,0}(x) :=
+\begin{cases}
+1\quad t_i\leq x < t_{i+1},\quad i = 1,2,...,m,\\
+0\quad\text{elsewhere.}
+\end{cases} 
+\end{equation}
+Higher order B-splines can then be derived using the recurrence relation \cite{deBoor}:
+\begin{equation}\label{NURBS_recurrence}
+B_{i,p}(x) := \frac{x-t_i}{t_{i+p} - t_i}B_{i,p-1}(x) + \frac{t_{i+p+1}  -  x}{t_{i+p+1}  -  t_{i+1}}B_{i+1,p-1}(x),\quad p\geq1, i = 1,2,...,m.
+\end{equation} 
+Something about padding...
+These B-splines can be constructed efficiently using the De Boor's algorithm \cite{deBoor}. In Fig. \ref{B-splines}, we show linear, quadratic and cubic splines for $x\in[0,1]$. At the interval boundaries these B-splines go to zero smoothly. The domain of influence of a given control point depends on the respective B-spline (rephrase)??
+
+Next, we describe steps to generate perturbed samples of chord from a given reference chord, $S_{ref}(x)$, using NURBS based parametrization. The first step is to approximate the given reference chord using a NURBS curve with a fixed degree $p$. For this, we need to sample $S_{ref}(x)$ at $N$ locations $\{x_j\}_{j=1}^N$ and compute $B_{i,p}(x_j), \text{ for }i, j = 1,2, ..., N$, such that we can compute the set of control points $\mathbf{c}=\{c_i\}_{i=0}^N$ by solving the following linear system:
+\begin{equation}\label{nurbs_inversion}
+\mathbf{B}\mathbf{c} = \mathbf{S},
+\end{equation}
+where $\mathbf{S}\in \mathbb{R}^{N}$ is a vector containing sampled values of the reference curve and $\mathbf{B}\in \mathbb{R}^{N\times N}$ is a matrix with $j$-th row consisting of B-splines values at $x_j$ locations, i.e., $B_{i,p}(x_j), i= 1, 2,..., N$. 
+Once the control points are obtained, we can derive the approximate reference curve $S_N(x)$ using \eqref{NURB_curve}. Note that the accuracy of the approximated curve is dependent on the sample locations $x_j$ as well as the degree $p$ and can be set heuristically \cite{adaptiveNurbs}. The number of sampled locations $N$ can be adaptively increased until the following tolerance criteria is met:
+\begin{equation}
+\frac{||S_N - S_{ref}||}{||S_{ref}||} <\varepsilon.
+\end{equation}
+More advanced approaches, monotonicity preserving methods, etc??
+%\begin{remark}
+%How to chose $x$?
+%\end{remark}
+%The final step is to introduce uncertainty in the above computed control points by associating a probability distribution.
+%
+%The steps to obtained perturbed samples from a given reference curve is outlined in Fig. \ref{}.
+\subsection{Model uncertainty}
+\subsection{Wind velocity}
+
+\section{Global sensitivity analysis}\label{sec:GSA}
+The objective of sensitivity analysis is to quantify the relative significance of individual inputs (or in combination) and how variations in input values affects the output of interest. In engineering, sensitivity analysis can be employed for a number of reasons: to determine the stability and robustness of a computational model with respect to input parameters, for simplification of stochastic models by fixing the insensitive parameters, and to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters. Sensitivity analysis techniques can be classified as local and global methods, see \cite{RSmith}. In local sensitivity analysis, individual parameters are perturbed around their nominal values allowing for the description of output variability only in a small neighbourhood of nominal input values. Although, local approaches are widely employed due to their ease of implementation and low computational cost, they are unable to quantify global behavior of nonlinearly parametrized models such as aeroelastic models. Global sensitivity approaches, on the other hand, consider the entire range of input values to compute output sensitivities. Therefore, global sensitivity analysis is more suitable for aeroelastic models considered in this work.  
+
+\subsection{Sobol analysis}
+We employ variance-based Sobol decomposition to perform global sensitivity analysis. This approach allows for quantification of  the relative importance of the input parameters on a scale of $[0,1]$ known as \emph{Sobol indices}. 
+
+The main idea of Sobol analysis is to express the total variance of the output in term of contributions from individual parameters and their combinations. For the ease of exposition, let us consider a nonlinear model:
+\begin{equation}\label{nonlinear_model}
+Y = f(\mathbf{Z}),
+\end{equation}
+where $\mathbf{Z} = [z_1, z_2, ..., z_M]\in \mathcal{D}_{\mathbf{Z}}\in \mathbb{R}^M$ is the input vector. For simplicity, we assume input parameters are uniformly distributed i.e. $z_i \sim \mathcal{U}(0,1)$ and the support of input set is $\mathcal{D}_\mathbf{Z}  =  [0,1]^M$ where $M$ is the total number input parameters. The Sobol decomposition is defined as:
+\begin{equation}\label{sobol_decomp}
+f(z_1, z_2, ..., z_M) = f_0+\sum_{i=1}^M f_i(z_i) + \sum_{1\leq<i<j\leq M} f_{ij}(z_i,z_j) + ... + f_{1, 2, ..., M}(z_1, z_2, ..., z_M),
+\end{equation}
+The above decomposition is only valid for independent input parameters. 
+\subsubsection{PCE Ordinary Least Square (PCE\_OLS)}
+\subsubsection{PCE Least Angle Regression (PCE\_LAR)}
+
+
+
+%\section{Description of test case}
+
+%\section{Sensitivity analysis workflow}
+
+\section{Results}\label{sec:results}
+
+\subsection{NM80}
+\subsubsection{Verification of GSA method}
+Convergence study of UQLab with increasing number of samples for Quad, OLS, LARS.
+
+\subsection{AVATAR}
+
+\section{Conclusions}\label{sec:conclusions}
+
+\section*{Acknowledgements}
+
+\newpage
+
+\section{References}
+\bibliography{\myreferences}
+
+\newpage
+
+\appendix
+\input{literature_overview}
+
+\end{document}
