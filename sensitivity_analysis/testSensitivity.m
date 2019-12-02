@@ -17,7 +17,8 @@ addpath([pwd,'\Geometry\']);
 
 %% initialize UQlab
 % add path
-addpath(genpath([pwd,'/UQLab/']));
+run('config.m');
+addpath(genpath(UQLab_path));
 % start uqlab
 uqlab
 %% process input files
