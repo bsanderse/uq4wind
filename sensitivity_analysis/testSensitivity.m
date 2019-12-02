@@ -1,6 +1,6 @@
 %% Sobol indices computed with Monte Carlo and PCE-type methods
 clc
-close all
+% close all
 clearvars 
 
 caseName = 'aero_module'; % 'airfoil_lift';
@@ -17,7 +17,8 @@ addpath([pwd,'\Geometry\']);
 
 %% initialize UQlab
 % add path
-addpath(genpath([pwd,'/UQLab/']));
+run('config.m');
+addpath(genpath(UQLab_path));
 % start uqlab
 uqlab
 %% process input files
