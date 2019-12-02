@@ -1,6 +1,6 @@
 %% Sobol indices computed with Monte Carlo and PCE-type methods
 clc
-close all
+% close all
 clearvars 
 
 caseName = 'aero_module'; % 'airfoil_lift';

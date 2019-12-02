@@ -287,13 +287,13 @@ for i = 1:P{31}{1} % Loop over the polar files
 end
 
 %% Uncomment to plot the random samples of chord, twist, CL, CD
-% figure(1)
-% hold on
-% plot(P{3}, chord, 'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
-% 
-% figure(2)
-% hold on 
-% plot(P{3}, twist, 'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
+figure(1)
+hold on
+plot(P{3}, chord, 'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
+
+figure(2)
+hold on 
+plot(P{3}, twist, 'color','k','linestyle','--','linewidth',0.5,'HandleVisibility','off')
 % 
 % figure(3)
 % hold on
