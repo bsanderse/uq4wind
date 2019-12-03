@@ -1,8 +1,8 @@
-% name of Matlab file representing the turbine data
-turbineName = 'NM80';
+% Name of Matlab file representing the turbine data
+turbineName = 'NM80'; % 'NM80', 'AVATAR'
 
 %% model description 
-% name of Matlab file representing the model
+% Name of Matlab file representing the model
 Model.mHandle = @aero_module;
 % Optionally, one can pass parameters to the model stores in the cell
 % array P
@@ -13,23 +13,23 @@ Model.isVectorized = false;
 %% list of UQ methods to be used for analysis
 
 % specify a list of options from the following list:
-methods = {'PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+methods = {'PCE_OLS','PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
 % for MC, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
 MC_repeat = 1;
 % number of samples with MC
-NsamplesMC = [1e1];
+NsamplesMC = [8 16 32];
 
 % for PCE-Quad, specify the polynomial degrees to be tested
-DegreesQuad = 1:4; %[1 2 3 4 5 6];
+DegreesQuad = 1:3; %[1 2 3 4 5 6];
 
 % % for PCE-OLS:
-NsamplesOLS = [8]; % if not specified, the number of samples from Quad is taken
+NsamplesOLS = [8 16]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [4]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [8 16]; % if not specified, the number of samples from Quad is taken
 LARS_repeat = 1; % like MC_repeat
 
 %% Assemble the Input.Marginal for sensitivity analysis by text comparison

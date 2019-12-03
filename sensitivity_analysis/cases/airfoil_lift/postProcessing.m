@@ -69,11 +69,11 @@ if (find(strcmp(methods,'MC')))
     semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));  
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    if(size(AVG_Sobol_Quad_Total,2)>1)
-        semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
+    if(size(Sobol_Quad_Total,2)>1)
+        semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
         hold on
     end
-    semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
+    semilogx(NsamplesQuad', Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
 end
 if (find(strcmp(methods,'PCE_OLS')))
     if(size(AVG_Sobol_OLS_Total,2)>1)
@@ -114,7 +114,7 @@ if (find(strcmp(methods,'MC')))
 end
 
 if (find(strcmp(methods,'PCE_Quad')))
-    uq_bar((1:ndim)+ coords(k), AVG_Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+ coords(k), Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 
@@ -151,94 +151,94 @@ legend(methods, 'Interpreter', 'none')
 ylabel('Total order Sobol index');
 ylim([0 1])
 
-%% plot the polynomial response surface for PCE quadrature-based
-
-if (find(strcmp(methods,'PCE_Quad')))
-    
-    n_inputs = length(Input.Marginals);
-    
-    if (n_inputs == 1)
-        Xsamples  = myPCE_Quad.ExpDesign.X;
-        Ysamples  = myPCE_Quad.ExpDesign.Y;
-        
-        N = 100;
-        domain = getMarginalBounds(myInput.Marginals(1));
-        X      = linspace(domain(1),domain(2),N)';
-        
-        Y     = uq_evalModel(myModel,X);
-        Y_PCE = uq_evalModel(myPCE_Quad,X); % or myPCE_OLS, myPCE_LARS
-        
-        figure
-        plot(X,Y,'-');
-        hold on
-        plot(X,Y_PCE,'--');
-        plot(Xsamples,Ysamples,'s');
-        
-        
-    elseif (n_inputs >= 2)
-        
-        Xsamples  = myPCE_Quad.ExpDesign.X;
-        Ysamples  = myPCE_Quad.ExpDesign.Y;
-        
-        % plot two parameters
-        N1 = 100;
-        N2 = 100;
-        
-        % select which parameters to plot
-        p1 = 1;
-        p2 = 2; 
-        p3 = 3; % we will use mean for p3
-        
-        % create regular grid of points where surrogate model will be evaluated
-        % (this should be cheap)
-        domain1 = getMarginalBounds(myInput.Marginals(p1));
-        X1      = linspace(domain1(1),domain1(2),N1)';
-        domain2 = getMarginalBounds(myInput.Marginals(p2));
-        X2      = linspace(domain2(1),domain2(2),N2)';
-        
-        
-        if (n_inputs==2)
-            X1new=kron(X1,ones(N2,1));
-            X2new=kron(ones(N1,1),X2);
-            X = [X1new X2new];
-            plotting = 1;
-        elseif (n_inputs==3)
-            % for n>2, it is difficult to plot something in 3D space
-            % for quadrature methods based on tensor formulation,
-            % number of samples in one direction = degree+1
-            % take 'middle' (mean?) point of samples in X3
-            samples1D = 1+DegreesQuad(end);
-            start1D  = ceil(samples1D/2);
-            X3    = Xsamples(start1D,p3);
-            
-            X1new = kron(X1,ones(N2,1));
-            X2new = kron(ones(N1,1),X2);
-            X3new = ones(size(X1new))*X3;
-            X = [X1new X2new X3new];
-            plotting = 1;
-        else
-            warning('plotting not correctly implemented for high dimensional spaces');
-            plotting = 0;
-        end
-        
-        if (plotting == 1)
-            % evaluate original model (can be expensive)
-            Y     = uq_evalModel(myModel,X);
-            % evaluate surrogate model (should be cheap)
-            Y_PCE = uq_evalModel(myPCE_Quad,X); % or myPCE_OLS, myPCE_LARS
-            
-            figure
-            surf(X1,X2,reshape(Y_PCE,N2,N1));
-            hold on
-            %     surf(X1,X2,reshape(Y,N2,N1));
-            if (n_inputs==2)
-                plot3(Xsamples(:,1),Xsamples(:,2),Ysamples,'s','MarkerSize',16,'MarkerFaceColor','black');
-            elseif (n_inputs==3)
-                plot3(Xsamples(start1D:samples1D:end,1),Xsamples(start1D:samples1D:end,2),Ysamples(start1D:samples1D:end),'s','MarkerSize',16,'MarkerFaceColor','black');
-            end
-            title('polynomial response surface'); 
-        end
-        
-    end
-    
-end
+%% plot the polynomial response surface for PCE quadrature-based 
+% 
+% if (find(strcmp(methods,'PCE_Quad')))
+%     
+%     n_inputs = length(Input.Marginals);
+%     
+%     if (n_inputs == 1)
+%         Xsamples  = myPCE_Quad.ExpDesign.X;
+%         Ysamples  = myPCE_Quad.ExpDesign.Y;
+%         
+%         N = 100;
+%         domain = getMarginalBounds(myInput.Marginals(1));
+%         X      = linspace(domain(1),domain(2),N)';
+%         
+%         Y     = uq_evalModel(myModel,X);
+%         Y_PCE = uq_evalModel(myPCE_Quad,X); % or myPCE_OLS, myPCE_LARS
+%         
+%         figure
+%         plot(X,Y,'-');
+%         hold on
+%         plot(X,Y_PCE,'--');
+%         plot(Xsamples,Ysamples,'s');
+%         
+%         
+%     elseif (n_inputs >= 2)
+%         
+%         Xsamples  = myPCE_Quad.ExpDesign.X;
+%         Ysamples  = myPCE_Quad.ExpDesign.Y;
+%         
+%         % plot two parameters
+%         N1 = 100;
+%         N2 = 100;
+%         
+%         % select which parameters to plot
+%         p1 = 1;
+%         p2 = 2; 
+%         p3 = 3; % we will use mean for p3
+%         
+%         % create regular grid of points where surrogate model will be evaluated
+%         % (this should be cheap)
+%         domain1 = getMarginalBounds(myInput.Marginals(p1));
+%         X1      = linspace(domain1(1),domain1(2),N1)';
+%         domain2 = getMarginalBounds(myInput.Marginals(p2));
+%         X2      = linspace(domain2(1),domain2(2),N2)';
+%         
+%         
+%         if (n_inputs==2)
+%             X1new=kron(X1,ones(N2,1));
+%             X2new=kron(ones(N1,1),X2);
+%             X = [X1new X2new];
+%             plotting = 1;
+%         elseif (n_inputs==3)
+%             % for n>2, it is difficult to plot something in 3D space
+%             % for quadrature methods based on tensor formulation,
+%             % number of samples in one direction = degree+1
+%             % take 'middle' (mean?) point of samples in X3
+%             samples1D = 1+DegreesQuad(end);
+%             start1D  = ceil(samples1D/2);
+%             X3    = Xsamples(start1D,p3);
+%             
+%             X1new = kron(X1,ones(N2,1));
+%             X2new = kron(ones(N1,1),X2);
+%             X3new = ones(size(X1new))*X3;
+%             X = [X1new X2new X3new];
+%             plotting = 1;
+%         else
+%             warning('plotting not correctly implemented for high dimensional spaces');
+%             plotting = 0;
+%         end
+%         
+%         if (plotting == 1)
+%             % evaluate original model (can be expensive)
+%             Y     = uq_evalModel(myModel,X);
+%             % evaluate surrogate model (should be cheap)
+%             Y_PCE = uq_evalModel(myPCE_Quad,X); % or myPCE_OLS, myPCE_LARS
+%             
+%             figure
+%             surf(X1,X2,reshape(Y_PCE,N2,N1));
+%             hold on
+%             %     surf(X1,X2,reshape(Y,N2,N1));
+%             if (n_inputs==2)
+%                 plot3(Xsamples(:,1),Xsamples(:,2),Ysamples,'s','MarkerSize',16,'MarkerFaceColor','black');
+%             elseif (n_inputs==3)
+%                 plot3(Xsamples(start1D:samples1D:end,1),Xsamples(start1D:samples1D:end,2),Ysamples(start1D:samples1D:end),'s','MarkerSize',16,'MarkerFaceColor','black');
+%             end
+%             title('polynomial response surface'); 
+%         end
+%         
+%     end
+%     
+% end

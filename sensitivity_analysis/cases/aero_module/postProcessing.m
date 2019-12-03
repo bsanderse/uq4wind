@@ -11,11 +11,11 @@ if (find(strcmp(methods,'MC')))
     semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));  
 end
 if (find(strcmp(methods,'PCE_Quad')))
-    if(size(AVG_Sobol_Quad_Total,2)>1)
-        semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
+    if(size(Sobol_Quad_Total,2)>1)
+        semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
         hold on
     end
-    semilogx(NsamplesQuad', AVG_Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
+    semilogx(NsamplesQuad', Sobol_Quad_Total(:, end), 's-','Linewidth', 2,'Color', cmap(2,:));
 end
 if (find(strcmp(methods,'PCE_OLS')))
     if(size(AVG_Sobol_OLS_Total,2)>1)
@@ -56,7 +56,7 @@ if (find(strcmp(methods,'MC')))
 end
 
 if (find(strcmp(methods,'PCE_Quad')))
-    uq_bar((1:ndim)+ coords(k), AVG_Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    uq_bar((1:ndim)+ coords(k), Sobol_Quad_Total(end,:), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
     k = k+1;
 end
 
@@ -83,6 +83,6 @@ ylabel('Total order Sobol index');
 ylim([0 1])
 xticks(1:ndim)
 for i =1:ndim
-label_names{i} = Input.Marginals(i).Name;
+    label_names{i} = Input.Marginals(i).Name;
 end
 xticklabels(label_names)
