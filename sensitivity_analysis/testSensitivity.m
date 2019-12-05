@@ -1,26 +1,30 @@
 %% Sobol indices computed with Monte Carlo and PCE-type methods
 clc
 close all
-clearvars 
+clearvars
 
-caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
+caseName = 'airfoil_lift'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
+
 %% Sobol options
 SobolOpts.Type        = 'Sensitivity';
 SobolOpts.Method      = 'Sobol';
 SobolOpts.Sobol.Order = 1;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
-addpath([pwd,'\AEROmoduleWrapper\']);
-addpath([pwd,'\NURBS\']);
-addpath([pwd,'\Geometry\']);
+addpath([pwd,'/AEROmoduleWrapper/']);
+addpath([pwd,'/NURBS/']);
+addpath([pwd,'/Geometry/']);
 
 %% initialize UQlab
+
 % add path
 run('config.m');
 addpath(genpath(UQLab_path));
+
 % start uqlab
 uqlab
+
 %% process input files
 run(['cases/' input_file '/initialize.m']);
 
