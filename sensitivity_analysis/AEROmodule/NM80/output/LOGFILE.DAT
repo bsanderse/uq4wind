@@ -1,7 +1,7 @@
 ************************************************************
 ************************************************************
 **** ECN Aero-Module version nr    252_CWI Windows 64-bit       
-**** Calculation started at DD-MM-YY hh:mm 03-12-19 09:53
+**** Calculation started at DD-MM-YY hh:mm 05-12-19 15:42
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
@@ -85,15 +85,15 @@ WAKECUTOFFRADIUS           0.1000
  ----------------Stand-alone-----------------------------
 CONEANGLE                  0.0000
 HUBHEIGHT                 57.1900
-PITCHANGLE                -1.5642
-RPM                       13.4397
+PITCHANGLE                 0.1500
+RPM                       12.3000
 STARTAZIMUTH               0.0000
 TBEGIN                     0.0000
 TEND                      30.0000
 TILTANGLE                  0.0000
 TIMESTEP                   0.1355
 XNAC2HUB                  -4.0300
-YAWANGLE                  -1.6685
+YAWANGLE                   0.4420
 ZNAC2HUB                   1.6000
  ----------------AeroProp Table-----------------------------
           zB [m]       chord [m]   thickness [-]     twist [deg] pitch axis [%c]          xB [m]          yB [m]      rCurvi [m]     Alpha [deg]      Beta [deg]
@@ -122,18 +122,18 @@ ZNAC2HUB                   1.6000
           38.800           0.070           0.148           6.130         -25.000          -1.502           0.000          39.467           5.779          -6.112
  ----------------Used variables at 1st iteration--------------------------
                             B1        B2        B3
-     Yaw angle [deg]     -1.67     -1.67     -1.67
+     Yaw angle [deg]      0.44      0.44      0.44
     Tilt angle [deg]      0.00      0.00      0.00
     Cone angle [deg]      0.00      0.00      0.00
  Azimuth angle [deg]      0.00   -120.00    120.00
 Aero root radius [m]      5.81      5.81      5.81
      Root radius [m]      1.24      1.24      1.24
       Tip radius [m]     40.04     40.04     40.04
-  Rotorspeed [rad/s]      1.41      1.41      1.41
+  Rotorspeed [rad/s]      1.29      1.29      1.29
        Hubheight [m]     57.19     57.19     57.19
  
                              u         v         w
- Windspeed@hub [m/s]      5.77      0.00      0.00
+ Windspeed@hub [m/s]      6.10      0.00      0.00
                              x         y         z
       Tower base [m]      0.00      0.00      0.00
        Tower top [m]      0.00      0.00     55.59

@@ -1,5 +1,7 @@
 function writeAeroModuleInput(X,P)
-% This routine add the random input to the input.txt file used for Aero module. 
+% This routine add the random input to the input.txt file used for Aero
+% module. Check getParameterAeroModule.m for order list of parameters
+% stored in variable 'P'
 %% ===========Get Twist samples===================
 ndim = length(P{26});
 TWIST_INDEX = [];
@@ -56,6 +58,23 @@ X_YAW = P{20}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'YAW'))
         X_YAW = X(i);
+    end
+end
+
+%% ===========DYNSTALLTYPE===============
+X_DYNSTALLTYPE = P{32}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'DYNSTALLTYPE'))
+        X_DYNSTALLTYPE = floor(X(i));
+    end
+end
+
+
+%% ===========CORR3DTYPE===============
+X_CORR3DTYPE = P{33}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'CORR3DTYPE'))
+        X_CORR3DTYPE = floor(X(i));
     end
 end
 
@@ -153,7 +172,6 @@ for i = 1:P{31}{1} % Loop over all possible polar files
 end
 
 %% Write to the input.txt file for aeromodule
-
 filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
@@ -198,8 +216,8 @@ fprintf(fid,'! Airfoil data ----------------------------------------------------
 fprintf(fid,'!---------------------------------------------------------------------\n');              
 %fprintf(fid,'AOAEVAL                         1\n');
 fprintf(fid,'COEFFFILENAME                   airfoils.dat\n');
-fprintf(fid,'CORR3DTYPE            0 !0: No correction 1: Snel\n');
-fprintf(fid,'DYNSTALLTYPE          1 !0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera\n');
+fprintf(fid,'CORR3DTYPE            %d !0: No correction 1: Snel\n', X_CORR3DTYPE);
+fprintf(fid,'DYNSTALLTYPE          %d!0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera\n', X_DYNSTALLTYPE);
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! Environment --------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
