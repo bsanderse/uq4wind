@@ -101,15 +101,7 @@ Input.Marginals(counter).Bounds = [YAW_LB YAW_UB];
 
 %% =======================PITCH==================
 % Truncated Gaussian
-PITCHANGLE_Std = 1;  % Standard deviation
-PITCHANGLE_LB = -2; % Lower bound of trucated Gaussian distribution
-PITCHANGLE_UB = 2;  % Upper bound of trucated Gaussian distribution
-counter = counter+1;
-Input.Marginals(counter).Name = 'PITCHANGLE'; 
-Input.Marginals(counter).Index = ''; % Empty for scalar
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [PITCHANGLE, PITCHANGLE_Std];
-Input.Marginals(counter).Bounds = [PITCHANGLE_LB PITCHANGLE_UB];
+ 
 
 %% =======================RPM====================
 % Truncated Gaussian

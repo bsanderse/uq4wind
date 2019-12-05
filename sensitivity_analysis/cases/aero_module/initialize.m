@@ -23,7 +23,7 @@ NsamplesMC = [8 16 32];
 
 % for PCE-Quad, specify the polynomial degrees to be tested
 DegreesQuad = 1:3; %[1 2 3 4 5 6];
-
+m
 % % for PCE-OLS:
 NsamplesOLS = [8 16]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
