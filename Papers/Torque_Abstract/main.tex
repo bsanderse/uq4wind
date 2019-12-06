@@ -75,22 +75,28 @@ The geometric uncertainties currently considered are chord and twist distributio
 % =============================================
 \section{Results}
 The aeroelastic code that we use is the \texttt{ECN Aero-Module} \cite{Boorsma2012} and the turbine is the 2MW NM80 turbine (blade radius of 38.8m) from the DANAERO project \cite{Troldborg2013}. The data for airfoil lift- and drag-polars are available at four locations along the blade at 11.87m, 17.82m, 28.97m and 35.53m. %The reference value of polars are obtained from wind-tunnel experiment with 3D corrections. 
-The lift variables are numbered from Cl1 - Cl4 and drag from Cd1 - Cd4 along the blade radius. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random number.  Each of the control points for chord (Ch1 - Ch5) and twist (Tw1 - Tw6)  are perturbed independently. Thus, by locally perturbing the chord and twist curves, we can identify locations along the blade that are sensitive to turbine response. For a given lift and drag curve, all control points are perturbed (globally) using the same random number. Here, we are interested in knowing at what locations the inaccuracies in polars may lead to the most variations in the turbine output. Random samples for these input parameters are presented in Fig. \ref{fig:samples}. In Fig. \ref{fig:Sobol}, we show the total order Sobol indices as a measure of sensitivity for different geometric and model parameters on the power output. We observe that the model parameters are relatively more sensitive than the geometric parameters. Within geometric parameters, chord distribution shows a significantly higher sensitivity compared to the twist variables.
+The lift and drag variables at these sections are numbered Cl1 - Cl4 and Cd1 - Cd4 respectively. Uncertainty enters by multiplying the reference lift and drag curves by a random variable (see Fig. \ref{fig:samples}). The chord and twist are perturbed via a number of control points that define the NURBS representation; we use 5 chord (Ch1 - Ch5) and 6 twist (Tw1 - Tw6) control points and perturb each value randomly following a uniformly distribution. Examples of random samples for these input parameters are presented in Fig.~\ref{fig:samples}.
+
+%Thus, by locally perturbing the chord and twist curves, we can identify locations along the blade that are sensitive to turbine response. For a given lift and drag curve, all control points are perturbed (globally) using the same random number. Here, we are interested in knowing at what locations the inaccuracies in polars may lead to the most variations in the turbine output.
+In Fig.~\ref{fig:Sobol}, we show the total order Sobol indices as a measure of the sensitivity of the different geometric and model parameters on the power output. In this case, we observe the important result that the uncertainty in model parameters is at least as important as the uncertainty in geometric parameters. Furthermore, within the geometric parameters, the chord distribution shows a significantly higher sensitivity compared to the twist variables.
+
 \begin{figure}[h!]
  \centering
- \includegraphics[trim={0 1.6cm 0 0},clip, scale=0.65]{figure1.pdf}
+ \includegraphics[trim={0 1.6cm 0 1.5cm},clip, scale=0.7]{figure1.pdf}
  \caption{Random realization of chord, twist, lift- (Cl2) and drag-polars (Cd2).}
  \label{fig:samples}
 \end{figure}
+
 \begin{figure}[h!]
  \centering
   \includegraphics[width=\linewidth]{SA_Power_chord_twist_Cl_Cd.eps}
- \caption{Total order Sobol indices for the sensitivity analysis of geometrical and model parameters.}
+ \caption{Sensitivity of power output towards geometric and model parameters, expressed by Sobol indices.}
   \label{fig:Sobol}
 \end{figure}
 % =============================================
 \section{Conclusions}
-We have shown that Sobol indices computed using sparse polynomial expansion is highly suitable for high-dimensional GSA. In the full paper, we will present a detailed sensitivity assessment that will include more model parameters. The identified sensitive parameters will further be utilized to develop calibrated BEM models.
+We have shown how Sobol indices computed using sparse adaptive polynomial expansion can be used for high-dimensional global sensitivity analysis of both geometric and model uncertainties. In the full paper, we will extend the sensitivity assessment to include more model uncertainties, such as parameters in dynamic stall and tip loss models. The identified sensitive model parameters will be utilized in future work to develop calibrated BEM models with built-in uncertainty estimates as part of the \textit{WindTrue} project, and is connected to IEA Task 29.
+
 % =============================================
 \bibliographystyle{abbrv}
 \bibliography{../references,../Mendeley_refs}
