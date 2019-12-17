@@ -145,8 +145,8 @@ counter = counter+1;
 Input.Marginals(counter).Name = 'DYNSTALLTYPE';
 Input.Marginals(counter).Index = '';
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [0 5-10^-20]; % subtract a small bias as floor operator should result in 0,1,2,3,4 
-Input.Marginals(counter).Bounds = [0 5-10^-20];
+Input.Marginals(counter).Parameters = [0 20-10^-20]; % subtract a small bias as floor operator should result in 0,1,2,3,4 
+Input.Marginals(counter).Bounds = [0 20-10^-20];
 
 
 %% =======================CORR3DTYPE==============
@@ -156,8 +156,8 @@ counter = counter+1;
 Input.Marginals(counter).Name = 'CORR3DTYPE';
 Input.Marginals(counter).Index = '';
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [0 2-10^-20]; % subtract a small bias as floor operator should result in 0,1
-Input.Marginals(counter).Bounds = [0 2-10^-20];
+Input.Marginals(counter).Parameters = [0 8-10^-20]; % subtract a small bias as floor operator should result in 0,1
+Input.Marginals(counter).Bounds = [0 8-10^-20];
 
 
 %% ====================Polars=====================
