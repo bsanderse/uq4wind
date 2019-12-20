@@ -115,15 +115,8 @@ This paper is structured as follows. First, in section \ref{sec:model_descriptio
 %
 %To compute parameter sensitivities we use the Sobol expansion approach, which decomposes the total variance of the quantity of interest into contributions from individual parameters and their combinations. To perform Sobol analysis, we use Matlab-based general purpose uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}. \texttt{UQLab}'s modular structure allows for easy integration with available BEM codes. For investigation the aeroelastic model of the  2MW NM80 turbine (with an 80m rotor) from the DANAERO project \cite{DANAERO} is utilized.
 
-<<<<<<< HEAD
-
-
-\section{Uncertainties in BEM models}\label{sec:model_description}
-\subsection{Model uncertainties}
-=======
 \section{Aeroelastic models}\label{sec:model_description}
 \subsection{BEM model uncertainties}
->>>>>>> b66a71c94ebe034e1293fc94660ddbfb27e814d6
 State-of-the-art wind-turbine models simulate the aeroelastic behavior of wind turbines by combining the concept of momentum conservation of the flow (BEM) with the equations of motion for the structure, possibly extended with hydrodynamics of the sea and control algorithms \cite{Vorpahl2013}. In this work, we only concentrate on the first aspect, namely the prediction of flow and blade forces as given by the BEM method. The particular BEM code that we use is  ECN's \texttt{Aero-Module} \cite{Boorsma2012}.
 
 For this case of a rigid turbine, with a uniform inflow field, the main model uncertainties that arise in the BEM formulation that we will discuss in this work are the following \cite{Hansen1993}:
@@ -131,15 +124,13 @@ For this case of a rigid turbine, with a uniform inflow field, the main model un
 \item The use of (2D) \textit{airfoil polars}; uncertainty arises not only because the actual flow along the blade is 3D, but also because the 2D polars itself can be inaccurate, either when obtained from measurement or from 2D codes like \texttt{XFOIL};
 %\item Sheared inflow
 \item The assumption of locally 2D flow along the blade is also invalid at the tip; this is typically corrected via \textit{a tip loss model};
-\item Three-dimensional flow effects also cause stall delay, mainly at the root; this is typically modelled via \textit{a dynamic stall model }and time constant;
-\item Yawed inflow is not naturally included in BEM and typically incorporated via \textit{a skew correction function}.
+\item Three-dimensional flow effects also cause stall delay at the root; this is typically modelled via \textit{a dynamic stall model }and time constant;
+\item Yawed inflow is not naturally included in BEM and typically incorporated via \textit{a wake correction}.
 
 %\item Dynamic wake - Oye time lag constant
 %\item Tower shadow constants – Potential flow / Downwind Empirical model
 
 \end{itemize}
-
-\subsection{Geometric uncertainties}
 
 %\subsection{Input parameters of aeroelastic models}
 %The main 
