@@ -65,16 +65,17 @@ end
 X_DYNSTALLTYPE = P{32}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'DYNSTALLTYPE'))
-        X_DYNSTALLTYPE = floor(X(i)/4);
+%         X_DYNSTALLTYPE = floor(X(i)/4);
+        X_DYNSTALLTYPE = X(i);
     end
 end
-
 
 %% ===========CORR3DTYPE===============
 X_CORR3DTYPE = P{33}; % Assign nominal value
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'CORR3DTYPE'))
-        X_CORR3DTYPE = floor(X(i)/4);
+%         X_CORR3DTYPE = floor(X(i)/4);
+        X_CORR3DTYPE = X(i);
     end
 end
 

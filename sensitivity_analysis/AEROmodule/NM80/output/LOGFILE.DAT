@@ -1,7 +1,7 @@
 ************************************************************
 ************************************************************
 **** ECN Aero-Module version nr    252_CWI Windows 64-bit       
-**** Calculation started at DD-MM-YY hh:mm 09-12-19 08:57
+**** Calculation started at DD-MM-YY hh:mm 07-01-20 09:14
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
@@ -26,21 +26,8 @@ AEROROOT                   5.1747
  ----------------AeroData--------------------------------
 AOAEVAL                    1
 CORR3DTYPE                 0
-DYNSTALLTYPE               3
-FSMETHOD                   2
+DYNSTALLTYPE               1
 LINREG                     1
-BL_ACD                     0.1300
-BL_A1                      0.3000
-BL_A2                      0.7000
-BL_B1                      0.1400
-BL_B2                      0.5300
-BL_KA                      0.7500
-BL_TF                      5.0000
-BL_TP                      1.5000
-BL_TV                      6.0000
-BL_TVL                     5.0000
-MAXAOALIN                  5.0000
-MINAOALIN                 -3.0000
  ----------------EnvironmentData-------------------------
 WINDTYPE                   1
 WINDINTERPL                2
@@ -98,7 +85,7 @@ WAKECUTOFFRADIUS           0.1000
  ----------------Stand-alone-----------------------------
 CONEANGLE                  0.0000
 HUBHEIGHT                 57.1900
-PITCHANGLE                 0.1500
+PITCHANGLE                -1.0668
 RPM                       12.3000
 STARTAZIMUTH               0.0000
 TBEGIN                     0.0000
@@ -106,7 +93,7 @@ TEND                      30.0000
 TILTANGLE                  0.0000
 TIMESTEP                   0.1355
 XNAC2HUB                  -4.0300
-YAWANGLE                  -0.4960
+YAWANGLE                  -2.8148
 ZNAC2HUB                   1.6000
  ----------------AeroProp Table-----------------------------
           zB [m]       chord [m]   thickness [-]     twist [deg] pitch axis [%c]          xB [m]          yB [m]      rCurvi [m]     Alpha [deg]      Beta [deg]
@@ -135,8 +122,8 @@ ZNAC2HUB                   1.6000
           38.800           0.070           0.148           6.130         -25.000          -1.502           0.000          39.467           5.779          -6.112
  ----------------Used variables at 1st iteration--------------------------
                             B1        B2        B3
-     Yaw angle [deg]     -0.50     -0.50     -0.50
-    Tilt angle [deg]      0.00      0.00      0.00
+     Yaw angle [deg]     -2.81     -2.81     -2.81
+    Tilt angle [deg]      0.00     -0.00     -0.00
     Cone angle [deg]      0.00      0.00      0.00
  Azimuth angle [deg]      0.00   -120.00    120.00
 Aero root radius [m]      5.81      5.81      5.81
