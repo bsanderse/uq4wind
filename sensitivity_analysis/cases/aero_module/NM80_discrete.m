@@ -151,9 +151,9 @@ Input.Marginals(counter).Bounds = ''; % No bound needed for Weibull
 counter = counter + 1;
 Input.Marginals(counter).Name = 'DYNSTALLTYPE';
 Input.Marginals(counter).Index = '';
-Input.Marginals(counter).Type = 'Constant';
-Input.Marginals(counter).Parameters = 5;
-Input.Marginals(counter).Bounds = '';
+Input.Marginals(counter).Type = 'Uniform';
+Input.Marginals(counter).Parameters = [0 5];
+Input.Marginals(counter).Bounds = [0 5];
 
 %% =======================CORR3DTYPE==============
 % Discrete variable with values 0,1  with 0: No correction 1: Snel. 
@@ -168,9 +168,10 @@ Input.Marginals(counter).Bounds = '';
 counter = counter + 1;
 Input.Marginals(counter).Name = 'CORR3DTYPE';
 Input.Marginals(counter).Index = '';
-Input.Marginals(counter).Type = 'Constant';
-Input.Marginals(counter).Parameters = 2;
-Input.Marginals(counter).Bounds = '';
+Input.Marginals(counter).Type = 'Uniform';
+Input.Marginals(counter).Parameters = [0 2];
+Input.Marginals(counter).Bounds = [0 2];
+
 
 %% ====================Polars=====================
 % Import the reference polar curves
@@ -297,6 +298,6 @@ Input.Marginals(counter).Bounds = [-0.5 0.5];
 %                    {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}
 %                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''}};
 
-uncertain_params = {{'Chord',2,0.2},{'Chord',4,0.2},{'CORR3DTYPE','',''}};
+uncertain_params = {{'CORR3DTYPE','',1},{'DYNSTALLTYPE','',1}};
 % Specify quantity of interest
 QoI = 'Power'; % 'Axial_Force' or 'Power'

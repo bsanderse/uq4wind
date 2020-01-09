@@ -13,7 +13,7 @@ Model.isVectorized = false;
 %% list of UQ methods to be used for analysis
 
 % specify a list of options from the following list:
-methods = {'PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+methods = {'PCE_OLS','PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
 % for MC, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
@@ -25,11 +25,11 @@ NsamplesMC = [8];
 DegreesQuad = 1:3; %[1 2 3 4 5 6];
 
 % % for PCE-OLS:
-NsamplesOLS = [8 16 32]; % if not specified, the number of samples from Quad is taken
+NsamplesOLS = [1]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [8]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [1]; % if not specified, the number of samples from Quad is taken
 LARS_repeat = 1; % like MC_repeat
 
 %% Assemble the Input.Marginal for sensitivity analysis by text comparison
@@ -45,9 +45,10 @@ for i=1:ndim
             Input.Marginals(i).Type = P{25}.Marginals(j).Type; 
             Input.Marginals(i).Parameters = P{25}.Marginals(j).Parameters;
             Input.Marginals(i).Bounds = P{25}.Marginals(j).Bounds;
-            if(strcmp(Input.Marginals(i).Type,'Constant')) % Get the index and parameter of discrete variable
+            
+            if(P{26}{i}{3} ==1) % Get the index and parameter of discrete variable
                 discrete_index = [discrete_index i];
-                discrete_param_vals = [discrete_param_vals Input.Marginals(i).Parameters];
+                discrete_param_vals = [discrete_param_vals Input.Marginals(i).Parameters(2)];
             else
                 cont_index = [cont_index i];
             end

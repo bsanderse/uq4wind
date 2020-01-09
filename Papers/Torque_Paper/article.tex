@@ -97,7 +97,7 @@ Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBoo
 As a consequence of the strong model assumptions at the basis of BEM theory, the results from BEM codes can be subject to significant inaccuracies or uncertainties. For example, the effect of sheared inflow \cite{Madsen2012} is not naturally accounted for in the theory, and needs to be incorporated via correction terms. Other major model uncertainties in BEM models are for example the time constant in dynamic stall models, the wake correction factor, the tip loss model parameter, and the lift- and drag-polars used to compute local aerodynamic forces. Especially for increasing turbine sizes, these model parameters  are foreseen to be not sufficiently accurate \cite{Sayed2019}. In other words, the uncertainty associated to the output of currently employed BEM models is rather large. 
 % iIn order to arrive at robust BEM models that include an uncertainty estimate associated 
 
-Recently, several papers have addressed the uncertainty in BEM model output by performing forward uncertainty propagation or sensitivity studies, e.g.\ \cite{Echeverria2017,Matthaus2017,Murcia2018,Robertson2018,Bos2019a}. In these studies, the focus in mainly on uncertainties in the external conditions (wind parameters) and/or uncertainty in the turbine specification (geometric parameters). Apart from understanding how uncertainty in the output is related to the different uncertain inputs, such sensitivity studies are very useful to reduce the number of parameters as needed for example in design optimization \cite{Echeverria2017}. However, the uncertainty in BEM model output as caused by uncertainty in the model formulation itself, e.g.\ through the values chosen for model parameters, has been given little attention (exceptions being the effect of aerodynamic properties studied in \cite{Matthaus2017,Bortolotti2019}).
+Recently, several papers have addressed the uncertainty in BEM model output by performing forward uncertainty propagation or sensitivity studies, e.g.\ \cite{Echeverria2017,Matthaus2017,Murcia2018,Robertson2018,Bos2019a}. In these studies, the focus in mainly on uncertainties in the external conditions (wind parameters) and/or uncertainty in the turbine specification (geometric parameters). Apart from understanding how uncertainty in the output is related to the different uncertain inputs, such sensitivity studies are very useful to reduce the number of parameters as needed for example in design optimization \cite{Echeverria2017}. However, the uncertainty in BEM model output as caused by uncertainty in the model formulation itself, e.g.\ through the values chosen for model parameters, has been given little attention (exceptions being the effect of aerodynamic properties studied in \cite{Bortolotti2019,Matthaus2017}).
 
 The goal of this work is to perform a systematic assessment of the uncertainty in model parameters in BEM models. We approach this by performing a global sensitivity analysis based on the Sobol expansion approach, which decomposes the total variance of the quantity of interest (model output) into contributions from individual parameters and their combinations, similar to \cite{Echeverria2017,Murcia2018,Rinker2016}. We will employ the uncertainty quantification toolbox \texttt{UQLab} \cite{uqlab}, which computes the Sobol indices based on a sparse polynomial chaos expansion. 
 
@@ -179,21 +179,21 @@ The objective of sensitivity analysis is to quantify the relative significance o
 \subsection{Sobol analysis}
 We employ variance-based Sobol decomposition to perform global sensitivity analysis. This approach allows for quantification of  the relative importance of the input parameters on a scale of $[0,1]$ known as \emph{Sobol indices}. In a Sobol analysis, we express the total variance of the output in term of contributions from individual parameters and their combinations. For the ease of exposition, let us consider a nonlinear model:
 \begin{equation}\label{nonlinear_model}
-Y = f({z}),
+Y = f({\mathbf{z}}),
 \end{equation}
-where ${z} = [z_1, z_2, ..., z_M]\in \mathcal{D}_{z}\in \mathbb{R}^M$ is a vector of random  inputs. For simplicity, we assume input parameters are uniformly distributed i.e. $z_i \sim \mathcal{U}(0,1)$ and the support of input set is $\mathcal{D}_{z}  =  [0,1]^M$ where $M$ is the total number input parameters. The Sobol decomposition is based on the hierarchical representation \cite{RSmith}:
+where ${\mathbf{z}} = [z_1, z_2, ..., z_M]\in \mathcal{D}_{\mathbf{z}}\in \mathbb{R}^M$ is a vector of random  inputs. For simplicity, we assume input parameters are uniformly distributed i.e. $z_i \sim \mathcal{U}(0,1)$ and the support of input set is $\mathcal{D}_{\mathbf{z}}  =  [0,1]^M$ where $M$ is the total number input parameters. The Sobol decomposition is based on the hierarchical representation \cite{RSmith}:
 \begin{equation}\label{sobol_decomp}
 f(z_1, z_2, ..., z_M) = f_0+\sum_{i=1}^M f_i(z_i) + \sum_{1\leq<i<j\leq M} f_{ij}(z_i,z_j) + ... + f_{1, 2, ..., M}(z_1, z_2, ..., z_M),
 \end{equation}
 where the zeroth-order function $f_0$ is the mean response of $f$, the first-order univariate functions $f_i(z_i)$ quantify independent contributions due to each random input, second-order functions $f_{i,j}(z_i,z_j)$ represent the effect of interaction between $z_i$ and $z_j$ on the response $f$. Note that the \eqref{sobol_decomp} is only valid for independent input parameters. Higher-order terms are interpreted in a similar manner. Formally, the zeroth-, first- and second-order terms are defined as:
 \begin{align}\label{sobol_terms}
-f_0 &= \int_{\mathcal{D}_{z}}f(z)dz,\\
-f_i(z_i) &= \int_{{\mathcal{D}_{z}}^{M-1}}f(z)dz_{\sim \{i\}} - f_0,\\
-f_{ij}(z_i,z_j) &= \int_{{\mathcal{D}_{z}}^{M-2}}f(z)dz_{\sim \{i,j\}} - f_i(z_i)  - f_j(z_j) - f_0,
+f_0 &= \int_{\mathcal{D}_{\mathbf{z}}}f(\mathbf{z})d\mathbf{z},\\
+f_i(z_i) &= \int_{{\mathcal{D}_{\mathbf{z}}}^{M-1}}f(\mathbf{z})d\mathbf{z}_{\sim \{i\}} - f_0,\\
+f_{ij}(z_i,z_j) &= \int_{{\mathcal{D}_{\mathbf{z}}}^{M-2}}f(\mathbf{z})d\mathbf{z}_{\sim \{i,j\}} - f_i(z_i)  - f_j(z_j) - f_0,
 \end{align}
-where ${\mathcal{D}_{z}}^{M-1} = [0,1]^{M-1}$ and the notation $z_{\sim \{i,j\}}$ denotes the vector having all the components of ${z}$ except in the set $\{i,j\}$. We only consider second order expansion of \eqref{sobol_decomp}, as for a number of applications, the second order expansion is usually sufficient and higher-order terms have negligible effect on the output response. In case of wind turbine, suppose $y$ represent the power output that depends on say 3 random inputs:  windspeed $(z_1)$, wind standard deviation $(z_2)$ and RPM $(z_3)$, then $f_0$ represents the mean power output considering all the three random inputs, $f_1(z_1)$ represent the independent contribution of windspeed on the power and $f_{1,2}(z_1,z_2)$ quantify the interactions of wind speed and wind standard deviation on power. Further, the total variance of $f(z)$ is defined as:
+where ${\mathcal{D}_{\mathbf{z}}}^{M-1} = [0,1]^{M-1}$ and the notation $\mathbf{z}_{\sim \{i,j\}}$ denotes the vector having all the components of $\mathbf{z}$ except in the set $\{i,j\}$. We only consider second order expansion of \eqref{sobol_decomp}, as for a number of applications, the second order expansion is usually sufficient and higher-order terms have negligible effect on the output response. In case of wind turbine, suppose $y$ represent the power output that depends on say 3 random inputs:  windspeed $(z_1)$, wind standard deviation $(z_2)$ and RPM $(z_3)$, then $f_0$ represents the mean power output considering all the three random inputs, $f_1(z_1)$ represent the independent contribution of windspeed on the power and $f_{1,2}(z_1,z_2)$ quantify the interactions of wind speed and wind standard deviation on power. Further, the total variance of $f(\mathbf{z})$ is defined as:
 \begin{equation}\label{tot_var}
-D = \text{Var}[f(z)] = \int_{\mathcal{D}_{z}} f^2(z)dz - f_0^2
+D = \text{Var}[f(\mathbf{z})] = \int_{\mathcal{D}_{\mathbf{z}}} f^2(\mathbf{z})d\mathbf{z} - f_0^2
 \end{equation}
 As the expansion in \eqref{sobol_decomp} is not unique, some orthogonality conditions must be imposed, see \cite{Rabitz1999,SOBOL2001271} which allows to express the total variance as
 \begin{equation}
@@ -216,8 +216,17 @@ Finally, the total effect of the parameter $z_i$ on the output response $Y$ is q
 \begin{equation}
 S_{T_i} = S_i + \sum_{j=1}^M S_{ij}.
 \end{equation}
-The total sensitivity indices can be interpreted as an importance measure for the parameter $z_i$, therefore a large $S_{T_i}$ implies that $z_i$ has a strong influence on $Y$. The computation of $S_{T_i}$ requires the approximation of partial variances defined in \eqref{partial_variance1} - \eqref{partial_variance2}. Using the Monte Carlo method for computing these variance can be prohibitive for computationally expensive models $Y$.  Polynomial Chaos Expansions (PCE) based approaches provides a more efficient alternative for sensitivity analysis. As shown in  \cite{SUDRET2008964}, one can compute the Sobol indices analytically by post-processing the PCE coefficients.
+The total sensitivity indices can be interpreted as an importance measure for the parameter $z_i$, therefore a large $S_{T_i}$ implies that $z_i$ has a strong influence on $Y$. The computation of $S_{T_i}$ requires the approximation of partial variances defined in \eqref{partial_variance1} - \eqref{partial_variance2}. Using the Monte Carlo method for computing these variance can be prohibitive for computationally expensive models $Y$.  Polynomial Chaos Expansions (PCE) based approaches provides a more efficient alternative for sensitivity analysis. As shown in \cite{SUDRET2008964}, one can compute the Sobol indices analytically by post-processing the PCE coefficients.
 \subsection{PCE based Sobol indices computation}
+The PCE $f^{K}(\mathbf{z})$ of the computational model $Y$ is defined as a weighted sum of multivariate polynomials in $\mathbf{z}$ \cite{RSmith}
+\begin{equation}
+Y = f^{K}(\mathbf{z}) = \sum_{|\mathbf{k}| = 0}^K y_{\mathbf{k}}\Psi_{\mathbf{k}}(\mathbf{z}),
+\end{equation}
+where $\mathbf{k}\in  \mathbb{N}_0^M$ is a $M$-dimensional multi-index with the magnitude $|\mathbf{k}| = k_1+k_2 + ... + k_M$, whereas $\Psi_{\mathbf{k}}(\mathbf{z})$ is the multivariate orthogonal polynomials that is computed using a tensor product of univariate polynomials $\psi_{k_i}^{(i)}(z_i)$
+\begin{equation}
+\Psi_{\mathbf{k}}(\mathbf{z}) := \prod_{i=1}^M\psi_{k_i}^{(i)}(z_i).
+\end{equation}
+The choice of the univariate orthogonal polynomial $\psi_{k_i}$ depends on the type of random variable, $z_i$. For example, if for uniformly distributed random variable, the Legendre family of polynomials is used, see  \cite{Xiu2002} for details. Projection methods are typically employed for the calculation 
 
 Quadrature based integration methods suffer from curse of dimensionality where the number of integration points rises exponentially with an increase in the number of dimensions. For applications with a fixed computational budget methods that minimizes the approximation error with a given number of samples are usually more practical. Next, we briefly describe two such methods to compute PCE coefficients based on a given number of model evaluations.
 

@@ -92,21 +92,9 @@ if(find(strcmp(methods,'MC')))
             new_SampleSize = size(Y_ED,1);
             
             % Sobol analysis; 
-            SobolOpts.Sobol.SampleSize = new_SampleSize;% NsamplesMC(i);
-
-            
-            SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);
-                       
+            SobolOpts.Sobol.SampleSize = new_SampleSize;% NsamplesMC(i);            
+            SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);                      
             SobolResults_MC            = SobolAnalysis_MC.Results;
-   
-            SobolResults_MC.ExpDesign.Sample1.X = Xnew(1:new_SampleSize/2,:);
-            SobolResults_MC.ExpDesign.Sample1.Y = Y_ED(1:new_SampleSize/2,:);
-            
-            SobolResults_MC.ExpDesign.Sample2.X = Xnew(new_SampleSize/2+1:end,:);
-            SobolResults_MC.ExpDesign.Sample2.Y = Y_ED(new_SampleSize/2+1:end,:);
-            
-            SobolResults_MC.ExpDesign.Shuffled.X = Xnew;
-            SobolResults_MC.ExpDesign.Shuffled.Y = Y_ED;
             
             Sobol_MC_FirstOrder(k,i,1:ndim) = SobolResults_MC.FirstOrder;
             Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;     
@@ -143,7 +131,6 @@ if (find(strcmp(methods,'PCE_Quad')))
     metamodelQuad.Input     = myInput;
     metamodelQuad.Type      = 'Metamodel';
     metamodelQuad.MetaType  = 'PCE';
-    
     metamodelQuad.Method          = 'Quadrature' ;
     metamodelQuad.Quadrature.Type = 'Full';
        
@@ -216,6 +203,33 @@ if (find(strcmp(methods,'PCE_OLS')))
             
             metamodelOLS.ExpDesign.NSamples = NsamplesOLS(i);
             metamodelOLS.ExpDesign.Sampling = 'LHS'; % LHS is default
+            
+           % use manual experimental design:
+            X_ED = uq_getSample(myInput,NsamplesOLS(i),'LHS');
+            discrete_index
+            if(size(discrete_index,1)>=1)
+                X_ED(:,discrete_index) = []; % get rid of the constant columns
+                X_temp  = allcomb(discrete_param_vals);
+                X_discrete = []; % contains repeated discrete grid
+                for di = 1:size(X_temp,1)
+                    X_discrete = [X_discrete;repmat(X_temp(di,:),NsamplesOLS(i),1)]; 
+                end
+                X_ED = repmat(X_ED,size(X_temp,1),1); % contains repeated LHS grid
+            
+                Xnew = zeros(size(X_discrete,1),ndim);
+                Xnew(:,discrete_index) = X_discrete;
+                Xnew(:,cont_index) = X_ED;
+            else
+                Xnew = X_ED;
+            end
+            
+            Ynew = uq_evalModel(myModel,Xnew);
+            
+            metamodelOLS.ExpDesign.X = Xnew;
+            metamodelOLS.ExpDesign.Y = Ynew;
+
+            metamodelOLS.ExpDesign.Sampling = 'user'; % or 'LHS' or 'Sobol' or 'Halton'
+            metamodelOLS.ExpDesign.NSamples = size(Xnew,1);
             myPCE_OLS = uq_createModel(metamodelOLS);
             
             % moments of solution            
@@ -227,7 +241,7 @@ if (find(strcmp(methods,'PCE_OLS')))
             SobolAnalysis_OLS    = uq_createAnalysis(SobolOpts);
             SobolResults_OLS     = SobolAnalysis_OLS.Results;
             Sobol_OLS_FirstOrder(k,i,1:ndim) = SobolResults_OLS.FirstOrder;
-            Sobol_OLS_Total(k,i,1:ndim)      = SobolResults_OLS.Total;
+            Sobol_OLS_Total(k,i,1:ndim)      = SobolResults_OLS.Total;             
         end
         
     end
@@ -267,6 +281,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     std_LARS     = zeros(LARS_repeat, N_LARS);
     Sobol_LARS_FirstOrder = zeros(LARS_repeat, N_LARS, ndim);
     Sobol_LARS_Total      = zeros(LARS_repeat, N_LARS, ndim);
+%     SobolOpts.Sobol.PCEBased = 0;
+
     
     metamodelLARS.FullModel = myModel;
     metamodelLARS.Input     = myInput;
@@ -279,20 +295,13 @@ if (find(strcmp(methods,'PCE_LARS')))
     % as there is randomness in the experimental design, we can 
     % average over several runs    
     for k = 1:LARS_repeat
-        for i = 1:N_LARS 
-            
-            % use manual experimental design:
-            %         X_ED = uq_getSample(NsamplesLARS(i),'MC') ;
-            %         Y_ED = uq_evalModel(myModel,X_ED);
-            %         metamodelLARS.ExpDesign.X = X_ED;
-            %         metamodelLARS.ExpDesign.Y = Y_ED;
-            
-            % use sampling strategy, note that default is MC!
+        for i = 1:N_LARS
+         
+           % use sampling strategy, note that default is MC!
             metamodelLARS.ExpDesign.Sampling = 'LHS'; % or 'LHS' or 'Sobol' or 'Halton'
             metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);            
-%           myPCE_LARS  = uq_createModel(metamodelLARS);
             
-            % ------
+           % use manual experimental design:
             X_ED = uq_getSample(myInput,NsamplesLARS(i),'LHS');
             discrete_index
             if(size(discrete_index,1)>=1)
@@ -318,7 +327,6 @@ if (find(strcmp(methods,'PCE_LARS')))
 
             metamodelLARS.ExpDesign.Sampling = 'user'; % or 'LHS' or 'Sobol' or 'Halton'
             metamodelLARS.ExpDesign.NSamples = size(Xnew,1);
-
             myPCE_LARS     = uq_createModel(metamodelLARS);            
             
             % moments of solution            
