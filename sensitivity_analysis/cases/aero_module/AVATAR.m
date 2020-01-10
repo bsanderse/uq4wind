@@ -1,6 +1,7 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
-          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED, POLARS]  = AVATAR()
+          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED, ... 
+          POLARS, DYNSTALLTYPE,CORR3DTYPE]  = AVATAR()
 %% Variables of input file extracted from reference test case from AVATAR turbine data
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -40,7 +41,8 @@ YAWANGLE = 0.0;
 NROFBEMELEMENTS = 21;
 ZNAC2HUB = 3.369;
 WINDSPEED = 6.1;
-
+DYNSTALLTYPE = 1;
+CORR3DTYPE = 0;
 %% Define properties of uncertain input in the UQLab format. 
 % We define this for all possible uncertain inputs and finally in the 
 % variable "uncertain_params" we specify which variables to be considered                                    
@@ -101,7 +103,7 @@ Input.Marginals(counter).Bounds = [YAW_LB YAW_UB];
 
 %% =======================PITCH==================
 % Truncated Gaussian
- 
+
 
 %% =======================RPM====================
 % Truncated Gaussian
