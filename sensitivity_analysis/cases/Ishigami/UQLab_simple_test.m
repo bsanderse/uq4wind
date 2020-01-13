@@ -52,13 +52,13 @@ std_MC  = std(Y_ED)
 % uq_histogram(Y_ED)
 
 
-%% PCE - OLS:
+%% PCE - LARS:
 disp('==============================================================')
 disp('Polynomial Chaos Expansion')
 % number of samples
 NsamplesLARS = 100;
 
-% UQLab settings to set up PCE with ordinary least squares (OLS)
+% UQLab settings to set up PCE with LARS
 metamodelLARS.FullModel = myModel;
 metamodelLARS.Input     = myInput;
 metamodelLARS.Type      = 'Metamodel';
