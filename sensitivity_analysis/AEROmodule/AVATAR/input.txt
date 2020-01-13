@@ -42,21 +42,21 @@ BLADEROOT                       2.800000
 CONEANGLE                       0.0
 HUBHEIGHT                       132.700000
 NROFBLADES                      3
-PITCHANGLE                      1.724194
-RPM                             8.715470
+PITCHANGLE                      0.012286
+RPM                             10.894866
 TBEGIN                          0.000000
 TEND                            79.806700000000006		!~3D
 TILTANGLE                       0.000000
 TIMESTEP                        0.073895084000000	!10deg
 XNAC2HUB                        -7.100000
-YAWANGLE                        -0.623984
+YAWANGLE                        0.480830
 ZNAC2HUB                        3.369000
 !---------------------------------------------------------------------
 ! Airfoil data -------------------------------------------------------
 !---------------------------------------------------------------------
 COEFFFILENAME                   airfoils.dat
 CORR3DTYPE            0 !0: No correction 1: Snel
-DYNSTALLTYPE          1 !0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
+DYNSTALLTYPE          1!0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
 !---------------------------------------------------------------------
 ! Environment --------------------------------------------------------
 !---------------------------------------------------------------------

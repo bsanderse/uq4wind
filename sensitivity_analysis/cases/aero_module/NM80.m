@@ -268,11 +268,15 @@ Input.Marginals(counter).Type = 'Uniform';
 Input.Marginals(counter).Parameters = [-0.5 0.5];
 Input.Marginals(counter).Bounds = [-0.5 0.5];
 
+
+
 %% Specify uncertain parameters to be considered in the sensitivity analysis
 % The parameter should be defined in the following format {name,index,rel_perturbation} where
 % rel_pertubation defines the amount of relative perturbation for B-spline
-% curves. This parameter may not be required for other scalar random
-% variables 
+% curves. For example, {'Twist',2,0.2} defines the uncertainty in the
+% second control point of Twist curve and 0.2 means a relative uncertainty of plus minus 10% for this  control point. 
+% This parameter may not be required for other scalar random
+% variables. 
 
 % uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
 %                    {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
@@ -283,6 +287,6 @@ Input.Marginals(counter).Bounds = [-0.5 0.5];
 %                    {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}
 %                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''}};
 
-uncertain_params = {{'YAW','',''}, {'DYNSTALLTYPE','',''},{'CORR3DTYPE','',''}};
+uncertain_params = {{'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
 % Specify quantity of interest
 QoI = 'Power'; % 'Axial_Force' or 'Power'

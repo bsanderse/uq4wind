@@ -3,8 +3,8 @@ clc
 
 % add path
 % UQLab_path = '/Users/sanderse/Dropbox/work/Programming/UQ/UQLabCore_Rel1.0.0/';
-% run('../../config.m');
-% addpath(genpath(UQLab_path));
+run('../../config.m');
+addpath(genpath(UQLab_path));
 
 % start uqlab
 uqlab
@@ -17,8 +17,6 @@ Model.Parameters = a;
 
 % create and add the model to UQLab
 myModel = uq_createModel(Model);
-
-
 
 % uniform:
 ncont=2;
@@ -38,7 +36,6 @@ NsamplesLARS = 100;
 % create input object with UQLab
 myInput = uq_createInput(Input);
 
-
 metamodelLARS.FullModel = myModel;
 metamodelLARS.Input     = myInput;
 metamodelLARS.Type      = 'Metamodel';
@@ -46,7 +43,6 @@ metamodelLARS.MetaType  = 'PCE';
 metamodelLARS.Method    = 'LARS';
 metamodelLARS.Degree    = 1:4; % this automatically switches on degree adaptive PCE
 metamodelLARS.TruncOptions.qNorm = 0.75;
-
 
 % use manual experimental design:
 %         X_ED = uq_getSample(NsamplesLARS(i),'MC') ;
