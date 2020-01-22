@@ -1,5 +1,5 @@
 % Name of Matlab file representing the turbine data
-turbineName = 'AVATAR'; % 'NM80', 'AVATAR'
+turbineName = 'NM80'; % 'NM80', 'AVATAR'
 
 %% model description 
 % Name of Matlab file representing the model
@@ -25,11 +25,11 @@ NsamplesMC = [8 16 32];
 DegreesQuad = 1:3; %[1 2 3 4 5 6];
 
 % % for PCE-OLS:
-NsamplesOLS = [8 16]; % if not specified, the number of samples from Quad is taken
+NsamplesOLS = [8 16 32 64 128]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [8 16]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [8 16 32 64 128]; % if not specified, the number of samples from Quad is taken
 LARS_repeat = 1; % like MC_repeat
 
 %% Assemble the Input.Marginal for sensitivity analysis by text comparison
