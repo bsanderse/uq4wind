@@ -25,11 +25,7 @@ function  samplesCurve = computeCurves(samples,index, randVec, pc, plotSamples,.
 
 % %Example: -------------------
 % samples = 1;
-<<<<<<< HEAD
-% index = [2:8];
-=======
-% index = [3:8];
->>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
+% index = [3:7];
 % randVec = rand(samples,length(index));
 % pc = 0.2*zeros(size(index));% plus minus 10 percent
 % plotSamples =1;
