@@ -1,11 +1,18 @@
 function  samplesChord = computeChord(samples,index, randVec, pc, plotSamples,bladeLength,...
                                       interpolationLocations,referenceChord,...
                                       t0,n,sampledLocations,sampledValues)
+
+% Only works for samples = 1 
+% Example: 
+% samplesChord = computeChord(1,[3:5], rand(10,3), 0.1*ones(3,1), 1)
+
 % This routine computes the random samples of Chord vector using the purturbed
 % control points of NURB curve
 
 % Input arguments
 % 'samples' Number of samples of perturbed Chord
+% 'index' is a integer>=1 prescribing the index of control points we want
+% to perturb
 % 'randVec' a samples-by-numOfControlPoints matrix of random numbers
 % 'pc' is vector with each element bw [0,1] representing fraction of perturbation for each control point from their baseline value.
 % 'plotSamples' 0 for no plot, 1 (default) to plot the generated samples, the baseline curve and the control points
