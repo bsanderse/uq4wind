@@ -283,6 +283,6 @@ Input.Marginals(counter).Bounds = [-0.5 0.5];
 %                    {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}
 %                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''}};
 
-uncertain_params = {{'YAW','',''}, {'DYNSTALLTYPE','',''},{'CORR3DTYPE','',''}};
+uncertain_params = {{'YAW','',''}, {'WINDSPEED','',''},{'RPM','',''}};
 % Specify quantity of interest
 QoI = 'Power'; % 'Axial_Force' or 'Power'
