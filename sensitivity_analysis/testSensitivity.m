@@ -9,7 +9,7 @@ input_file = caseName; % specify directory which contains test case settings and
 %% Sobol options
 SobolOpts.Type        = 'Sensitivity';
 SobolOpts.Method      = 'Sobol';
-SobolOpts.Sobol.Order = 1;
+SobolOpts.Sobol.Order = 2;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
 addpath([pwd,'/AEROmoduleWrapper/']);
