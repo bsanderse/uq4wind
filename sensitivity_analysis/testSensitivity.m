@@ -3,7 +3,7 @@ clc
 close all
 clearvars
 
-caseName = 'airfoil_lift'; % 'airfoil_lift','aero_module', etc;
+caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -64,7 +64,7 @@ if (find(strcmp(methods,'MC')))
             
             disp(NsamplesMC(i));
             % get random samples ('experimental design')
-            X_ED = uq_getSample(NsamplesMC(i), 'MC');
+            X_ED = uq_getSample(NsamplesMC(i),'MC');
             
             % evaluate model at sample
             Y_ED = uq_evalModel(myModel,X_ED);
