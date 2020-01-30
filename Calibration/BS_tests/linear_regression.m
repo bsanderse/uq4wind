@@ -8,56 +8,74 @@ clearvars
 %% initialize UQlab
 
 % add path
-addpath(genpath('../../UQLabCore_Rel1.3.0/'));
+addpath(genpath('../../../UQLabCore_Rel1.3.0/'));
 % start uqlab
 uqlab
 
-%% 
 
-% generate data
-N_data = 50;
+%% generate data and exact solution
+
+% generate artificial measurement data by using the linear model
+% with Gaussian noise on top of it
+
+% number of data points
+N_data = 20;
+% interval [0,1]
 x_data = linspace(0,1,N_data)';
 
+% exact value for beta used to generate artificial measurement data, and to
+% plot exact solution
 beta_exact = [2;3];
-y_data  = linearmodel(x_data,beta_exact) + 0.5*randn(N_data,1);
+% measurement data
+y_data  = linearmodel(beta_exact,x_data) + 0.5*randn(N_data,1);
 
+% generate exact solution
 N_exact = 100;
 x_exact = linspace(0,1,N_exact)';
-y_exact = linearmodel(x_exact,beta_exact);
+y_exact = linearmodel(beta_exact,x_exact);
 
+figure(1)
 plot(x_data,y_data,'x');
 hold on
 plot(x_exact,y_exact,'-');
 
 
 %% ordinary least squares solution
-% design matrix
-% X = [ones(N_data,1) x_data];
-% automatically create design matrix:
-p = 2;
-X = zeros(N_data,p);
-X(:,1) = linearmodel(x_data,[1 0]);
-X(:,2) = linearmodel(x_data,[0 1]);
-   
-beta_OLS = regress(y_data,X)
-% this is the same as 
+% we now create the design matrix, built with the x_data points
+% we can create it automatically by calling linearmodel several times,
+% each time with only one of the betas active
+p = length(beta_exact); % number of terms to calibrate
+A = zeros(N_data,p); % size of design matrix, normally N_data>p
+beta_test = eye(p,p);
+for i=1:p
+    A(:,i) = linearmodel(beta_test(i,:),x_data);
+end
+% solve the (overdetermined) least-squares problem with the regress command
+% this gives the estimate for the beta parameters
+beta_OLS = regress(y_data,A)
+% note that this is the same as 
 % beta_OLS = (X' * X)\(X' * y_data)
-% or
+% and also the same as
 % beta_OLS = pinv(X)*y_data
 
-y_OLS = linearmodel(x_exact,beta_OLS);
+% with this estimate of beta we get the following solution 
+y_OLS = linearmodel(beta_OLS,x_exact);
+% alternatively, we can use linearmodel_vectorized, which will return the
+% OLS solution at the data points 
+% y_OLS = linearmodel_vectorized(beta_OLS,A);
+figure(1)
 plot(x_exact,y_OLS,'--');
 
-legend('data','exact','OLS');
 
 %% Bayesian solution
 
-% 
-ModelOpts.mFile = 'linearmodel';
+% model settings
+ModelOpts.mFile = 'linearmodel_vectorized';
+% pass design matrix as parameter to the M-file
+ModelOpts.Parameters   = A; 
 ModelOpts.isVectorized = true;
-% 
 myForwardModel = uq_createModel(ModelOpts);
-% 
+ 
 % prior
 PriorOpts.Marginals(1).Name = 'beta_0';
 PriorOpts.Marginals(1).Type = 'Uniform';
@@ -66,34 +84,50 @@ PriorOpts.Marginals(1).Parameters = [1,3];
 PriorOpts.Marginals(2).Name = 'beta_1';
 PriorOpts.Marginals(2).Type = 'Uniform';
 PriorOpts.Marginals(2).Parameters = [2,4];
-
-% 
-% PriorOpts.Marginals(3).Name = 'L';               % beam length
-% PriorOpts.Marginals(3).Type = 'Constant';
-% PriorOpts.Marginals(3).Parameters = 5;           % (m)
-% 
-% PriorOpts.Marginals(4).Name = 'E';               % Young's modulus
-% PriorOpts.Marginals(4).Type = 'LogNormal';
-% PriorOpts.Marginals(4).Moments = [30000 4500];   % (MPa)
-% 
-% PriorOpts.Marginals(5).Name = 'p';               % uniform load
-% PriorOpts.Marginals(5).Type = 'Gaussian';
-% PriorOpts.Marginals(5).Moments = [0.012 0.012*0.05]; % (kN/m)
 % 
 myPriorDist = uq_createInput(PriorOpts);
-% 
+
+
 % display input properties
 uq_print(myPriorDist);
 uq_display(myPriorDist);
-% 
-% %% data
-% myData.y = [12.84; 13.12; 12.13; 12.19; 12.67]/1000; % (m)
-% myData.Name = 'Mid-span deflection';
-% 
-% Bayes options and run
-BayesOpts.Type = 'Inversion';
+ 
+
+%% likelihood
+DiscrepancyOptsKnown.Type = 'Gaussian';
+DiscrepancyOptsKnown.Parameters = 1;
+
+%% Bayes options 
+Solver.Type = 'MCMC';
+Solver.MCMC.Sampler = 'AM';
+Solver.MCMC.Steps = 1e3;
+Solver.MCMC.NChains = 1e2;
+Solver.MCMC.T0 = 1e2;
+% Solver.MCMC.Proposal.PriorScale = 0.1;
+
+myData.y       = y_data'; % note: UQLab uses a row vector here
+myData.Name    = 'measurement data';
 BayesOpts.Data = myData;
+BayesOpts.Type = 'Inversion';
+BayesOpts.Discrepancy = DiscrepancyOptsKnown;
+BayesOpts.Solver = Solver;
+
+%% perform MCMC
 myBayesianAnalysis = uq_createAnalysis(BayesOpts);
-% 
-% %% postprocessing
-% uq_display(myBayesianAnalysis)
+ 
+%% postprocessing
+% text output of Bayesian analysis
+uq_print(myBayesianAnalysis)
+% graphical display of posterior
+uq_display(myBayesianAnalysis)
+
+% uq_postProcessInversion(myBayesianAnalysis,'pointEstimate', 'MAP')
+
+% get the Maximum a Posteriori value
+beta_MAP = myBayesianAnalysis.Results.PostProc.PointEstimate.X
+
+y_MAP = linearmodel(beta_MAP,x_exact);
+
+figure(1)
+plot(x_exact,y_MAP,'-.');
+legend('measurement data','exact solution','least-squares fit','Bayesian MAP');
