@@ -94,7 +94,7 @@ Given the reference values of $\mathbf{c}$, it becomes straightforward to genera
 \tilde{S} (x) = \sum_{i=1}^{n} \tilde{c}_{i} B_{i,p}(x),
 \end{equation}
 where
-\begin{equation}
+\begin{equation}\label{eqn:perturb_c}
 \tilde{c}_{i} = c_{i} (1 + \Delta_{i}),
 \end{equation}
 and the perturbation is randomly sampled as $\Delta_{i} \sim \mathcal{U}[-0.05,0.05]$. 
@@ -110,102 +110,115 @@ The above framework is directly applicable to express the geometric uncertainty 
 
 
 \section{Global sensitivity analysis}\label{sec:GSA}
-The objective of sensitivity analysis is to quantify the relative significance of individual inputs (or their combination) and how variations in input values affect the output of interest. In engineering, sensitivity analysis can be employed for several reasons: to determine the stability and robustness of a computational model for input parameters, for simplification of stochastic models by fixing the insensitive parameters, and to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters. Sensitivity analysis techniques can be classified as local and global methods, see \cite{RSmith}. In a local sensitivity analysis, individual parameters are perturbed around their nominal values allowing for the description of output variability only in a small neighbourhood of nominal input values. Although, local approaches are widely employed due to their ease of implementation and low computational cost, they are unable to quantify the global behavior of nonlinearly parametrized models such as aeroelastic models. Global sensitivity approaches, on the other hand, consider the entire range of input values to compute output sensitivities. Therefore, a global sensitivity analysis is more suitable for aeroelastic models considered in this work.  
+The objective of sensitivity analysis is to quantify the relative significance of individual inputs (or their combination) and how variations in input values affect the output of interest. Sensitivity analysis techniques can be classified as local and global \cite{RSmith}. In a local sensitivity analysis, individual parameters are perturbed around their nominal values allowing for the description of output variability only in a small neighbourhood around the nominal input values. Although local approaches are widely employed due to their ease of implementation and low computational cost, they are unable to quantify the global behaviour of nonlinearly parametrized models such as aeroelastic models. Global sensitivity approaches, on the other hand, consider the entire range of input values to compute output sensitivities. Therefore, a global sensitivity analysis is more suitable for the aeroelastic models considered in this work.  
+%In engineering, sensitivity analysis can be employed for several reasons: to determine the stability and robustness of a computational model for input parameters, for simplification of stochastic models by fixing the insensitive parameters, and to guide data acquisition campaigns and experimental design to refine the data on sensitive parameters. 
 
 \subsection{Sobol analysis}
-We employ variance-based Sobol decomposition to perform global sensitivity analysis. This approach allows for quantification of the relative importance of the input parameters on a scale of $[0,1]$ known as \emph{Sobol indices}. In a Sobol analysis, we express the total variance of the output in term of contributions from individual parameters and their combinations. For the ease of exposition, let us consider a nonlinear model:
+We employ the variance-based Sobol decomposition to perform global sensitivity analysis. This approach allows for quantification of the relative importance of the input parameters on a scale of $[0,1]$ known as \emph{Sobol indices}. In a Sobol analysis, we express the total variance of the output in term of contributions from individual parameters and their combinations. Consider a generic BEM model $f(\mathbf{z})$, depending on uncertain parameters $\mathbf{z}$ and returning a quantity of interest $Y$ (e.g.\ power, loads, moments):
 \begin{equation}\label{nonlinear_model}
 Y = f({\mathbf{z}}),
 \end{equation}
-where ${\mathbf{z}} = [z_1, z_2, ..., z_M]\in \mathcal{D}_{\mathbf{z}}\in \mathbb{R}^M$ is a vector of random inputs. For simplicity, we assume input parameters are uniformly distributed i.e. $z_i \sim \mathcal{U}(0,1)$ and the support of input set is $\mathcal{D}_{\mathbf{z}} = [0,1]^M$ where $M$ is the total number input parameters. The Sobol decomposition is based on the hierarchical representation \cite{RSmith}:
+where ${\mathbf{z}} = [z_1, z_2, ..., z_M]\in \mathcal{D}_{\mathbf{z}}\in \mathbb{R}^M$ is a vector of random variables (parameters). For ease of notation, we assume these input parameters to be uniformly distributed i.e. $z_i \sim \mathcal{U}(0,1)$ and the support of the input set is $\mathcal{D}_{\mathbf{z}} = [0,1]^M$ where $M$ is the total number of input parameters. The Sobol decomposition is based on the following hierarchical representation \cite{RSmith}:
 \begin{equation}\label{sobol_decomp}
-f(z_1, z_2, ..., z_M) = f_0+\sum_{i=1}^M f_i(z_i) + \sum_{1\leq i<j\leq M} f_{ij}(z_i,z_j) + ... + f_{1, 2, ..., M}(z_1, z_2, ..., z_M),
+f(z_1, z_2, ..., z_M) = f_0+\sum_{i=1}^M f_i(z_i) + \sum_{1\leq i<j\leq M} f_{ij}(z_i,z_j) + ... + f_{1, 2, ..., M}(z_1, z_2, ..., z_M).
 \end{equation}
-where the zeroth-order function $f_0$ is the mean response of $f$, the first-order univariate functions $f_i(z_i)$ quantify independent contributions due to each random input, second-order functions $f_{i,j}(z_i,z_j)$ represent the effect of interaction between $z_i$ and $z_j$ on the response $f$.  Higher-order terms are interpreted in a similar manner. Note that the \eqref{sobol_decomp} is only valid for independent input parameters.
-
-Formally, the zeroth-, first- and second-order terms are defined as:
+Here the zeroth-order function $f_0$ is the mean response of $f$, the first-order univariate functions $f_i(z_i)$ quantify independent contributions due to each random input, and second-order functions $f_{i,j}(z_i,z_j)$ represent the effect of interaction between $z_i$ and $z_j$ on the response $f$. Formally, the zeroth-, first- and second-order terms are defined as:
 \begin{align}\label{sobol_terms}
 f_0 &= \int_{\mathcal{D}_{\mathbf{z}}}f(\mathbf{z})d\mathbf{z},\\
 f_i(z_i) &= \int_{{\mathcal{D}_{\mathbf{z}}}^{M-1}}f(\mathbf{z})d\mathbf{z}_{\sim \{i\}} - f_0,\\
 f_{ij}(z_i,z_j) &= \int_{{\mathcal{D}_{\mathbf{z}}}^{M-2}}f(\mathbf{z})d\mathbf{z}_{\sim \{i,j\}} - f_i(z_i) - f_j(z_j) - f_0,
 \end{align}
-where ${\mathcal{D}_{\mathbf{z}}}^{M-1} = [0,1]^{M-1}$ and the notation $\mathbf{z}_{\sim \{i,j\}}$ denotes the vector having all the components of $\mathbf{z}$ except in the set $\{i,j\}$. We only consider second-order expansion of \eqref{sobol_decomp}, as for a number of applications, the second-order expansion is usually sufficient and higher-order terms have negligible effect on the output response. In the case of wind turbine, suppose $y$ represent the power output that depends on say 3 random inputs: windspeed $(z_1)$, wind standard deviation $(z_2)$ and RPM $(z_3)$, then $f_0$ represents the mean power output considering all the three random inputs, $f_1(z_1)$ represent the independent contribution of windspeed on the power and $f_{1,2}(z_1,z_2)$ quantify the interactions of wind speed and wind standard deviation on power. Further, the total variance of $f(\mathbf{z})$ is defined as:
+where ${\mathcal{D}_{\mathbf{z}}}^{M-1} = [0,1]^{M-1}$ and the notation $\mathbf{z}_{\sim \{i,j\}}$ denotes the vector having all the components of $\mathbf{z}$ except in the set $\{i,j\}$. Higher-order terms are interpreted in a similar manner. Note that \eqref{sobol_decomp} is only valid for independent input parameters. We only consider a second-order expansion of \eqref{sobol_decomp}, as for many applications this is sufficient because higher-order terms have negligible effect on the output response. 
+
+As an example, $Y$ can represent the power output of a wind turbine, with random inputs windspeed $(z_1)$, wind standard deviation $(z_2)$ and rotational speed $(z_3)$. $f_0$ then represents the mean power output considering all the three random inputs, $f_1(z_1)$ represent the independent contribution of windspeed on the power and $f_{1,2}(z_1,z_2)$ quantifies the interactions of wind speed and wind standard deviation on power. 
+
+The definition of the variance is:
 \begin{equation}\label{tot_var}
-D = \text{Var}[f(\mathbf{z})] = \int_{\mathcal{D}_{\mathbf{z}}} f^2(\mathbf{z})d\mathbf{z} - f_0^2
+D = \text{Var}[f(\mathbf{z})] = \int_{\mathcal{D}_{\mathbf{z}}} f^2(\mathbf{z})d\mathbf{z} - f_0^2.
 \end{equation}
 As the expansion in \eqref{sobol_decomp} is not unique, some orthogonality conditions must be imposed  \cite{Rabitz1999,SOBOL2001271} which allows to express the total variance as
 \begin{equation}
 D = \sum_{i=1}^M D_i + \sum_{1\leq i<j\leq M} D_{ij},
 \end{equation}
-where the first- and second-order partial variances are defined as
+where the first- and second-order partial variances are defined via the Sobol decomposition as
 \begin{align}
-D_i &= \int_{0}^{1} f^2_i(z_i)dz_i, \label{partial_variance1}\\
-D_{ij} &= \int_{0}^{1} \int_{0}^{1} f^2_{ij}(z_i,z_j)dz_idz_j \label{partial_variance2}. 
+D_i &= \int_{0}^{1} f^2_i(z_i)dz_i, & D_{ij} &= \int_{0}^{1} \int_{0}^{1} f^2_{ij}(z_i,z_j)dz_idz_j \label{partial_variance2}. 
 \end{align}
 The first- and second-order Sobol indices are then computed as
 \begin{equation}\label{sobol_ind}
-S_i = \frac{D_i}{D}, \quad S_{ij} = \frac{D_{ij}}{D}, \quad i,j=1,2, ..., M,
+S_i = \frac{D_i}{D}, \quad S_{ij} = \frac{D_{ij}}{D}, \quad i,j=1,2, ..., M.
 \end{equation}
-and the sum of all indices satisfy
-\begin{equation}
-\sum_{i=1}^M S_i + \sum_{1\leq i<j\leq M} S_{ij} = 1.
-\end{equation}
-Finally, the total effect of the parameter $z_i$ on the output response $Y$ is quantified using the total sensitivity indices measure
+%and the sum of all indices satisfy
+%\begin{equation}
+%\sum_{i=1}^M S_i + \sum_{1\leq i<j\leq M} S_{ij} = 1.
+%\end{equation}
+The total effect of $z_i$ on the output $Y$ can be quantified using the total sensitivity index
 \begin{equation}
 S_{T_i} = S_i + \sum_{j=1}^M S_{ij}.
 \end{equation}
-The total sensitivity indices can be interpreted as an importance measure for the parameter $z_i$, therefore a large $S_{T_i}$ implies that $z_i$ has a strong influence on $Y$. The computation of $S_{T_i}$ requires the approximation of partial variances defined in \eqref{partial_variance1} - \eqref{partial_variance2}. Using the Monte Carlo method for computing these variance can be prohibitive for computationally expensive models $Y$. Polynomial Chaos Expansions (PCE) based approaches provides a more efficient alternative for sensitivity analysis. As shown in \cite{SUDRET2008964}, one can compute the Sobol indices analytically by post-processing the PCE coefficients.
-\subsection{PCE based Sobol indices computation}
+The total sensitivity indices can be interpreted as an importance measure for the parameter $z_i$, therefore a large $S_{T_i}$ implies that $z_i$ has a strong influence on $Y$. The computation of $S_{T_i}$ requires the approximation of partial variances defined in \eqref{partial_variance2}. Using the Monte Carlo method for computing these variances can be prohibitive for computationally expensive models $Y$. On the other hand, Polynomial Chaos Expansions (PCE) based approaches provide a more efficient alternative for sensitivity analysis, and will be used here. As shown in \cite{SUDRET2008964}, one can compute the Sobol indices analytically by post-processing the PCE coefficients.
+
+\subsection{PCE-based Sobol indices computation}
 The PCE approximation $f^{K}(\mathbf{z})$ of the computational model $Y$ can be defined as a weighted sum of multivariate polynomials in $\mathbf{z}$ \cite{RSmith}
 \begin{equation}\label{eq:PCE}
 Y= f(\mathbf{z}) \approx f^{K}(\mathbf{z}) = \sum_{|\mathbf{k}| = 0}^K w_{\mathbf{k}}\Psi_{\mathbf{k}}(\mathbf{z}),
 \end{equation}
-where $\mathbf{k}\in \mathbb{N}_0^M$ is a $M$-dimensional multi-index with the magnitude $|\mathbf{k}| = k_1+k_2 + ... + k_M$ and $\Psi_{\mathbf{k}}(\mathbf{z})$ multivariate polynomial is computed using a tensor product of univariate polynomials $\psi_{k_i}^{(i)}(z_i)$
+where $\mathbf{k}\in \mathbb{N}_0^M$ is a $M$-dimensional multi-index with magnitude $|\mathbf{k}| = k_1+k_2 + ... + k_M$ and $\Psi_{\mathbf{k}}(\mathbf{z})$ a multivariate polynomial basis, which is computed using a tensor product of univariate polynomials $\psi_{k_i}^{(i)}(z_i)$
 \begin{equation}
-\Psi_{\mathbf{k}}(\mathbf{z}) := \prod_{i=1}^M\psi_{k_i}^{(i)}(z_i).
+\Psi_{\mathbf{k}}(\mathbf{z}) := \prod_{i=1}^M\psi_{k_i}^{(i)}(z_i),
 \end{equation}
-where $k_i$ is the order of univariate polynomial. The multivariate polynomials $\Psi_{\mathbf{k}}(\mathbf{z})$ is orthogonal with respect to the joint probability distribution of random vector $\mathbf{z}$. The choice of the univariate orthogonal polynomial $\psi_{k_i}$ depends on the type of random variable, $z_i$. For example, for uniform random variable the Legendre family of polynomials is used, see \cite{Xiu2002} for details. 
+where $k_i$ is the order of the univariate polynomial. The choice of the univariate orthogonal polynomial $\psi_{k_i}$ depends on the type of random variable, $z_i$. For example, for uniform random variables the Legendre family of polynomials is used \cite{Xiu2002}. 
+%The multivariate polynomials $\Psi_{\mathbf{k}}(\mathbf{z})$ is orthogonal with respect to the joint probability distribution of random vector $\mathbf{z}$. 
+The total number of terms $K$ in \eqref{eq:PCE} can be based for example on a standard truncation scheme in which all polynomials in $M$ random variable with order less than or equal to $p$ are used. More advanced truncation schemes such as the maximum interaction or a hyperbolic scheme can also be employed depending on the application, see \cite{BlatmanThesis}. \todo{which one is used?}
 
-The total number of terms $K$ in \eqref{eq:PCE} can be based on a standard truncation scheme where we use all polynomials in $M$ random variable with order less than or equal to $p$. More advanced truncation schemes such as the maximum interaction or a hyperbolic scheme can also be employed depending on the application, see \cite{BlatmanThesis}. 
+The PCE coefficients $w_{\mathbf{k}}$ corresponding to $\Psi_{\mathbf{k}}(\mathbf{z})$ can be computed using a pseudo-spectral approach by using quadrature methods. For a small number of dimensions this is an efficient approach. However, in the current work we will encounter more than 10 dimensions and quadrature methods are typically too expensive as they suffer strongly from the curse of dimensionality. We therefore focus on methods in which the sampling points can be chosen more freely: Ordinary Least Squares (OLS) and Least-Angle Regression (LARS).
+%In the current work where we have a limited computational budget, methods that minimizes the approximation error for a given number of samples are more practical. Next, we briefly describe two such methods to compute PCE coefficients based on a fixed number of model evaluations.
 
-The PCE coefficient $w_{\mathbf{k}}$ corresponding to $\Psi_{\mathbf{k}}(\mathbf{z})$ can be computed using the projection approach:
-\begin{equation}\label{eq:projection}
-w_{\mathbf{k}} = \mathbb{E}[\Psi_{\mathbf{k}}(\mathbf{z})\cdot f^{K}(\mathbf{z})].
-\end{equation} 
-The above expectation can be computed using a quadrature based integration methods such as the Gaussian quadrature, sparse quadrature rules (e.g. Smolyak's tensor grid), etc. Quadrature based integration methods suffer from curse of dimensionality where the number of integration points rises exponentially with an increase in the number of dimensions. In the current work where we have a fixed computational budget, methods that minimizes the approximation error for a given number of samples are more practical. Next, we briefly describe two such methods to compute PCE coefficients based on a fixed number of model evaluations.
-\subsubsection{Ordinary Least Square}
-Instead of using projection based method one can also use least squares based approaches to compute coefficients \cite{Berveiller2006}. The PCE expansion \eqref{eq:PCE} can be expressed as a vector-matrix product
+%\subsubsection{Quadrature}
+%The PCE coefficients $w_{\mathbf{k}}$ corresponding to $\Psi_{\mathbf{k}}(\mathbf{z})$ can be computed using the projection approach:
+%\begin{equation}\label{eq:projection}
+%w_{\mathbf{k}} = \mathbb{E}[\Psi_{\mathbf{k}}(\mathbf{z})\cdot f^{K}(\mathbf{z})].
+%\end{equation} 
+%The above expectation can be computed using a quadrature based integration methods such as the Gaussian quadrature, sparse quadrature rules (e.g. Smolyak's tensor grid), etc. Quadrature based integration methods typically suffer from the curse of dimensionality because the number of integration points rises exponentially with an increase in the number of dimensions. In the current work where we have a limited computational budget, methods that minimizes the approximation error for a given number of samples are more practical. Next, we briefly describe two such methods to compute PCE coefficients based on a fixed number of model evaluations.
+
+\subsubsection{Ordinary Least Squares}
+Instead of using a projection-based method one can also use least squares based approaches to compute coefficients \cite{Berveiller2006}. The PCE expansion \eqref{eq:PCE} can be expressed as a vector-matrix product
 \begin{equation}\label{eq:LSM}
 Y = f^{K}(\mathbf{z}) +\varepsilon_K = \sum_{|\mathbf{k}| = 0}^K w_{\mathbf{k}}\Psi_{\mathbf{k}}(\mathbf{z}) + \varepsilon_K = \mathbf{w}^T\boldsymbol{\Psi}(\mathbf{z}) +\varepsilon_K,
 \end{equation} 
-where $\mathbf{w} = \{w_0,w_1,...,w_K\}^T$ is the coefficient vector, $\boldsymbol{\Psi}(\mathbf{z}) = \{\Psi_0(\mathbf{z}), \Psi_1(\mathbf{z}), ..., \Psi_K(\mathbf{z})\}^T$ is the matrix containing multivariate polynomials in $\mathbf{z}$ and $\varepsilon_K$ is the approximation error. The least-squares minimization problem can then be formulated as:
+where $\mathbf{w} = \{w_0,w_1,...,w_K\}^T$ is the coefficient vector, $\boldsymbol{\Psi}(\mathbf{z}) = \{\Psi_0(\mathbf{z}), \Psi_1(\mathbf{z}), ..., \Psi_K(\mathbf{z})\}^T$ is the matrix containing multivariate polynomials in $\mathbf{z}$, and $\varepsilon_K$ is the approximation error. The least-squares minimization problem can then be formulated as:
 \begin{equation}\label{eq:PCE_OLS}
-\mathbf{\overline{w}} = \text{arg min }\mathbb{E}\left[\left(\mathbf{w}^T \boldsymbol{\Psi}(\mathbf{z}) - f(\mathbf{z})\right)^2\right]
+\mathbf{\overline{w}} = \argmin_{\mathbf{w}} \mathbb{E}\left[\left(\mathbf{w}^T \boldsymbol{\Psi}(\mathbf{z}) - f(\mathbf{z})\right)^2\right]
  \end{equation}
 The coefficient vector $\mathbf{\overline{w}}$ can be computed using the Ordinary Least Squares (OLS) method. Given $N$ model evaluations $\mathbf{Y} = \{f(\mathbf{z}_1), f(\mathbf{z}_2), ..., f(\mathbf{z}_N)\}$, we can obtain the coefficients as:
 \begin{equation}\label{eq:OLS}
 \overline{\mathbf{w}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y},
 \end{equation}
-where $\mathbf{X}\in \mathbb{R}^{N\times K}$ is the design matrix where $\mathbf{X}_{i,j} = \Psi_{j}(\mathbf{z}_i)$, $i = 1,2, ..., N$ and $j = 0,1,2,..., K$. Although the OLS method allows to compute the coefficients using a limited number of model evaluations, one of the main drawback of this approach is that it may result in a PCE model that consists of high-order interaction terms that may lead to overfitting. For many engineering problems, low-order interactions between the input variables are more important. Therefore, the least squares form in \eqref{eq:PCE_OLS} can be regularized such that the minimization results is a low-order sparse PCE model.
+where $\mathbf{X}\in \mathbb{R}^{N\times K}$ is the design matrix where $\mathbf{X}_{i,j} = \Psi_{j}(\mathbf{z}_i)$, $i = 1,2, ..., N$ and $j = 0,1,2,..., K$. Although the OLS method allows to compute the coefficients using a limited number of model evaluations, one of the main drawbacks of this approach is that it may result in a PCE model that consists of high-order interaction terms that may lead to overfitting. For many engineering problems, low-order interactions between the input variables are most important. Therefore, the least squares form in \eqref{eq:PCE_OLS} can be regularized such that the minimization results is a low-order sparse PCE model, as discussed next.
 
 \subsubsection{Least Angle Regression}
-Least angle regression (LARS) algorithm \cite{efron2004} is one of the several methods can be applied to compute sparse PCE models \cite{BlatmanThesis, BLATMAN2011}. The key idea is to find the best set of polynomials from a given candidate set that minimizes the regularized form of \eqref{eq:PCE_OLS}:
+The LARS algorithm \cite{efron2004} is one of the methods that can be applied to compute sparse PCE models \cite{BlatmanThesis, BLATMAN2011}. The key idea is to find the best set of polynomials from a given candidate set that minimizes the regularized form of \eqref{eq:PCE_OLS}:
 \begin{equation}\label{regularized_LS}
-\mathbf{\overline{w}} = \text{arg min }\mathbb{E}\left[\left(\mathbf{w}^T \boldsymbol{\Psi}(\mathbf{z}) - f(\mathbf{z})\right)^2\right] + \lambda ||\mathbf{w}||_1.
+\mathbf{\overline{w}} = \argmin_{\mathbf{w}} \mathbb{E}\left[\left(\mathbf{w}^T \boldsymbol{\Psi}(\mathbf{z}) - f(\mathbf{z})\right)^2\right] + \lambda ||\mathbf{w}||_1.
 \end{equation}
-The LARS algorithm in the context of PCE can be summarized as follows. We start with all PCE coefficients for the candidate polynomials set to zero, and find the polynomial, say $\Psi_1(\mathbf{w})$ most correlated with the model evaluations. This polynomial enters the active set. Next, we take the largest step in the direction of $\Psi_1(\mathbf{w})$ until some other polynomial $\Psi_2(\mathbf{w})$ from the candidate set, has as much correlation with the current residual. The second polynomial is now also added to the active set. In the next step, we move both the coefficients in the active set towards their least-square values until a third polynomial from candidate set shows as much correlation as the current PCE model based on two polynomials show with the model evaluations. The number of iteration is given by the minimum of $\{K,N\}$. After every iteration a posteriori error, for instance, Leave-One-Out (LOO) cross-validation error is computed. The active set with the smallest LOO is then chosen as the best sparse PCE
-model.
+The LARS algorithm in the context of PCE can be summarized as follows. We start with all PCE coefficients for the candidate polynomials set to zero, and find the polynomial, say $\Psi_1(\mathbf{w})$ most correlated with the model evaluations. This polynomial enters the active set. Next, we take the largest step in the direction of $\Psi_1(\mathbf{w})$ until some other polynomial $\Psi_2(\mathbf{w})$ from the candidate set, has as much correlation with the current residual. The second polynomial is now also added to the active set. In the next step, we move both the coefficients in the active set towards their least-square values until a third polynomial from the candidate set shows as much correlation as the current PCE model based on two polynomials shows with the model evaluations. The number of iterations is given by the minimum of $\{K,N\}$. After every iteration a posteriori error, for instance the Leave-One-Out (LOO) cross-validation error, is computed. The active set with the smallest LOO is then chosen as the best sparse PCE model.
 
-One of the main advantage of the LARS algorithm is that it works well in cases when $K>>N$, i.e. the number of polynomials in the candidate set is much more larger than the number of model evaluations.
+One of the main advantage of the LARS algorithm is that it works well in cases when $K>>N$, i.e. the number of polynomials in the candidate set is much larger than the number of model evaluations.
 
+\subsection{Sobol index computation}
 
-\subsection{Sensitivity analysis with discrete random variable}
+%\subsection{Sensitivity analysis with discrete random variable}
+
 \section{Results}\label{sec:results}
 
 \subsection{NM80}
-As a reference wind turbine, we consider the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8 m. The data for lift ($Cl$) and drag ($Cd$) polars are available at four locations along the blade radius at 11.87 m, 17.82 m, 28.97 m, and 35.53 m. The lift and drag variables at these sections are numbered Cl1 - Cl4 and Cd1 - Cd4 respectively. The reference value of polars is obtained from the wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable.  
+\subsubsection{Operating conditions}
+As a reference wind turbine, we consider the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8 m. \todo{Add operating conditions}
 
-There are two ways to obtain perturbed curves either by independently perturbing each of the control points (local perturbation) or using the same random number to perturb all the control points (global perturbation). We use local perturbation for chord control points Ch3 - Ch7 and twist control points Tw2 - Tw7 control points, see Fig. \ref{perturbed_samples} (a) - (b), respectively. Each control point are perturbed using a uniform random number with bounds given by $\pm5\%$ of the magnitude of a control point. For lift and drag curves, all control points are perturbed using the same uniform random number resulting in samples of the lift and drag curves as shown in Fig. \ref{perturbed_samples} (c) - (d), respectively. For simplicity, we only consider uniform distributions for perturbing the control points, however, we can also use other probability distributions for this purpose. Also note that when using a uniform distribution with bounds given by the relative magnitude of control points, we tend to obtain small perturbations for control points with values close to zero. 
+\subsubsection{Choice of uncertain inputs}
+The data for lift ($C_l$) and drag ($C_d$) polars are available at four locations along the blade radius at 11.87 m, 17.82 m, 28.97 m, and 35.53 m. The lift and drag variables at these sections are numbered Cl1 - Cl4 and Cd1 - Cd4 respectively. The reference value of these polars is obtained from the wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable.  
+
+There are two ways to obtain perturbed curves: independently perturbing each of the control points (local perturbation) or using a single random number to perturb all the control points (global perturbation). We use local perturbation for chord control points Ch3 - Ch7 and twist control points Tw2 - Tw7 control points, see Fig.\ \ref{perturbed_samples} (a) - (b), respectively. Each control point are perturbed using a uniform random number with bounds given by $\pm5\%$ of the magnitude of a control point (see equation \eqref{eqn:perturb_c}). For the lift and drag curves, all control points are perturbed using the same uniform random number resulting in samples of the lift and drag curves as shown in Fig.\ \ref{perturbed_samples} (c) - (d), respectively. For simplicity, we only consider uniform distributions for perturbing the control points, however, we can also use other probability distributions for this purpose. Also note that when using a uniform distribution with bounds given by the relative magnitude of control points, we tend to obtain small perturbations for control points with values close to zero. 
 \begin{figure}[h!]
 \centering
 \includegraphics[trim={0.5cm 0cm 0 0cm},clip, scale=0.67]{figure1.pdf}
@@ -213,8 +226,8 @@ There are two ways to obtain perturbed curves either by independently perturbing
 \label{perturbed_samples}
 \end{figure}
 
-\subsubsection{Verification of GSA method}
-We perform a convergence study for OLS and LARS to determine which method converges fastest with increasing dimension. For this, we use the parametrized chord from Fig. \ref{perturbed_samples}(a) with 9 control points. In Fig. \ref{convergence_dim}, we show the convergence behavior of the two methods with increasing number of uncertain inputs, consisting of 4, 6 and 8 control points and for different number of model evaluations. We see that both methods scales well with increasing dimensions, however, $PCE\_LARS$ exhibits faster convergence than $PCE\_OLS$ in high dimensions.
+\subsubsection{Verification of sensitivity analysis method}
+We perform a convergence study for both OLS and LARS in order to determine which method converges fastest with increasing number of uncertain parameters and number of model runs. For this purpose we only include uncertainty in the chord. The NURBS representation is defined by 9 control points, of which a subset is taken uncertain (see Fig.\ \ref{perturbed_samples}(a)). In Fig.\ \ref{convergence_dim}, we show for both OLS and LARS the convergence behaviour of the total Sobol indices of the power output with increasing number of model evaluations $N$ (runs of the AeroModule), and with increasing number of uncertain inputs $M$ (4, 6 and 8 control points). We see that both methods scale well with increasing dimensions, however, LARS exhibits faster convergence than OLS in high dimensions due to its adaptive nature, and will be the method of choice in the subsequent tests. \todo{what is a reasonable choice of $N$, depending on $M$?}
 
 \begin{figure*}[h!]
     \centering
@@ -235,9 +248,10 @@ We perform a convergence study for OLS and LARS to determine which method conver
         \includegraphics[trim={1cm 0cm 0 0cm},clip, scale=0.22]{convergence_chord1_8.eps}
         \caption{ $M=8, Ch1-Ch8$}
  \end{subfigure}
-    \caption{Convergence of $PCE\_OLS$ and $PCE\_LARS$ with increasing number of uncertain inputs $M$ and samples $N$.}
+    \caption{Convergence of OLS and LARS with increasing number of uncertain inputs $M$ and model evaluations $N$.}
 \label{convergence_dim}
 \end{figure*}
+
 \subsubsection{Sensitivity analysis results}
 In Fig.~\ref{sensitivity_analysis}, we show the total order Sobol indices as a measure of the sensitivity of the different geometric and model parameters on the power output. In this case, we observe the important result that the uncertainty in model parameters is at least as important as the uncertainty in geometric parameters. Furthermore, within the geometric parameters, the chord distribution shows a significantly higher sensitivity compared to the twist variables
 
