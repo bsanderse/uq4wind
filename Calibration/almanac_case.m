@@ -9,10 +9,10 @@ N_data = 15;
 height = linspace(58,72,N_data)';
 weight = [115; 117; 120; 123; 126; 129; 132; 135; 139; 142; 146; 150; ...
           154; 159; 164];
+p = 3; % number of terms to calibrate
 
 %% Frequentist
 
-p = 3; % number of terms to calibrate
 A = zeros(N_data,p); % size of design matrix, normally N_data>p
 q_test = eye(p,p);
 for i=1:p
