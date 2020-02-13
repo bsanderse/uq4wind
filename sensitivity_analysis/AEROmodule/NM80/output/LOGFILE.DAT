@@ -1,17 +1,21 @@
 ************************************************************
 ************************************************************
 **** ECN Aero-Module version nr    252_CWI Windows 64-bit       
+<<<<<<< HEAD
+**** Calculation started at DD-MM-YY hh:mm 13-01-20 10:41
+=======
 **** Calculation started at DD-MM-YY hh:mm 21-01-20 15:26
+>>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
-INPUTFILENAME            C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\input.txt
-INCLUDEFILENAME          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\specialist_input.txt
-WINDFILENAME             C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\WIND.DAT
-COEFFFILENAME            C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\AIRFOILS.DAT
-LOGFILENAME              C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\output\LOGFILE.DAT
-AERORESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\output\aeroresultsout.dat
-GEOMRESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\output\geomresultsout.dat
+INPUTFILENAME            C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\input.txt
+INCLUDEFILENAME          C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\specialist_input.txt
+WINDFILENAME             C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\WIND.DAT
+COEFFFILENAME            C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\AIRFOILS.DAT
+LOGFILENAME              C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\output\LOGFILE.DAT
+AERORESULTSFILE          C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\output\aeroresultsout.dat
+GEOMRESULTSFILE          C:\Users\vinit\Documents\windtrue\sensitivity_analysis\AEROmodule\NM80\output\geomresultsout.dat
  ----------------GeneralData-----------------------------
 AEROMODEL                  1
 TURBINETYPE                1
@@ -86,14 +90,18 @@ WAKECUTOFFRADIUS           0.1000
 CONEANGLE                  0.0000
 HUBHEIGHT                 57.1900
 PITCHANGLE                 0.1500
-RPM                       12.3000
+RPM                       11.1688
 STARTAZIMUTH               0.0000
 TBEGIN                     0.0000
 TEND                      30.0000
 TILTANGLE                  0.0000
 TIMESTEP                   0.1355
 XNAC2HUB                  -4.0300
+<<<<<<< HEAD
+YAWANGLE                  -1.8058
+=======
 YAWANGLE                   0.0000
+>>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
 ZNAC2HUB                   1.6000
  ----------------AeroProp Table-----------------------------
           zB [m]       chord [m]   thickness [-]     twist [deg] pitch axis [%c]          xB [m]          yB [m]      rCurvi [m]     Alpha [deg]      Beta [deg]
@@ -122,18 +130,23 @@ ZNAC2HUB                   1.6000
           38.800           0.070           0.148           6.130         -25.000          -1.502           0.000          39.446           5.779          -6.112
  ----------------Used variables at 1st iteration--------------------------
                             B1        B2        B3
+<<<<<<< HEAD
+     Yaw angle [deg]     -1.81     -1.81     -1.81
+    Tilt angle [deg]      0.00     -0.00     -0.00
+=======
      Yaw angle [deg]      0.00      0.00      0.00
     Tilt angle [deg]      0.00      0.00      0.00
+>>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
     Cone angle [deg]      0.00      0.00      0.00
  Azimuth angle [deg]      0.00   -120.00    120.00
 Aero root radius [m]      5.55      5.55      5.55
      Root radius [m]      1.24      1.24      1.24
       Tip radius [m]     40.04     40.04     40.04
-  Rotorspeed [rad/s]      1.29      1.29      1.29
+  Rotorspeed [rad/s]      1.17      1.17      1.17
        Hubheight [m]     57.19     57.19     57.19
  
                              u         v         w
- Windspeed@hub [m/s]      6.10      0.00      0.00
+ Windspeed@hub [m/s]      5.97      0.00      0.00
                              x         y         z
       Tower base [m]      0.00      0.00      0.00
        Tower top [m]      0.00      0.00     55.59

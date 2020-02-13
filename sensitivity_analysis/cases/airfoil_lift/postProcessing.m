@@ -63,7 +63,8 @@ cmap = get(gca,'ColorOrder');
 
 if (find(strcmp(methods,'MC')))
     if(size(AVG_Sobol_MC_Total,2)>1)
-        semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+%         semilogx(Sobol_MC_Nsamples', AVG_Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+        semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');       
         hold on
     end
     semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end), 'x-','Linewidth', 2, 'Color', cmap(1,:));  

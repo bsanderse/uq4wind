@@ -1,7 +1,11 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
+<<<<<<< HEAD
+          RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED, POLARS, DYNSTALLTYPE, CORR3DTYPE]  = AVATAR()
+=======
           RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, uncertain_params, QoI, WINDSPEED, ... 
           POLARS, DYNSTALLTYPE,CORR3DTYPE]  = AVATAR()
+>>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
 %% Variables of input file extracted from reference test case from AVATAR turbine data
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -43,6 +47,10 @@ ZNAC2HUB = 3.369;
 WINDSPEED = 6.1;
 DYNSTALLTYPE = 1;
 CORR3DTYPE = 0;
+<<<<<<< HEAD
+
+=======
+>>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
 %% Define properties of uncertain input in the UQLab format. 
 % We define this for all possible uncertain inputs and finally in the 
 % variable "uncertain_params" we specify which variables to be considered                                    
@@ -105,6 +113,32 @@ Input.Marginals(counter).Bounds = [YAW_LB YAW_UB];
 % Truncated Gaussian
 
 
+
+
+%% =======================DYNSTALLTYPE==============
+% Discrete variable with values 0,1,2,3,4 with 0: No DS 1:Snel1 2: Snel2
+% 3:B-Leishmann 4: Onera. We use uniform random variable from [0 5] sample models with equal probability
+
+counter = counter+1;
+Input.Marginals(counter).Name = 'DYNSTALLTYPE';
+Input.Marginals(counter).Index = '';
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [0 20-10^-20]; % subtract a small bias as floor operator should result in 0,1,2,3,4 
+Input.Marginals(counter).Bounds = [0 20-10^-20];
+
+
+%% =======================CORR3DTYPE==============
+% Discrete variable with values 0,1  with 0: No correction 1: Snel. 
+% We use uniform random variable from [0 2] sample models with equal probability
+counter = counter+1;
+Input.Marginals(counter).Name = 'CORR3DTYPE';
+Input.Marginals(counter).Index = '';
+Input.Marginals(counter).Type = 'Uniform'; 
+Input.Marginals(counter).Parameters = [0 8-10^-20]; % subtract a small bias as floor operator should result in 0,1
+Input.Marginals(counter).Bounds = [0 8-10^-20];
+
+
+
 %% =======================RPM====================
 % Truncated Gaussian
 RPM_Std = 1;  % Standard deviation
@@ -143,10 +177,10 @@ POLARS ={0};
 %                 {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
 %                 {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
 
-uncertain_params = {{'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}};
+uncertain_params = {{'YAW','',''},{'WINDSPEED','',''},{'RPM','',''}};
 
 % Specify quantity of interest
-QoI = 'Axial_Force'; % 'Axial_Force' or  'Power'
+QoI = 'Power'; % 'Axial_Force' or  'Power'
 
 
 

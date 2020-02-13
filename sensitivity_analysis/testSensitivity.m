@@ -3,13 +3,13 @@ clc
 close all
 clearvars
 
-caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
+caseName = 'airfoil_lift'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
 SobolOpts.Type        = 'Sensitivity';
 SobolOpts.Method      = 'Sobol';
-SobolOpts.Sobol.Order = 1;
+SobolOpts.Sobol.Order = 2;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
 addpath([pwd,'/AEROmoduleWrapper/']);
@@ -57,6 +57,8 @@ if (find(strcmp(methods,'MC')))
     std_MC   = zeros(MC_repeat,N_MC);
     Sobol_MC_FirstOrder = zeros(MC_repeat,N_MC,ndim);
     Sobol_MC_Total      = zeros(MC_repeat,N_MC,ndim);
+    Sobol_MC_Nsamples   = zeros(N_MC,1);
+    
     
     % perform multiple runs to decrease effect of random sampling
     for k = 1:MC_repeat
@@ -78,7 +80,8 @@ if (find(strcmp(methods,'MC')))
             SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);
             SobolResults_MC            = SobolAnalysis_MC.Results;
             Sobol_MC_FirstOrder(k,i,1:ndim) = SobolResults_MC.FirstOrder;
-            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;         
+            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;     
+            Sobol_MC_Nsamples(i)          = SobolResults_MC.Cost;
         end
     end
     
