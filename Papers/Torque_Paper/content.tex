@@ -169,7 +169,7 @@ where $\mathbf{k}\in \mathbb{N}_0^M$ is a $M$-dimensional multi-index with magni
 \end{equation}
 where $k_i$ is the order of the univariate polynomial. The choice of the univariate orthogonal polynomial $\psi_{k_i}$ depends on the type of random variable, $z_i$. For example, for uniform random variables the Legendre family of polynomials is used \cite{Xiu2002}. 
 %The multivariate polynomials $\Psi_{\mathbf{k}}(\mathbf{z})$ is orthogonal with respect to the joint probability distribution of random vector $\mathbf{z}$. 
-The total number of terms $K$ in \eqref{eq:PCE} can be based for example on a standard truncation scheme in which all polynomials in $M$ random variable with order less than or equal to $p$ are used. More advanced truncation schemes such as the maximum interaction or a hyperbolic scheme can also be employed depending on the application, see \cite{BlatmanThesis}. \todo{which one is used?}
+The total number of terms $K$ in \eqref{eq:PCE} can be based for example on a standard truncation scheme in which all polynomials in $M$ random variable with order less than or equal to $p$ are used. More advanced truncation schemes such as the maximum interaction or a hyperbolic scheme can also be employed depending on the application, see \cite{BlatmanThesis}. \textcolor{red}{In this work, we use the hyperbolic truncation scheme with a $qnorm = 0.75$.} \todo{which one is used?}
 
 The PCE coefficients $w_{\mathbf{k}}$ corresponding to $\Psi_{\mathbf{k}}(\mathbf{z})$ can be computed using a pseudo-spectral approach by using quadrature methods. For a small number of dimensions this is an efficient approach. However, in the current work we will encounter more than 10 dimensions and quadrature methods are typically too expensive as they suffer strongly from the curse of dimensionality. We therefore focus on methods in which the sampling points can be chosen more freely: Ordinary Least Squares (OLS) and Least-Angle Regression (LARS).
 %In the current work where we have a limited computational budget, methods that minimizes the approximation error for a given number of samples are more practical. Next, we briefly describe two such methods to compute PCE coefficients based on a fixed number of model evaluations.
@@ -213,7 +213,8 @@ One of the main advantage of the LARS algorithm is that it works well in cases w
 
 \subsection{NM80}
 \subsubsection{Operating conditions}
-As a reference wind turbine, we consider the 2MW NM80 turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8 m. \todo{Add operating conditions}
+As a reference wind turbine, we consider the 2MW NM80 onshore turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8 m and \textcolor{red}{a hub height of 57.19 m with the mean wind speed at hub height set as 6.1m/s.  Also, we use the following mean values for: RPM = 12.3, Pitch angle = 0.15 and Yaw  = 0.}
+\todo{Add operating conditions}
 
 \subsubsection{Choice of uncertain inputs}
 The data for lift ($C_l$) and drag ($C_d$) polars are available at four locations along the blade radius at 11.87 m, 17.82 m, 28.97 m, and 35.53 m. The lift and drag variables at these sections are numbered Cl1 - Cl4 and Cd1 - Cd4 respectively. The reference value of these polars is obtained from the wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable.  
@@ -227,7 +228,7 @@ There are two ways to obtain perturbed curves: independently perturbing each of 
 \end{figure}
 
 \subsubsection{Verification of sensitivity analysis method}
-We perform a convergence study for both OLS and LARS in order to determine which method converges fastest with increasing number of uncertain parameters and number of model runs. For this purpose we only include uncertainty in the chord. The NURBS representation is defined by 9 control points, of which a subset is taken uncertain (see Fig.\ \ref{perturbed_samples}(a)). In Fig.\ \ref{convergence_dim}, we show for both OLS and LARS the convergence behaviour of the total Sobol indices of the power output with increasing number of model evaluations $N$ (runs of the AeroModule), and with increasing number of uncertain inputs $M$ (4, 6 and 8 control points). We see that both methods scale well with increasing dimensions, however, LARS exhibits faster convergence than OLS in high dimensions due to its adaptive nature, and will be the method of choice in the subsequent tests. \todo{what is a reasonable choice of $N$, depending on $M$?}
+We perform a convergence study for both OLS and LARS in order to determine which method converges fastest with increasing number of uncertain parameters and number of model runs. For this purpose we only include uncertainty in the chord and \textcolor{red}{set power production as the quantity of interest}. The NURBS representation is defined by 9 control points, of which a subset is taken uncertain (see Fig.\ \ref{perturbed_samples}(a)). In Fig.\ \ref{convergence_dim}, we show for both OLS and LARS the convergence behaviour of the total Sobol indices of the power output with increasing number of model evaluations $N$ (runs of the AeroModule), and with increasing number of uncertain inputs $M$ (4, 6 and 8 control points). We see that both methods scale well with increasing dimensions, however, LARS exhibits faster convergence than OLS in high dimensions due to its adaptive nature, and will be the method of choice in the subsequent tests. \textcolor{red}{Ideally, for spectral methods, $N$ should be increased exponentially with increasing $M$. In the numerical experiments, for both OLS and LARS, we start with a small $N$ and double it with every iteration until converged values of Sobol indices are obtained.}  \todo{what is a reasonable choice of $N$, depending on $M$?}
 
 \begin{figure*}[h!]
     \centering
@@ -253,7 +254,7 @@ We perform a convergence study for both OLS and LARS in order to determine which
 \end{figure*}
 
 \subsubsection{Sensitivity analysis results}
-In Fig.~\ref{sensitivity_analysis}, we show the total order Sobol indices as a measure of the sensitivity of the different geometric and model parameters on the power output. In this case, we observe the important result that the uncertainty in model parameters is at least as important as the uncertainty in geometric parameters. Furthermore, within the geometric parameters, the chord distribution shows a significantly higher sensitivity compared to the twist variables
+In Fig.~\ref{sensitivity_analysis}, we show the total order Sobol indices as a measure of the sensitivity of the different geometric and model parameters on the power output \textcolor{red}{computed using LARS method with the number of uncertain parameter $M = 19$ chosen from Fig.~\ref{perturbed_samples}. We found that 1024 model evaluations were sufficient to achieve converged indices}. In this case, we observe the important result that the uncertainty in model parameters is at least as important as the uncertainty in geometric parameters. Furthermore, within the geometric parameters, the chord distribution shows a significantly higher sensitivity compared to the twist variables.
 
 \begin{figure}[h!]
 \centering
