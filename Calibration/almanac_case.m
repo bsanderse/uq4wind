@@ -90,6 +90,8 @@ weight_Bayes = almanac(q_Bayes,height);
 
 %% Post-processing (Point estimates)
 
+format bank % Rounding to 2 decimal places
+
 % Frequentist
 
 q_freq = regress(weight,A)
