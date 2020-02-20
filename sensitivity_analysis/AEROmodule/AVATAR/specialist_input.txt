@@ -15,17 +15,17 @@ DEBUGFILE                       1
 !---
 !Beddoes Leishman Parameters -----------------------------------------
 !---
-!BL_A1	                    0.30
-!BL_A2	                    0.70
-!BL_b1	                    0.14
-!BL_b2	                    0.53
-!BL_Ka	                    0.75
-!BL_Tp	                    1.50
-!BL_Tf	                    5.00
-!BL_Tv	                    6.00
-!BL_Tvl	                    5.00
-!BL_Acd	                    0.13
-!FSMETHOD	                2
+BL_A1	                    0.30
+BL_A2	                    0.70
+BL_b1	                    0.14
+BL_b2	                    0.53
+BL_Ka	                    0.75
+BL_Tp	                    1.50
+BL_Tf	                    5.00
+BL_Tv	                    6.00
+BL_Tvl	                    5.00
+BL_Acd	                    0.13
+FSMETHOD	                2
 !---
 !ONERA Parameters ----------------------------------------------------
 !---

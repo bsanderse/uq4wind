@@ -1,6 +1,3 @@
-
-
-
 % Name of Matlab file representing the turbine data
 turbineName = 'NM80'; % 'NM80', 'AVATAR'
 
@@ -37,7 +34,7 @@ OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
 
-NsamplesLARS = [1024]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [32]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 

@@ -59,7 +59,7 @@ ZNAC2HUB                        3.369000
 !---------------------------------------------------------------------
 COEFFFILENAME                   airfoils.dat
 CORR3DTYPE            0 !0: No correction 1: Snel
-DYNSTALLTYPE          1!0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
+DYNSTALLTYPE          3!0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
 !---------------------------------------------------------------------
 ! Environment --------------------------------------------------------
 !---------------------------------------------------------------------

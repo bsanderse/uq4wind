@@ -70,6 +70,77 @@ for i=1:ndim
     end
 end
 
+%% =========== BL parameters ===============
+X_BL_A1 = P{34}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_A1'))
+        X_BL_A1 = X(i);
+    end
+end
+
+X_BL_A2 = P{35}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_A2'))
+        X_BL_A2 = X(i);
+    end
+end
+
+X_BL_b1 = P{36}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_b1'))
+        X_BL_b1 = X(i);
+    end
+end
+
+X_BL_b2 = P{37}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_b2'))
+        X_BL_b2 = X(i);
+    end
+end
+
+X_BL_Ka = P{38}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_Ka'))
+        X_BL_Ka = X(i);
+    end
+end
+
+X_BL_Tp = P{39}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_Tp'))
+        X_BL_Tp = X(i);
+    end
+end
+
+X_BL_Tf = P{40}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_Tf'))
+        X_BL_Tf = X(i);
+    end
+end
+
+X_BL_Tv = P{41}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_Tv'))
+        X_BL_Tv = X(i);
+    end
+end
+
+X_BL_Tvl = P{42}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_Tvl'))
+        X_BL_Tvl = X(i);
+    end
+end
+
+X_BL_Acd = P{43}; % Assign nominal value
+for i=1:ndim
+    if(strcmp(P{26}{i}{1},'BL_Acd'))
+        X_BL_Acd = X(i);
+    end
+end
+
 %% ===========CORR3DTYPE===============
 X_CORR3DTYPE = P{33}; % Assign nominal value
 for i=1:ndim
@@ -180,7 +251,7 @@ fprintf(fid,'! General ---------------------------------------------------------
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'AEROMODEL                        %d	! 1:BEM 2: AWSM\n', P{1}); 
 fprintf(fid,'!TURBINETYPE                     %d	! 1:HAWT 2: VAWT\n', P{2});
-fprintf(fid,'INCLUDE                         specialist_input.txt\n');
+fprintf(fid,'!INCLUDE                         specialist_input.txt\n');
 fprintf(fid,'!INTERPOL                        2  	! 1:Linear 2: Spline\n');
 fprintf(fid,'LOGFILENAME                      logfile.dat\n');
 fprintf(fid,'DEBUGFILE                        1\n');
@@ -219,6 +290,17 @@ fprintf(fid,'!------------------------------------------------------------------
 fprintf(fid,'COEFFFILENAME                   airfoils.dat\n');
 fprintf(fid,'CORR3DTYPE            %d !0: No correction 1: Snel\n', X_CORR3DTYPE);
 fprintf(fid,'DYNSTALLTYPE          %d!0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera\n', X_DYNSTALLTYPE);
+fprintf(fid,'BL_A1	                    %f\n', X_BL_A1);
+fprintf(fid,'BL_A2	                    %f\n', X_BL_A2);
+fprintf(fid,'BL_B1	                    %f\n', X_BL_b1);
+fprintf(fid,'BL_B2	                    %f\n', X_BL_b2);
+fprintf(fid,'BL_KA	                    %f\n', X_BL_Ka);
+fprintf(fid,'BL_TP	                    %f\n', X_BL_Tp);
+fprintf(fid,'BL_TF	                    %f\n', X_BL_Tf);
+fprintf(fid,'BL_TV	                    %f\n', X_BL_Tv);
+fprintf(fid,'BL_TVL	                    %f\n', X_BL_Tvl);
+fprintf(fid,'BL_ACD	                    %f\n', X_BL_Acd);
+fprintf(fid,'FSMETHOD	                2\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! Environment --------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
@@ -304,6 +386,112 @@ for i = 1:P{31}{1} % Loop over the polar files
     end
     fclose(fid);
 end
+
+
+%% Change specialist.txt file
+filename = [pwd,'\AEROmodule\',P{29},'\specialist_input.txt'];
+fid = fopen(filename,'w');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'! General ------------------------------------------------------------\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'!TURBINETYPE                     1	! 1:HAWT 2: VAWT\n');
+fprintf(fid,'!INTERPOL                        2  	! 1:Linear 2: Spline\n');
+fprintf(fid,'!SUBITERFLAG                     1	! 0:dt>0 1:all dt 2:>=9+extr 3:1 and >=9\n');
+fprintf(fid,'DEBUGFILE                       1\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'! Airfoil data ------------------------------------------------------------\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'!AOAEVAL                         1\n');
+fprintf(fid,'!LINREG 	                 1\n');
+fprintf(fid,'!MINAOALIN 	           	-3.000	!-5.00\n');
+fprintf(fid,'!MAXAOALIN 	            	 5.000	!8.00\n');
+fprintf(fid,'!---\n');
+fprintf(fid,'!Beddoes Leishman Parameters -----------------------------------------\n');
+fprintf(fid,'!---\n');
+% fprintf(fid,'BL_A1	                    0.30\n');
+% fprintf(fid,'BL_A2	                    0.70\n');
+% fprintf(fid,'BL_b1	                    0.14\n');
+% fprintf(fid,'BL_b2	                    0.53\n');
+% fprintf(fid,'BL_Ka	                    0.75\n');
+% fprintf(fid,'BL_Tp	                    1.50\n');
+% fprintf(fid,'BL_Tf	                    5.00\n');
+% fprintf(fid,'BL_Tv	                    6.00\n');
+% fprintf(fid,'BL_Tvl	                    5.00\n');
+% fprintf(fid,'BL_Acd	                    0.13\n');
+fprintf(fid,'BL_A1	                    %f\n', X_BL_A1);
+fprintf(fid,'BL_A2	                    %f\n', X_BL_A2);
+fprintf(fid,'BL_B1	                    %f\n', X_BL_b1);
+fprintf(fid,'BL_B2	                    %f\n', X_BL_b2);
+fprintf(fid,'BL_KA	                    %f\n', X_BL_Ka);
+fprintf(fid,'BL_TP	                    %f\n', X_BL_Tp);
+fprintf(fid,'BL_TF	                    %f\n', X_BL_Tf);
+fprintf(fid,'BL_TV	                    %f\n', X_BL_Tv);
+fprintf(fid,'BL_TVL	                    %f\n', X_BL_Tvl);
+fprintf(fid,'BL_ACD	                    %f\n', X_BL_Acd);
+fprintf(fid,'FSMETHOD	                2\n');
+fprintf(fid,'!---\n');
+fprintf(fid,'!ONERA Parameters -----------------------------------------\n');
+fprintf(fid,'!---\n');
+fprintf(fid,'!ON_LAML	                    0.17\n');
+fprintf(fid,'!ON_SIGL	                    6.28\n');
+fprintf(fid,'!ON_R0  	                    0.20\n');
+fprintf(fid,'!ON_R2  	                    0.20\n');
+fprintf(fid,'!ON_A0  	                    0.30\n');
+fprintf(fid,'!ON_A2  	                    0.20\n');
+fprintf(fid,'!ON_E2  	                    0.53\n');
+fprintf(fid,'!ON_SL  	                    3.14\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'! Environment ------------------------------------------------------------\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'!SOS                             340.3 \n');
+fprintf(fid,'!RAMPTIME			0.0\n');
+fprintf(fid,'!RAMPFACTOR			1.0\n');
+fprintf(fid,'!WINDINTERPL			2	! 1:Linear 2: Cubic (Turbsim/Mann only)\n');
+fprintf(fid,'!Z0                              0.0\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'! BEM ------------------------------------------------------------\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'!AEROROOT                        0\n');
+fprintf(fid,'!ATRANSITION                     0.38  \n');
+fprintf(fid,'!COUNTERMIN			50\n');
+fprintf(fid,'!DYNINFLOW                       1\n');
+fprintf(fid,'!INDUCTIONDRAG                   0\n');
+fprintf(fid,'!PRANDTLROOT                     1 \n');
+fprintf(fid,'!PRANDTLTIP                      1\n');
+fprintf(fid,'!YAWMODEL			1\n');
+fprintf(fid,'!SOLVEBEMMETHOD			1\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'! AWSM ------------------------------------------------------------\n');
+fprintf(fid,'!---------------------------------------------------------------------\n');
+fprintf(fid,'!AERORESULTSFILE                 aeroresultsout.dat\n');
+fprintf(fid,'!GEOMRESULTSFILE                 geomresultsout.dat\n');
+fprintf(fid,'!TIMESTARTAERO                   1\n');
+fprintf(fid,'!TIMEENDAERO                     540\n');
+fprintf(fid,'!AEROOUTPUTINCREMENT             1\n');
+fprintf(fid,'!TIMESTARTGEOM                   540\n');
+fprintf(fid,'!TIMEENDGEOM                     540\n');
+fprintf(fid,'!GEOMOUTPUTINCREMENT             1\n');
+fprintf(fid,'!TRACELEVEL                      2\n');
+fprintf(fid,'!STDOUTSWITCH                    0   !0: no 1: yes\n');
+fprintf(fid,'!LOGTRACESWITCH                  0   !0: no 1: yes\n');
+fprintf(fid,'!CENTEREDCONTRPOINTS             0   !0: no 1: yes\n');
+fprintf(fid,'!VORTEXCUTOFF                    2\n');
+fprintf(fid,'!WAKECUTOFFRADIUS                0.1\n');
+fprintf(fid,'!CIRCCONVCRIT                    0.0001\n');
+fprintf(fid,'!LIFTCUTOFFRADIUS                0.001\n');
+fprintf(fid,'!NEWRAPHNEIGHBOURS               2\n');
+fprintf(fid,'!STARTSMOOTHINGS                 3\n');
+fprintf(fid,'!NUMITEQMAX                      10\n');
+fprintf(fid,'!NUMITAEROCONV                   100\n');
+fprintf(fid,'!EXTFIELDFLAG                    0   !0: off 1: on\n');
+fprintf(fid,'!GROUNDFLAG                      0   !0: off 1: on\n');
+fprintf(fid,'!GROUNDLEVEL	                0.0\n');
+fprintf(fid,'!PARALLEL	                1   !0: off 1: on\n');
+fprintf(fid,'!PRSCRBWAKE			0   !0: off 1: on\n');
+fprintf(fid,'!CONVECFACTOR			0.0\n');
+fprintf(fid,'!WAKEREDUCTIONSTART		360\n');
+fprintf(fid,'!WAKEREDUCTIONSKIP		4\n');
+fclose(fid);
 
 %% Uncomment to plot the random samples of chord, twist, CL, CD
 % figure(1)

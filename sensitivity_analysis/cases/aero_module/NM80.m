@@ -1,7 +1,8 @@
 function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, vectorLength, ...
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
           RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, ...
-          uncertain_params, QoI, WINDSPEED, POLARS, DYNSTALLTYPE, CORR3DTYPE]  = NM80()
+          uncertain_params, QoI, WINDSPEED, POLARS, DYNSTALLTYPE, CORR3DTYPE, ...
+          BL_A1,BL_A2,BL_b1,BL_b2,BL_Ka,BL_Tp,BL_Tf,BL_Tv,BL_Tvl,BL_Acd]  = NM80()
 %% Variables of input file extracted from reference test case from DANAERO turbine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -43,8 +44,19 @@ YAWANGLE = 0.0;
 NROFBEMELEMENTS = 26;
 ZNAC2HUB = 1.6;
 WINDSPEED = 6.1;
-DYNSTALLTYPE = 1;
+DYNSTALLTYPE = 3; % 0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
 CORR3DTYPE = 0;
+% BL model parameters
+BL_A1 = 0.30;
+BL_A2 = 0.70;
+BL_b1 = 0.14;
+BL_b2 = 0.53;
+BL_Ka = 0.75;
+BL_Tp = 1.50;
+BL_Tf = 5.00;
+BL_Tv = 6.00;
+BL_Tvl = 5.00;
+BL_Acd = 0.13;
 %% Define properties of uncertain input in the UQLab format. 
 % We define this for all possible uncertain inputs and finally in the 
 % variable "uncertain_params" we specify which variables to be considered                                    
@@ -269,6 +281,128 @@ Input.Marginals(counter).Parameters = [-0.5 0.5];
 Input.Marginals(counter).Bounds = [-0.5 0.5];
 
 
+%% Inputs for BL model parameters
+% =======================BL_A1====================
+% Truncated Gaussian
+BL_A1_Std = 1;  % Standard deviation
+BL_A1_LB = BL_A1 - BL_A1*0.1; % Lower bound of trucated Gaussian distribution
+BL_A1_UB = BL_A1 + BL_A1*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_A1';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_A1, BL_A1_Std];
+Input.Marginals(counter).Bounds = [BL_A1_LB BL_A1_UB]; 
+
+% =======================BL_A2====================
+% Truncated Gaussian
+BL_A2_Std = 1;  % Standard deviation
+BL_A2_LB = BL_A2 - BL_A2*0.1; % Lower bound of trucated Gaussian distribution
+BL_A2_UB = BL_A2 + BL_A2*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_A2';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_A2, BL_A2_Std];
+Input.Marginals(counter).Bounds = [BL_A2_LB BL_A2_UB]; 
+
+% =======================BL_b1====================
+% Truncated Gaussian
+BL_b1_Std = 1;  % Standard deviation
+BL_b1_LB = BL_b1 - BL_b1*0.1; % Lower bound of trucated Gaussian distribution
+BL_b1_UB = BL_b1 + BL_b1*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_b1';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_b1, BL_b1_Std];
+Input.Marginals(counter).Bounds = [BL_b1_LB BL_b1_UB];
+
+% =======================BL_b2====================
+% Truncated Gaussian
+BL_b2_Std = 1;  % Standard deviation
+BL_b2_LB = BL_b2 - BL_b2*0.1; % Lower bound of trucated Gaussian distribution
+BL_b2_UB = BL_b2 + BL_b2*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_b2';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_b2, BL_b2_Std];
+Input.Marginals(counter).Bounds = [BL_b2_LB BL_b2_UB];
+
+% =======================BL_Ka====================
+% Truncated Gaussian
+BL_Ka_Std = 1;  % Standard deviation
+BL_Ka_LB = BL_Ka - BL_Ka*0.1; % Lower bound of trucated Gaussian distribution
+BL_Ka_UB = BL_Ka + BL_Ka*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_Ka';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_Ka, BL_Ka_Std];
+Input.Marginals(counter).Bounds = [BL_Ka_LB BL_Ka_UB];
+
+% =======================BL_Tp====================
+% Truncated Gaussian
+BL_Tp_Std = 1;  % Standard deviation
+BL_Tp_LB = BL_Tp - BL_Tp*0.1; % Lower bound of trucated Gaussian distribution
+BL_Tp_UB = BL_Tp + BL_Tp*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_Tp';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_Tp, BL_Tp_Std];
+Input.Marginals(counter).Bounds = [BL_Tp_LB BL_Tp_UB];
+
+ 
+% =======================BL_Tf====================
+% Truncated Gaussian
+BL_Tf_Std = 1;  % Standard deviation
+BL_Tf_LB = BL_Tf - BL_Tf*0.1; % Lower bound of trucated Gaussian distribution
+BL_Tf_UB = BL_Tf + BL_Tf*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_Tf';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_Tf, BL_Tf_Std];
+Input.Marginals(counter).Bounds = [BL_Tf_LB BL_Tf_UB];
+
+% =======================BL_Tv====================
+% Truncated Gaussian
+BL_Tv_Std = 1;  % Standard deviation
+BL_Tv_LB = BL_Tv - BL_Tv*0.1; % Lower bound of trucated Gaussian distribution
+BL_Tv_UB = BL_Tv + BL_Tv*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_Tv';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_Tv, BL_Tv_Std];
+Input.Marginals(counter).Bounds = [BL_Tv_LB BL_Tv_UB];
+
+% =======================BL_Tvl====================
+% Truncated Gaussian
+BL_Tvl_Std = 1;  % Standard deviation
+BL_Tvl_LB = BL_Tvl - BL_Tvl*0.1; % Lower bound of trucated Gaussian distribution
+BL_Tvl_UB = BL_Tvl + BL_Tvl*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_Tv1';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_Tvl, BL_Tvl_Std];
+Input.Marginals(counter).Bounds = [BL_Tvl_LB BL_Tvl_UB];
+
+% =======================BL_Acd====================
+% Truncated Gaussian
+BL_Acd_Std = 1;  % Standard deviation
+BL_Acd_LB = BL_Acd - BL_Acd*0.1; % Lower bound of trucated Gaussian distribution
+BL_Acd_UB = BL_Acd + BL_Acd*0.1;  % Upper bound of trucated Gaussian distribution 
+counter = counter+1;
+Input.Marginals(counter).Name = 'BL_Acd';
+Input.Marginals(counter).Index = ''; % Empty for scalar
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [BL_Acd, BL_Acd_Std];
+Input.Marginals(counter).Bounds = [BL_Acd_LB BL_Acd_UB];
+
 
 %% Specify uncertain parameters to be considered in the sensitivity analysis
 % The parameter should be defined in the following format {name,index,rel_perturbation} where
@@ -285,12 +419,14 @@ Input.Marginals(counter).Bounds = [-0.5 0.5];
 %                    {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2}, ...
 %                    {'CD',1, 0.2}, {'CD',2, 0.2}, {'CD',3, 0.2},{'CD',4,0.2}, ...
 %                    {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}
-%                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''}};
+%                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''},...
+%                    {'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
+%                    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''},{'BL_Tvl','',''},{'BL_Acd','',''}};
 
-uncertain_params = {{'Twist',2,0.1},{'Twist',3,0.1},{'Twist',4,0.1},{'Twist',5,0.1},{'Twist',6,0.1},{'Twist',7,0.1}, ...
-                    {'Chord',3,0.1},{'Chord',4,0.1},{'Chord',5,0.1},{'Chord',6,0.1},{'Chord',8,0.1}, ...
-                    {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}, ...
-                    {'CD',1, 0.2}, {'CD',2, 0.2}, {'CD',3, 0.2}, {'CD',4,0.2}};
+% uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
+
+uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
+     {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
                 
 % Specify quantity of interest
-QoI = 'Axial_Force'; % 'Axial_Force' or 'Power'
+QoI = 'Power'; % 'Axial_Force' or 'Power'
