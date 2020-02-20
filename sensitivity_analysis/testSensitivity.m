@@ -3,7 +3,7 @@ clc
 close all
 clearvars
 
-caseName = 'airfoil_lift'; % 'airfoil_lift','aero_module', etc;
+caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -293,3 +293,5 @@ end
 
 %% perform post processing
 run(['cases/' input_file '/postProcessing.m']);
+
+save('Axial_force_sensitivity')
