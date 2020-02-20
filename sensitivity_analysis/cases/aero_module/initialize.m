@@ -16,11 +16,11 @@ Model.isVectorized = false;
 %% list of UQ methods to be used for analysis
 
 % specify a list of options from the following list:
-<<<<<<< HEAD
-methods = {'PCE_OLS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
-=======
-methods = {'PCE_OLS','PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
->>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
+
+% methods = {'PCE_OLS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+
+methods = {'PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+
 
 % for MC, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
@@ -36,11 +36,9 @@ NsamplesOLS = [8 16 32 64 128]; % if not specified, the number of samples from Q
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-<<<<<<< HEAD
-NsamplesLARS = [16]; % if not specified, the number of samples from Quad is taken
-=======
-NsamplesLARS = [8 16 32 64 128]; % if not specified, the number of samples from Quad is taken
->>>>>>> f2ec09ef350001703ca54b256071e2f106b70094
+
+NsamplesLARS = [1024]; % if not specified, the number of samples from Quad is taken
+
 LARS_repeat = 1; % like MC_repeat
 
 %% Assemble the Input.Marginal for sensitivity analysis by text comparison
