@@ -79,6 +79,8 @@ BayesOpts.Solver.MCMC.T0 = 1e2;
 myBayesianAnalysis = uq_createAnalysis(BayesOpts);
 uq_print(myBayesianAnalysis)
 uq_display(myBayesianAnalysis)
+uq_display(myBayesianAnalysis, 'meanConvergence', 'all')
+uq_display(myBayesianAnalysis, 'trace', 'all')
     
 %Point value for Q[q1, q2, q3]
 uq_postProcessInversion(myBayesianAnalysis,'pointEstimate', 'MAP')
@@ -89,6 +91,8 @@ weight_Bayes = almanac(q_Bayes,height);
 
 
 %% Post-processing (Point estimates)
+
+format bank % Rounding to 2 decimal places
 
 % Frequentist
 
