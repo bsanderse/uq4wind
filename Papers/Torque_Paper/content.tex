@@ -2,7 +2,7 @@
 \section{Introduction}
 Aeroelastic models such as the Blade Element Momentum (BEM) models \cite{HandBook} play a critical role in the design, development, and optimization of modern wind turbines. A large number of BEM models have been developed to predict turbine responses such as the structural loads and power output \cite{Vorpahl2013}. 
 
-As a consequence of the strong model assumptions at the basis of BEM theory, the results from BEM codes can be subject to significant inaccuracies or uncertainties. For example, the effect of sheared inflow \cite{Madsen2012} is not naturally accounted for in the theory and needs to be incorporated via correction terms. Other major model uncertainties in BEM models are for example the time constant in dynamic stall models, the wake correction factor, the tip loss model parameter, and the lift- and drag-polars used to compute local aerodynamic forces. Especially for increasing turbine sizes, these model parameters are foreseen to be not sufficiently accurate \cite{Sayed2019}. In other words, the uncertainty associated with the output of currently employed BEM models is rather large. 
+As a consequence of the relatively strong model assumptions at the basis of BEM theory, the results from BEM codes can be subject to significant inaccuracies or uncertainties. For example, the effect of sheared inflow \cite{Madsen2012} is not naturally accounted for in the theory and needs to be incorporated via correction terms. Other major model uncertainties in BEM models are for example the time constant in dynamic stall models, the wake correction factor, the tip loss model parameter, and the lift- and drag-polars used to compute local aerodynamic forces. Especially for increasing turbine sizes, these model parameters are foreseen to be not sufficiently accurate \cite{Sayed2019}. In other words, the uncertainty associated with the output of currently employed BEM models is rather large. 
 % to arrive at robust BEM models that include an uncertainty estimate associated 
 
 Recently, several papers have addressed the uncertainty in BEM model output by performing forward uncertainty propagation or sensitivity studies, e.g.\ \cite{Echeverria2017,Matthaus2017,Murcia2018,Robertson2018,Bos2019a}. In these studies, the focus in mainly on uncertainties in the external conditions (wind parameters) and/or uncertainty in the turbine specification (geometric parameters). Apart from understanding how uncertainty in the output is related to the different uncertain inputs, such sensitivity studies are very useful to reduce the number of parameters as needed for example in design optimization \cite{Echeverria2017}. However, the uncertainty in BEM model output as caused by uncertainty in the model formulation itself, e.g.\ through the values chosen for model parameters, has been given little attention (exceptions being the effect of aerodynamic properties studied in \cite{Bortolotti2019,Matthaus2017})\todo{this is also what we do}.
@@ -52,23 +52,23 @@ NURBS have already been exploited in several aerodynamics applications, for inst
 %The uncertainty in a variable, e.g.\ the chord, is then expressed through uncertainties in the value of the control points.
 
 \subsection{NURBS representation}
-A NURBS curve $S(x)$ is expressed using a weighted sum of $n$ basis functions (or B-splines):
+A NURBS curve $S(r)$ is expressed using a weighted sum of $n$ basis functions (or B-splines):
 \begin{equation}\label{NURB_curve}
-S(x) = \sum_{i=1}^{n} c_i B_{i,p}(x),
+S(r) = \sum_{i=1}^{n} c_i B_{i,p}(r),
 \end{equation}
-where $c_i$ is the weight of the $i$-th control point and $B_{i,p}(x)$ is the value of the B-spline corresponding to the $i$-th control point at $x$, with the subscript $p$ denoting its polynomial degree.  In our case, $S(x)$ represent for example the chord as a function of the radial location along the blade. A sequence of non-decreasing parameters $X = \{x_1,x_2,...,x_m\}$, called the \textit{knot vector}, determines the domain in which any control point is active. A control point $c_i$ is said to be active at a location when the corresponding B-spline $B_{i,p}(x)$ is non-zero at $x$. B-splines are recursive in polynomial degree, thus we can derive quadratic B-splines using linear B-splines, cubic from quadratic B-splines and so on. Starting with a B-spline of degree 0 defined as 
+where $c_i$ is the weight of the $i$-th control point and $B_{i,p}(r)$ is the value of the B-spline corresponding to the $i$-th control point at $x$, with the subscript $p$ denoting its polynomial degree.  In our case, $S(r)$ represent for example the chord as a function of the radial location along the blade. A sequence of non-decreasing parameters $X = \{r_1,r_2,...,r_m\}$, called the \textit{knot vector}, determines the domain in which any control point is active. A control point $c_i$ is said to be active at a location when the corresponding B-spline $B_{i,p}(r)$ is non-zero at $r$. B-splines are recursive in polynomial degree, thus we can derive quadratic B-splines using linear B-splines, cubic from quadratic B-splines and so on. Starting with a B-spline of degree 0 defined as 
 \begin{equation}\label{linearBspline}
-B_{i,0}(x) :=
+B_{i,0}(r) :=
 \begin{cases}
-1\quad x_i\leq x < x_{i+1},\quad i = 1,2,...,m,\\
+1\quad r_i\leq r < r_{i+1},\quad i = 1,2,...,m,\\
 0\quad\text{elsewhere,}
 \end{cases} 
 \end{equation}
 we can derive higher-order B-splines using the recurrence relation \cite{deBoor}:
 \begin{equation}\label{NURBS_recurrence}
-B_{i,p}(x) := \frac{x - x_i}{x_{i+p} - x_i}B_{i,p-1}(x) + \frac{x_{i+p+1} - x}{x_{i+p+1} - x_{i+1}}B_{i+1,p-1}(x),\quad p\geq1.
+B_{i,p}(r) := \frac{r - r_i}{r_{i+p} - r_i}B_{i,p-1}(r) + \frac{r_{i+p+1} - r}{r_{i+p+1} - r_{i+1}}B_{i+1,p-1}(r),\quad p\geq1.
 \end{equation}
-Note that with increasing $p$ the interval in which a B-spline is non-zero also become larger. For a curve of polynomial degree $p$, there are $p+1$ active control points at any location $x$. For example, for a linear curve ($p=1$) only two adjacent control points are active at any location. Therefore, only a few nearby control points are active when computing the NURBS curve \eqref{NURB_curve}. These B-splines can be constructed efficiently using the de Boor's algorithm \cite{deBoor}. To compute high-order B-splines in \eqref{NURBS_recurrence}, we need to pad the knot vector $X$ by repeating the first and last elements $p$ times each. In Fig. \ref{basis_examples}, we show linear, quadratic and cubic splines for $x\in[0,1]$ with original knot vector $X = \{0,1/3,2/3,1\}$, padded accordingly with the curve order, for e.g., for linear B-splines, we use the knot vector $X = \{0,0,1/3,2/3,1,1\}$.
+Note that with increasing $p$ the interval in which a B-spline is non-zero also become larger. For a curve of polynomial degree $p$, there are $p+1$ active control points at any location $r$. For example, for a linear curve ($p=1$) only two adjacent control points are active at any location. Therefore, only a few nearby control points are active when computing the NURBS curve \eqref{NURB_curve}. These B-splines can be constructed efficiently using the de Boor's algorithm \cite{deBoor}. To compute high-order B-splines in \eqref{NURBS_recurrence}, we need to pad the knot vector $X$ by repeating the first and last elements $p$ times each. In Fig. \ref{basis_examples}, we show linear, quadratic and cubic splines for $r\in[0,1]$ with original knot vector $X = \{0,1/3,2/3,1\}$, padded accordingly with the curve order, for e.g., for linear B-splines, we use the knot vector $X = \{0,0,1/3,2/3,1,1\}$.
 \begin{figure}[h!]
 \centering
 \includegraphics[trim={0 0cm 0 0cm},clip, scale=.75]{basis_example.eps}
@@ -76,11 +76,11 @@ Note that with increasing $p$ the interval in which a B-spline is non-zero also 
 \label{basis_examples}
 \end{figure}
 
-In order to parameterize a given curve, e.g. the blade reference chord, we choose a degree $p$ and a number of knots $X =\{x_j\}_{j=1}^n$. The knots can be uniformly spaced or chosen heuristically (for advanced approaches for knot selection see\cite{LI2005791,razdan1999knot}). Next we sample $S_{ref}(x)$ at $X$ and also compute $B_{i,p}(x_j), \text{ for }i, j = 1,2, ..., n$. We then formulate a linear system and solve for the set of control points $\mathbf{c}=\{c_i\}_{i=1}^n$ as:
+In order to parameterize a given curve, e.g. the blade reference chord, we choose a degree $p$ and a number of knots $X =\{r_j\}_{j=1}^n$. The knots can be uniformly spaced or chosen heuristically (for advanced approaches for knot selection see\cite{LI2005791,razdan1999knot}). Next we sample $S_{ref}(r)$ at $X$ and also compute $B_{i,p}(r_j), \text{ for }i, j = 1,2, ..., n$. We then formulate a linear system and solve for the set of control points $\mathbf{c}=\{c_i\}_{i=1}^n$ as:
 \begin{equation}\label{nurbs_inversion}
 \mathbf{B}\mathbf{c} = \mathbf{S}_{ref},
 \end{equation}
-where $\mathbf{S}_{ref}\in\mathbb{R}^{n}$ is a vector containing sampled values of $S_{ref}(x)$ and $\mathbf{B}\in \mathbb{R}^{n\times n}$ is a matrix with the $j$-th row consisting of values of $n$ B-splines sampled at location $x_j$. Once the control points are obtained, the approximate reference curve $S_n(x)$ follows from \eqref{NURB_curve}. Fig.~\ref{nurbs_approx} shows a parameterization of the chord curve using $n=9$ control points and second-order ($p=2$) B-splines.
+where $\mathbf{S}_{ref}\in\mathbb{R}^{n}$ is a vector containing sampled values of $S_{ref}(r)$ and $\mathbf{B}\in \mathbb{R}^{n\times n}$ is a matrix with the $j$-th row consisting of values of $n$ B-splines sampled at location $r_j$. Once the control points are obtained, the approximate reference curve $S_n(r)$ follows from \eqref{NURB_curve}. Fig.~\ref{nurbs_approx} shows a parameterization of the chord curve using $n=9$ control points and second-order ($p=2$) B-splines.
 \begin{figure}[h!]
 \centering
 \includegraphics[trim={0cm 0cm 0 0cm},clip, scale=1.3]{nurbs_approx.eps}
@@ -89,19 +89,15 @@ where $\mathbf{S}_{ref}\in\mathbb{R}^{n}$ is a vector containing sampled values 
 \end{figure}
 
 \subsection{Perturbing the NURBS curves}
-Given the reference values of $\mathbf{c}$, it becomes straightforward to generate perturbed curves: we sample a uniform random variable to perturb the baseline control points and use these to compute a perturbed curve $\tilde{S}(x)$:
-\begin{equation}
-\tilde{S} (x) = \sum_{i=1}^{n} \tilde{c}_{i} B_{i,p}(x),
-\end{equation}
-where
+Given the reference values of $\mathbf{c}$, it becomes straightforward to generate perturbed curves: we sample a uniform random variable to perturb the baseline control points and use these to compute a perturbed curve $\tilde{S}(r)$:
 \begin{equation}\label{eqn:perturb_c}
-\tilde{c}_{i} = c_{i} (1 + \Delta_{i}),
+\tilde{S} (r) = \sum_{i=1}^{n} \tilde{c}_{i} B_{i,p}(r) \qquad \text{where} \qquad \tilde{c}_{i} = c_{i} (1 + \Delta_{i}),
 \end{equation}
-and the perturbation is randomly sampled as $\Delta_{i} \sim \mathcal{U}[-0.05,0.05]$. 
-
-
-\subsection{Model uncertainties}
-The above framework is directly applicable to express the geometric uncertainty in twist- and chord distribution, with $c$ denoting either the value of the twist control points or of the chord control points. For model uncertainties, i.e.\ lift- and drag polars, \todo{Insert mathematical expression}
+and the perturbation is randomly sampled as $\Delta_{i} \sim \mathcal{U}[-0.05,0.05]$. This equation is applicable to both the twist- and chord distribution, where $\tilde{c}_{i}$ can denote either the value of the twist control points, $\text{Tw}_i$, or of the chord control points, $\text{Ch}_{i}$. For the lift- and drag polars, we use the following parametrization:
+\begin{equation}\label{eqn:perturb_cl}
+\tilde{S} (r,\alpha) = \sum_{i=1}^{n} \tilde{c}_{i}(\alpha) B_{i,p}(r) \qquad \text{where} \qquad \tilde{c}_{i}(\alpha) = c_{\text{ref},i} (\alpha) (1 + \Delta_{i}),
+\end{equation}
+where $c_{i}(\alpha)$ can denote either the lift coefficient $\text{Cl}_{i}$ or drag coefficient $\text{Cd}_{i}$, and the subscript $\text{ref}$ denotes the reference curve. % $c_{\text{ref},i}(\alpha)$ can denote either the reference lift coefficient $C_{l,\text{ref},i}(\alpha)$ or drag coefficient $C_{d,\text{ref},i}(\alpha)$ at section $i$.
 
 %
 %Finally, to obtain random samples of the chord curve, first we associate a probability distribution for each control point. And then we independently sample each control point and use them in \eqref{NURB_curve} to compute a random samples of chord curve. 
@@ -217,9 +213,9 @@ One of the main advantage of the LARS algorithm is that it works well in cases w
 As a reference wind turbine, we consider the 2MW NM80 onshore turbine from the DANAERO project \cite{Troldborg2013} with a blade radius of 38.8 m and a hub height of 57.19 m with the mean wind speed at hub height set as 6.1m/s. Furthermore, the RPM is set at 12.3$/\text{min.}$, the blade pitch angle at 0.15 $\deg$ and the turbine yaw angle is zero.
 
 \subsubsection{Choice of uncertain inputs}
-The data for lift ($C_l$) and drag ($C_d$) polars are available at four locations along the blade radius at 11.87 m, 17.82 m, 28.97 m, and 35.53 m. The lift and drag variables at these sections are numbered Cl1 - Cl4 and Cd1 - Cd4 respectively. The reference value of these polars is obtained from the wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable.  
+The data for lift ($C_l$) and drag ($C_d$) polars are available at four locations along the blade radius: at 11.87 m, 17.82 m, 28.97 m, and 35.53 m. The lift and drag variables at these sections are numbered Cl1 - Cl4 and Cd1 - Cd4 respectively. The reference value of these polars is obtained from the wind-tunnel experiment with 3D corrections. Random samples of chord, twist, lift- and drag-polars are obtained by perturbing the control points with a uniformly distributed random variable.  
 
-There are two ways to obtain perturbed curves: independently perturbing each of the control points (local perturbation) or using a single random number to perturb all the control points (global perturbation). We use local perturbation for chord control points Ch3 - Ch7 and twist control points Tw2 - Tw7 control points, see Fig.\ \ref{perturbed_samples} (a) - (b), respectively. Each control point are perturbed using a uniform random number with bounds given by $\pm5\%$ of the magnitude of a control point (see equation \eqref{eqn:perturb_c}). For the lift and drag curves, all control points are perturbed using the same uniform random number resulting in samples of the lift and drag curves as shown in Fig.\ \ref{perturbed_samples} (c) - (d), respectively. For simplicity, we only consider uniform distributions for perturbing the control points, however, we can also use other probability distributions for this purpose. Also note that when using a uniform distribution with bounds given by the relative magnitude of control points, we tend to obtain small perturbations for control points with values close to zero. 
+There are two ways to obtain perturbed curves: independently perturbing each of the control points (local perturbation) or using a single random number to perturb all the control points (global perturbation). We use local perturbation for chord control points Ch3 - Ch7 and twist control points Tw2 - Tw7 control points, see Fig.\ \ref{perturbed_samples} (a) - (b), respectively. The twist and chord are perturbed following equation \eqref{eqn:perturb_c}, whereas the lift and drag are perturbed according to equation \eqref{eqn:perturb_cl}. Examples of the resulting lift and drag curves are shown in Fig.\ \ref{perturbed_samples} (c) - (d), respectively. For simplicity, we only consider uniform distributions for perturbing the control points, however, we can also use other probability distributions for this purpose. Also note that when using a uniform distribution with bounds given by the relative magnitude of control points, we tend to obtain small perturbations for control points with values close to zero. 
 \begin{figure}[h!]
 \centering
 \includegraphics[trim={0.5cm 0cm 0 0cm},clip, scale=0.67]{figure1.pdf}
@@ -266,4 +262,4 @@ In Fig.~\ref{sensitivity_analysis}, we show the total order Sobol indices as a m
 
 
 \section{Conclusions}\label{sec:conclusions}
-We have shown how Sobol indices computed using sparse adaptive polynomial expansion can be used for high-dimensional global sensitivity analysis of both geometric and model uncertainties. The identified sensitive model parameters will be utilized in future work to develop calibrated BEM models with built-in uncertainty estimates as part of the \textit{WindTrue} project, and is connected to IEA Task 29.
+We have shown how Sobol indices computed using sparse adaptive polynomial expansion can be used for high-dimensional global sensitivity analysis of both geometric and model uncertainties in BEM models. The proposed framework is generic and can deal with many types of (parametric uncertainties) The sensitive model parameters identified here will be utilized in future work to develop calibrated BEM models with built-in uncertainty estimates, as part of the \textit{WindTrue} project, and used to better understand the differences between BEM models and measurement data as studied in IEA Task 29.
