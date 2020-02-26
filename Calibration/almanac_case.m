@@ -104,8 +104,9 @@ sigma2_freq = (R_freq.'*R_freq)/(N_data-p)% Variance estimator
 
 cov_freq = sigma2_freq*inv(A'*A)% Covariance matrix estimate
 
-q_dev_freq = [q_freq - (q_freq*sqrt(sigma2_freq))/2, q_freq + ...
-             (q_freq*sqrt(sigma2_freq))/2]%(+-) two standard deviation 
+% 2 comes from z value for 0.02275
+q_dev_freq = [q_freq - (2*sqrt(sigma2_freq))/sqrt(N_data), q_freq + ...
+             (2*sqrt(sigma2_freq))/sqrt(N_data)]%(+-)two standard deviation 
 
 
 % Bayesian
@@ -118,8 +119,9 @@ sigma2_Bayes = (R_Bayes.'*R_Bayes)/(N_data-p)% Variance estimator
 
 cov_Bayes = sigma2_Bayes*inv(A'*A)% Covariance matrix estimate
 
-q_dev_Bayes = [q_Bayes - (q_Bayes*sqrt(sigma2_Bayes))/2, q_Bayes + ...
-             (q_Bayes*sqrt(sigma2_Bayes))/2]%(+-) two standard deviation 
+% 2 comes from z value for 0.02275
+q_dev_Bayes = [q_Bayes - (2*sqrt(sigma2_freq))/sqrt(N_data), q_Bayes + ...
+             (2*sqrt(sigma2_freq))/sqrt(N_data)]%(+-) two standard deviation 
          
 
 % Comapre the two approaches to the experimental data        
