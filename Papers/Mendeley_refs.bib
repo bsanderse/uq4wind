@@ -11,7 +11,7 @@ year = {2014}
 abstract = {Unsteady power output and long-term loads (extreme and fatigue) drive wind turbine design. However, these loads are difficult to include in optimization loops and are typically only assessed in a post-optimization load analysis or via reduced-order methods. Both alternatives yield suboptimal results. The reason for this difficulty lays in the deterministic approaches to long-term loads assessment. To model the statistics of lifetime loads they require the analysis of many unsteady load cases, generated from many different random seeds—a computationally expensive procedure. In this paper, we present an alternative: a stochastic solution for the unsteady aerodynamic loads based on a projection of the unsteady Blade Element Momentum (BEM) equations onto a stochastic space spanned by chaos exponentials. This approach is similar to the increasingly popular polynomial chaos expansion, but with 2 major differences. First, the BEM equations constitute a random process, varying in time, while previous polynomial chaos expansion methods were concerned with random parameters (ie, random but constant in time or initial values). Second, a new, more efficient basis (the exponential chaos) is used. This new stochastic method enables us to obtain unsteady long-term loads much faster, enabling unsteady loads to become accessible inside wind turbine optimization loops. In this paper we derive the stochastic BEM solution and present the most relevant results showing the accuracy of the new method.},
 author = {Fluck, Manuel and Crawford, Curran},
 doi = {10.1002/we.2148},
-file = {:Users/sanderse/Dropbox/work/Mendeley/Fluck, Crawford/Wind Energy/Fluck, Crawford - 2018 - A fast stochastic solution method for the Blade Element Momentum equations for long-term load assessment.pdf:pdf},
+file = {:Users/sanderse/Dropbox/work/Mendeley/Fluck, Crawford/Wind Energy/Fluck, Crawford - 2018 - A fast stochastic solution method for the Blade Element Mo04485mentum equations for long-term load assessment.pdf:pdf},
 issn = {10991824},
 journal = {Wind Energy},
 keywords = {Blade Element Momentum,aerodynamic,chaos expansion,extreme loads,fatigue loads,stochastic,wind turbine},
@@ -44,13 +44,11 @@ title = {{The DAN-AERO MW experiment, Ris{\o}-R-1726(EN)}},
 year = {2010}
 }
 @inproceedings{Matthaus2017,
-address = {Reston, Virginia},
 author = {Matth{\"{a}}us, David and Bortolotti, Pietro and Loganathan, Jaikumar and Bottasso, Carlo L.},
 booktitle = {35th Wind Energy Symposium, AIAA SciTech Forum, 9-13 January 2017, Grapevine, Texas},
 doi = {10.2514/6.2017-1849},
 file = {:Users/sanderse/Dropbox/work/Mendeley/Matth{\"{a}}us et al/35th Wind Energy Symposium, AIAA SciTech Forum, 9-13 January 2017, Grapevine, Texas/Matth{\"{a}}us et al. - 2017 - Propagation of Uncertainties Through Wind Turbine Models for Robust Design Optimization.pdf:pdf},
 month = {jan},
-publisher = {American Institute of Aeronautics and Astronautics},
 title = {{Propagation of Uncertainties Through Wind Turbine Models for Robust Design Optimization}},
 year = {2017}
 }
@@ -99,7 +97,6 @@ abstract = {An adaptive knot placement algorithm for B-spline curve approximatio
 author = {Li, Weishi and Xu, Shuhong and Zhao, Gang and Goh, Li Ping},
 doi = {10.1016/j.cad.2004.09.008},
 file = {:Users/sanderse/Dropbox/work/Mendeley/Li et al/CAD Computer Aided Design/Li et al. - 2005 - Adaptive knot placement in B-spline curve approximation.pdf:pdf},
-issn = {00104485},
 journal = {CAD Computer Aided Design},
 keywords = {Curve approximation,Filtering,Knot placement,Locally small deflection spline},
 number = {8},
@@ -262,15 +259,12 @@ title = {{Sensitivity of Uncertainty in Wind Characteristics and Wind Turbine Pr
 year = {2019}
 }
 @article{Robertson2018,
-abstract = {Wind turbines are designed using the International Electrotechnical Commission (IEC) 61400-1 standard,1 which prescribes a set of simulations to ascertain the ultimate and fatigue loads that the turbine could encounter under a variety of environmental and operational conditions. In the simulation prescription, the only probabilistic variable considered is the mean hub-height wind speed. Other wind parameters - such as the turbulence spectra, sheer, veer, spatial coherence, and component correlation - are deterministic values that remain constant across all simulations (turbulence and coherence only vary with wind speed). In addition, these values are set based on the IEC classification of the wind turbine and hub height. These other wind parameters, however, could vary vastly in time and between different sites and could potentially have a significant effect on the resulting loads the turbine could see. Therefore, this paper seeks to assess the sensitivity of different wind parameters on the resulting loads of the wind turbine, to (1) rank the sensitivities of different parameters, (2) help establish error bars around the predictions of engineering models during validation efforts, and (3) provide insight to probabilistic design methods and site-suitability analyses.},
-author = {Robertson, Amy and Sethuraman, Latha and Jonkman, Jason M.},
+journal = {NREL/CP-5000-70445},
+author = {Robertson, Amy and Sethuraman, Latha and Jonkman, Jason M. and Quick, Julian},
 doi = {10.2514/6.2018-1728},
 file = {:Users/sanderse/Dropbox/work/Mendeley/Robertson, Sethuraman, Jonkman/2018 Wind Energy Symposium/Robertson, Sethuraman, Jonkman - 2018 - Assessment of Wind Parameter Sensitivity on Extreme and Fatigue Wind Turbine Loads.pdf:pdf},
-isbn = {978-1-62410-522-7},
-journal = {2018 Wind Energy Symposium},
 number = {February},
-title = {{Assessment of Wind Parameter Sensitivity on Extreme and Fatigue Wind Turbine Loads}},
-url = {https://arc.aiaa.org/doi/10.2514/6.2018-1728},
+title = {Assessment of Wind Parameter Sensitivity on Extreme and Fatigue Wind Turbine Loads},
 year = {2018}
 }
 @article{Bos2019a,
@@ -284,6 +278,17 @@ pages = {1--18},
 title = {{Fatigue design load calculations of the offshore NREL 5MW benchmark turbine using quadrature rule techniques}},
 url = {http://arxiv.org/abs/1904.07021},
 year = {2019}
+}
+@article{Bos2019c,
+abstract = {A novel approach is proposed to reduce, compared to the conventional binning approach, the large number of aeroelastic code evaluations that are necessary to obtain equivalent loads acting on wind turbines. These loads describe the effect of long-term environmental variability on the fatigue loads of a horizontal-axis wind turbine. In particular Design Load Case 1.2, as standardized by IEC, is considered. The approach is based on numerical integration techniques and, more specifically, quadrature rules. The quadrature rule used in this work is a recently proposed "implicit" quadrature rule, which has the main advantage that it can be constructed directly using measurements of the environment. It is demonstrated that the proposed approach yields accurate estimations of the equivalent loads using a significantly reduced number of aeroelastic model evaluations (compared to binning). Moreover the error introduced by the seeds (introduced by averaging over random wind fields and sea states) is incorporated in the quadrature framework, yielding an even further reduction in the number of aeroelastic code evaluations. The reduction in computational time is demonstrated by assessing the fatigue loads on the NREL 5MW reference offshore wind turbine in conjunction with measurement data obtained at the North Sea, both for a simplified and a full load case.},
+journal = {Wind Energy},
+author = {van den Bos, L. M. M. and Bierbooms, W. A. A. M. and Alexandre, A. and Sanderse, B. and van Bussel, G. J. W.},
+doi = {10.1002/we.2470},
+file = {:Users/sanderse/Dropbox/work/Mendeley/Bos et al/Unknown/Bos et al. - 2019 - Fatigue design load calculations of the offshore NREL 5MW benchmark turbine using quadrature rule techniques.pdf:pdf},
+volume = {1},
+pages = {1--15},
+title = {{Fatigue design load calculations of the offshore NREL 5MW benchmark turbine using quadrature rule techniques}},
+year = {2020}
 }
 @article{Murcia2018,
 abstract = {Polynomial surrogates are used to characterize the energy production and lifetime equivalent fatigue loads for different components of the DTU 10 MW reference wind turbine under realistic atmospheric conditions. The variability caused by different turbulent inflow fields are captured by creating independent surrogates for the mean and standard deviation of each output with respect to the inflow realizations. A global sensitivity analysis shows that the turbulent inflow realization has a bigger impact on the total distribution of equivalent fatigue loads than the shear coefficient or yaw miss-alignment. The methodology presented extends the deterministic power and thrust coefficient curves to uncertainty models and adds new variables like damage equivalent fatigue loads in different components of the turbine. These surrogate models can then be implemented inside other work-flows such as: estimation of the uncertainty in annual energy production due to wind resource variability and/or robust wind power plant layout optimization. It can be concluded that it is possible to capture the global behavior of a modern wind turbine and its uncertainty under realistic inflow conditions using polynomial response surfaces. The surrogates are a way to obtain power and load estimation under site specific characteristics without sharing the proprietary aeroelastic design.},
