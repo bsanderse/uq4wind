@@ -76,11 +76,12 @@ for j=1:p
     end
 end
 
-q_freq = regress(F_n,A);
+%q_freq = regress(F_n,A);
+q_freq = pinv(A)*F_n;
 F_n_OLS = dan_model_ext(q_freq,P);
 
-cl_freq = (q_freq(1:2:end)./0.5*1.225.*v_r.*c_r)
-cd_freq = (q_freq(2:2:end)./0.5*1.225.*v_r.*c_r)
+cl_freq = q_freq(1:2:end)
+cd_freq = q_freq(2:2:end)
 
 
 figure(10)
