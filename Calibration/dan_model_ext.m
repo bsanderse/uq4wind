@@ -1,12 +1,8 @@
 function Y = dan_model_ext(Q,P)
 % Q: uncertain parameter, size p*2
-% P: contains independent variables, P = [beta c V]
+% P: contains independent variables, P = [beta c V x]
 % ind: range of each model
 Y = zeros(4,1);
-% y = b_1 + b_2*x 
-% Y = 0.5*1.225.*P(:,2).*(P(:,3).^2)*( ...
-%     Q(1)*sin(P(:,1)).*( + Q(2).*cos(P(:,1)) + ...
-%     Q(3)*sin(P(:,1)) + Q(4).*cos(P(:,1)) );
 
 Y(1) = 0.5*1.225.*P(1,2).*(P(1,3).^2)*( ...
     Q(1)*sin(P(1,1)) + Q(2).*cos(P(1,1)) );
