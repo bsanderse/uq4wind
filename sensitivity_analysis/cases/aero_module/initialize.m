@@ -1,10 +1,12 @@
 % Name of Matlab file representing the turbine data
 turbineName = 'NM80'; % 'NM80', 'AVATAR'
+% check NM80.m or AVATAR.m or (turbine_name).m for turbine-specific
+% settings and definition of uncertainties
 
 %% model description 
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module;
-% Optionally, one can pass parameters to the model stores in the cell
+% Optionally, one can pass parameters to the model stored in the cell
 % array P
 P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
@@ -39,13 +41,23 @@ NsamplesLARS = [32]; % if not specified, the number of samples from Quad is take
 LARS_repeat = 1; % like MC_repeat
 
 %% Assemble the Input.Marginal for sensitivity analysis by text comparison
-ndim = length(P{26});
+% NOTE: check getParameterAeroModule.m to see the definition of the P array
+% P{26} contains the uncertain parameters for which we will do sensitivity analysis
+ndim = length(P{26}); 
+% P{25} contains all possible parameters, deterministic and uncertain, of
+% which a subset is used in the sensitivity study (as defined in P{25})
 ntot = length(P{25}.Marginals); 
 discrete_index = [];
 cont_index = [];
 discrete_param_vals = [];
+
+% loop over P{26} and for each uncertain parameter get the distribution as
+% stored in P{25}
 for i=1:ndim    
     for j = 1:ntot
+        % find which index we need by looking in struct P{25}
+        % store the required information in Input.Marginals(i), which will
+        % be used by UQLab
         if(strcmp([P{25}.Marginals(j).Name,num2str(P{25}.Marginals(j).Index)],[P{26}{i}{1},num2str(P{26}{i}{2})]))
             Input.Marginals(i).Name =  [P{26}{i}{1},num2str(P{26}{i}{2})];
             Input.Marginals(i).Type = P{25}.Marginals(j).Type; 

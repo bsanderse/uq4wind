@@ -178,21 +178,39 @@ end
 CL_INDEX = [];
 CL_PERTURB = [];
 X_CL = [];
-CL =cell(P{31}{1});
-for i = 1:P{31}{1} % Loop over all possible polar files
-    CL{i} = P{31}{6+i}{1};
+n_polar = P{31}{1};
+ind_aoa = P{31}{7+n_polar}; % indices that are perturbed
+aoa  = P{31}{6};
+% note the perturbed angle of attack is aoa(ind_aoa)
+
+CL =cell(n_polar); % P{31} contains the polars
+for i = 1:n_polar % Loop over all possible polar files, P{31}{1} contains number of polars
+    CL{i} = P{31}{6+i}{1}; % CL of each polar, corresponding to a certain section
 end
+
+% note:
+% P{name,index,rel_perturbation}
 for i=1:ndim
-    if(strcmp(P{26}{i}{1},'CL'))
-        CL_INDEX = [CL_INDEX P{26}{i}{2}];
-        CL_PERTURB = [CL_PERTURB P{26}{i}{3}];
-        X_CL = [X_CL X(i)];
+    if(strcmp(P{26}{i}{1},'CL')) % check if CL is part of the random variable vector
+        CL_INDEX = [CL_INDEX P{26}{i}{2}]; % index -> section / polar
+        CL_PERTURB = [CL_PERTURB P{26}{i}{3}]; % perturbation 
+        X_CL = [X_CL X(i)]; % value of the random variable CL
     end
 end
-for i = 1:P{31}{1} % Loop over all possible polar files
+% now that the value of Cl and perturbation are defined, 
+% the Cl curves can be constructed
+% i.e. the Cl-alpha curve at a certain section
+d = ones(length(ind_aoa),1);
+for i = 1:n_polar % Loop over all possible polar files
     for j = 1:length(CL_INDEX)
         if(CL_INDEX(j)==i)
-            CL{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CL(i)*ones(length(P{31}{7+P{31}{1}}),1), CL_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{1}, 3, 1:length(P{31}{6}));
+            % note the syntax:
+            % computeCurves(samples,index, randVec, pc, plotSamples,...
+%                                       interpolationLocations,referenceCurve,NURBS_order,sampledIndices)
+            % X_CL gives a sample between [-0.5,0.5]
+            % this is multiplied by the value of CL_PERTURB
+            CL{i} = computeCurves(1, ind_aoa, X_CL(i)*d, CL_PERTURB(i)*d, 0, ...
+                aoa, P{31}{6+i}{1}, 3, 1:length(aoa));
         end
     end
 end
@@ -244,7 +262,8 @@ for i = 1:P{31}{1} % Loop over all possible polar files
 end
 
 %% Write to the input.txt file for aeromodule
-filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
+filename = fullfile(pwd,'AEROmodule',P{29},'input.txt');
+%filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
@@ -360,7 +379,8 @@ fprintf(fid,'NROFBEMELEMENTS                   %d\n', P{21});
 fclose(fid);
 
 %% Change windspeed file
-filename = [pwd,'\AEROmodule\',P{29},'\wind.dat'];
+filename = fullfile(pwd,'AEROmodule',P{29},'wind.dat');
+% filename = [pwd,'\AEROmodule\',P{29},'\wind.dat'];
 fid = fopen(filename,'w');
 fprintf(fid,'!time [s]  u [m/s]  v [m/s]  w [m/s]\n');
 fprintf(fid,'%f    %f    %f    %f\n', 0.0,  X_WindSpeed, 0.0, 0.0);
@@ -371,7 +391,8 @@ fclose(fid);
 
 %% Change the Polar file
 for i = 1:P{31}{1} % Loop over the polar files
-    filename = [pwd,'\AEROmodule\',P{29},'\',P{31}{2}{i}]; 
+    filename = fullfile(pwd,'AEROmodule',P{29},P{31}{2}{i});
+%     filename = [pwd,'\AEROmodule\',P{29},'\',P{31}{2}{i}]; 
     fid = fopen(filename,'w');
     fprintf(fid,'! Aero mudule input file for airfoil data\n');
     fprintf(fid,'\n');
@@ -389,7 +410,8 @@ end
 
 
 %% Change specialist.txt file
-filename = [pwd,'\AEROmodule\',P{29},'\specialist_input.txt'];
+filename = fullfile(pwd,'AEROmodule',P{29},'specialist_input.txt');
+% filename = [pwd,'\AEROmodule\',P{29},'\specialist_input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');

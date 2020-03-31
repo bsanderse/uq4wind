@@ -21,6 +21,7 @@ S = zeros(samples,numel(xu));
 for k = 1:samples
     for i = 1:numel(j)
         [y,xu] = bspline_basis(j(i),n,t,xu);
+        % note: Delta in the Torque paper is pc(i)*randVec(k,i)
         S(k,:) = S(k,:) + (c(i)+ pc(i).*c(i)*(randVec(k,i)))*y;
     end
 end

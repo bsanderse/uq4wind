@@ -20,20 +20,30 @@ if nargin < 2
 end
 
 %% Setup the Import Options
-opts = delimitedTextImportOptions("NumVariables", 4);
 
-% Specify range and delimiter
-opts.DataLines = dataLines;
-opts.Delimiter = "\t";
-
-% Specify column names and types
-opts.VariableNames = ["alpha", "Cl", "Cd", "Cm"];
-opts.VariableTypes = ["double", "double", "double", "double"];
-opts.ExtraColumnsRule = "ignore";
-opts.EmptyLineRule = "read";
-
-% Import the data
-tbl = readtable(filename, opts);
+if (verLessThan('matlab','9.5'))
+    % for older versions of Matlab:
+    tbl = readtable(filename, 'Delimiter', '\t');
+    tbl.Properties.VariableNames = {'alpha','Cl','Cd','Cm'};
+    
+else
+    
+    % opts = delimitedTextImportOptions("NumVariables", 4);
+    
+    % Specify range and delimiter
+    opts.DataLines = dataLines;
+    opts.Delimiter = "\t";
+    
+    % Specify column names and types
+    opts.VariableNames = ["alpha", "Cl", "Cd", "Cm"];
+    opts.VariableTypes = ["double", "double", "double", "double"];
+    opts.ExtraColumnsRule = "ignore";
+    opts.EmptyLineRule = "read";
+    
+    % Import the data
+    tbl = readtable(filename, opts);
+    
+end
 
 %% Convert to output type
 alpha = tbl.alpha';

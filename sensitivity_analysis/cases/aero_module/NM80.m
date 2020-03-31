@@ -174,23 +174,28 @@ Input.Marginals(counter).Bounds = [0 8-10^-20];
 
 %% ====================Polars=====================
 % Import the reference polar curves
-[alpha, CL_section03, CD_section03, CM_section03] = importPolars("..\..\AEROmodule\NM80\section03_ref.dat");
-[alpha, CL_section05, CD_section05, CM_section05] = importPolars("..\..\AEROmodule\NM80\section05_ref.dat");
-[alpha, CL_section08, CD_section08, CM_section08] = importPolars("..\..\AEROmodule\NM80\section08_ref.dat");
-[alpha, CL_section10, CD_section10, CM_section10] = importPolars("..\..\AEROmodule\NM80\section10_ref.dat");
+% using fullfile works both on Windows and Linux and Mac
+section03_file = fullfile('..','..','AEROmodule','NM80','section03_ref.dat');
+section05_file = fullfile('..','..','AEROmodule','NM80','section05_ref.dat');
+section08_file = fullfile('..','..','AEROmodule','NM80','section08_ref.dat');
+section10_file = fullfile('..','..','AEROmodule','NM80','section10_ref.dat');
+[alpha, CL_section03, CD_section03, CM_section03] = importPolars(section03_file);
+[alpha, CL_section05, CD_section05, CM_section05] = importPolars(section05_file);
+[alpha, CL_section08, CD_section08, CM_section08] = importPolars(section08_file);
+[alpha, CL_section10, CD_section10, CM_section10] = importPolars(section10_file);
 
 % Important: the format of POLARS cell defined below should not be changed 
 POLARS = {4,... % Number of polar files
     {'section03.dat', 'section05.dat','section08.dat', 'section10.dat'}, ... % Name of polar files
     {'Section03', 'Section05', 'Section08', 'Section10'}, ... % Airfoil_Name
     {0.333, 0.243, 0.197, 0.187}, ... % thickness by chord ratio
-    1.0E+07, ...
+    1.0E+07, ... % Reynolds
     alpha, ... % Angle of attack vector
     {CL_section03, CD_section03, CM_section03}, ... % Cl, Cd, Cm data for section03
     {CL_section05, CD_section05, CM_section05}, ...
     {CL_section08, CD_section08, CM_section08}, ...
     {CL_section10, CD_section10, CM_section10}, ...
-     48:79 ... % indices of angle of attack where the curve is perturbed
+     48:79 ... % indices of angle of attack where the curve is perturbed; the corresponding angle of attack is given by alpha(index)
     };
 
 % Define PDF for CL

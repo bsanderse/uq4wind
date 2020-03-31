@@ -84,6 +84,8 @@ if plotSamples == 1
     plot(sampledLocations,sampledValues,'marker','x','markersize',8,'linestyle','none','linewidth',2) % plot sampled points
    plot(interpolationLocations,samplesCurve,'linewidth',2,'color','b')
 end
+
+% this is a key step, where the perturbation is added to the baseline
 samplesCurve = perturbNURBS(t0,n,interpolationLocations,c, pc_mod,samples,randVec_mod);
 
 if plotSamples == 1

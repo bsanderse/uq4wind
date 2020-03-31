@@ -39,6 +39,7 @@ else
     compare_std = 0;
 end
 
+%% set-up UQLab model and input
 % create and add the model to UQLab
 myModel = uq_createModel(Model);
 % create input object with UQLab
