@@ -183,7 +183,7 @@ ind_aoa = P{31}{7+n_polar}; % indices that are perturbed
 aoa  = P{31}{6};
 % note the perturbed angle of attack is aoa(ind_aoa)
 
-CL =cell(n_polar); % P{31} contains the polars
+CL =cell(n_polar); % initialize, P{31} contains the polars
 for i = 1:n_polar % Loop over all possible polar files, P{31}{1} contains number of polars
     CL{i} = P{31}{6+i}{1}; % CL of each polar, corresponding to a certain section
 end
@@ -219,9 +219,11 @@ end
 CD_INDEX = [];
 CD_PERTURB = [];
 X_CD = [];
-CD =cell(P{31}{1});
-for i = 1:P{31}{1} % Loop over all possible polar files
-    CD{i} = P{31}{6+i}{2};
+
+CD =cell(n_polar); % initialize, P{31} contains the polars
+
+for i = 1:n_polar % Loop over all possible polar files
+    CD{i} = P{31}{6+i}{2}; % CD of each polar, corresponding to a certain section
 end
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'CD'))
@@ -230,10 +232,14 @@ for i=1:ndim
         X_CD = [X_CD X(i)];
     end
 end
-for i = 1:P{31}{1} % Loop over all possible polar files
+d = ones(length(ind_aoa),1);
+for i = 1:n_polar % Loop over all possible polar files
     for j = 1:length(CD_INDEX)
         if(CD_INDEX(j)== i)
-            CD{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CD(i)*ones(length(P{31}{7+P{31}{1}}),1), CD_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{2},3,1:length(P{31}{6}));
+            CD{i} = computeCurves(1, ind_aoa, X_CD(i)*d, CD_PERTURB(i)*d, 0, ...
+                aoa, P{31}{6+i}{2}, 3, 1:length(aoa));
+%             CD{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CD(i)*ones(length(P{31}{7+P{31}{1}}),1), ...
+%                 CD_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{2},3,1:length(P{31}{6}));
         end
     end
 end
@@ -242,9 +248,9 @@ end
 CM_INDEX = [];
 CM_PERTURB = [];
 X_CM = [];
-CM = cell(P{31}{1});
-for i = 1:P{31}{1} % Loop over all possible polar files
-    CM{i} = P{31}{6+i}{3};
+CM = cell(n_polar);
+for i = 1:n_polar % Loop over all possible polar files, P{31}{1} contains number of polars
+    CM{i} = P{31}{6+i}{3}; % CM of each polar, corresponding to a certain section
 end
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'CM'))
@@ -253,10 +259,14 @@ for i=1:ndim
         X_CM = [X_CM X(i)];
     end
 end
-for i = 1:P{31}{1} % Loop over all possible polar files
+d = ones(length(ind_aoa),1);
+for i = 1:n_polar % Loop over all possible polar files
     for j = 1:length(CM_INDEX)
         if(CM_INDEX(j)==i)
-            CM{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CM(i)*ones(length(P{31}{7+P{31}{1}}),1), CM_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{3}, 3, 1:length(P{31}{6}));
+            CM{i} = computeCurves(1, ind_aoa, X_CM(i)*d, CM_PERTURB(i)*d, 0, ...
+                aoa, P{31}{6+i}{3}, 3, 1:length(aoa));
+%             CM{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CM(i)*ones(length(P{31}{7+P{31}{1}}),1), ...
+%                 CM_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{3}, 3, 1:length(P{31}{6}));
         end
     end
 end
