@@ -59,14 +59,14 @@ ZNAC2HUB                        1.600000
 COEFFFILENAME                   airfoils.dat
 CORR3DTYPE            0 !0: No correction 1: Snel
 DYNSTALLTYPE          3!0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
-BL_A1	                    0.323529
-BL_A2	                    0.676241
-BL_B1	                    0.131326
-BL_B2	                    0.492265
-BL_KA	                    0.801342
-BL_TP	                    1.540305
-BL_TF	                    4.651872
-BL_TV	                    5.445078
+BL_A1	                    0.300000
+BL_A2	                    0.700000
+BL_B1	                    0.140000
+BL_B2	                    0.530000
+BL_KA	                    0.750000
+BL_TP	                    1.500000
+BL_TF	                    5.000000
+BL_TV	                    6.000000
 BL_TVL	                    5.000000
 BL_ACD	                    0.130000
 FSMETHOD	                2

@@ -15,6 +15,7 @@ addpath([pwd,'/NURBS/']);
 addpath([pwd,'/Geometry/']);
 
 %% initialize UQlab
+
 % add path
 run('config.m');
 addpath(genpath(UQLab_path));
@@ -22,22 +23,5 @@ addpath(genpath(UQLab_path));
 % start uqlab
 uqlab
 
-
 %% process input files
 run(['cases/' input_file '/initialize_calibration.m']);
-
-%% set prior distribution
-myPrior = uq_createInput(Prior);
-
-% display input properties
-uq_print(myPrior);
-uq_display(myPrior);
-
-%% set forward model
-ForwardModel = uq_createModel(Model);
-
-%% start Bayesian calibration
-BayesianAnalysis = uq_createAnalysis(BayesOpts);
-
-%% postprocessing
-uq_display(BayesianAnalysis)

@@ -1,17 +1,17 @@
 ************************************************************
 ************************************************************
 **** ECN Aero-Module version nr    252_CWI Windows 64-bit       
-**** Calculation started at DD-MM-YY hh:mm 20-02-20 15:58
+**** Calculation started at DD-MM-YY hh:mm 15-04-20 17:49
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
-INPUTFILENAME            C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\input.txt
-INCLUDEFILENAME          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\
-WINDFILENAME             C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\WIND.DAT
-COEFFFILENAME            C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\AIRFOILS.DAT
-LOGFILENAME              C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\output\LOGFILE.DAT
-AERORESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\output\aeroresultsout.dat
-GEOMRESULTSFILE          C:\Users\pkumar\Dropbox\WindTrue\windtrue\sensitivity_analysis\AEROmodule\NM80\output\geomresultsout.dat
+INPUTFILENAME            C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\input.txt
+INCLUDEFILENAME          C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\
+WINDFILENAME             C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\WIND.DAT
+COEFFFILENAME            C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\AIRFOILS.DAT
+LOGFILENAME              C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\output\LOGFILE.DAT
+AERORESULTSFILE          C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\output\aeroresultsout.dat
+GEOMRESULTSFILE          C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\output\geomresultsout.dat
  ----------------GeneralData-----------------------------
 AEROMODEL                  1
 TURBINETYPE                1
@@ -30,14 +30,14 @@ DYNSTALLTYPE               3
 FSMETHOD                   2
 LINREG                     1
 BL_ACD                     0.1300
-BL_A1                      0.3235
-BL_A2                      0.6762
-BL_B1                      0.1313
-BL_B2                      0.4923
-BL_KA                      0.8013
-BL_TF                      4.6519
-BL_TP                      1.5403
-BL_TV                      5.4451
+BL_A1                      0.3000
+BL_A2                      0.7000
+BL_B1                      0.1400
+BL_B2                      0.5300
+BL_KA                      0.7500
+BL_TF                      5.0000
+BL_TP                      1.5000
+BL_TV                      6.0000
 BL_TVL                     5.0000
 MAXAOALIN                  5.0000
 MINAOALIN                 -3.0000

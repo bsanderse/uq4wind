@@ -13,7 +13,7 @@ Model.Parameters = P;
 Model.isVectorized = false;
 
 %% data description
-Data.y = 1; % need to put in data (N/m)
+Data.y = 96832; % need to put in data (N/m)
 Data.Name = 'Axial force';
 
 %% likelihood description
@@ -27,10 +27,10 @@ DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
 %% Bayes options
 Solver.Type = 'MCMC';
 % Adaptive Metropolis:
-Solver.MCMC.Sampler = 'AM';
-Solver.MCMC.Steps = 1e3;
-Solver.MCMC.NChains = 1e2;
-Solver.MCMC.T0 = 1e2;
+Solver.MCMC.Sampler = 'MH';
+Solver.MCMC.Steps = 1e2;
+Solver.MCMC.NChains = 1e1;
+%Solver.MCMC.T0 = 1e2;
 %     Solver.MCMC.Proposal.PriorScale = 0.1;
 % AIES:
 %     Solver.MCMC.Sampler = 'AIES';

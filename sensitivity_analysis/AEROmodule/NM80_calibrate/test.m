@@ -1,10 +1,12 @@
-
 %%
 clc
 close all
 clearvars
 format compact
 
+
+%% Run the AeroModule executable
+system('ECNAero.exe')
 
 %% Read data
 % The AeroModule output files are stored in the following format:
@@ -66,14 +68,17 @@ r_a = [0.1833,1.7549,3.3294,4.9066,6.4848,8.0632,9.6423,11.2252,12.8089,14.3906.
 % available to be obtained using spline interpolation.
 
 r_i = [13,19,30,37]; % Measurement locations
+B1n_e = [466.3 804.7 1217 1253] % Experimental values available
 B1n_i = spline(r_a,B1n_a,r_i); % Interpolated variable values
 
 %% Plotting
 
 plot(r_a,B1n_a,"ko")
 hold on
+plot(r_i,B1n_e,"ro",'markersize',10)
+hold on
 plot(r_i,B1n_i,"rx",'markersize',10)
 xlabel('r [m]')
 ylabel('B1n')
-legend('available','interpolated')
+legend('AeroModule','Experiments','AeroModule interpolated')
 title('NM80 turbine')

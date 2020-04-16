@@ -428,10 +428,10 @@ Input.Marginals(counter).Bounds = [BL_Acd_LB BL_Acd_UB];
 %                    {'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
 %                    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''},{'BL_Tvl','',''},{'BL_Acd','',''}};
 
-% uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
+ uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
 
-uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
-     {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
+%uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
+%    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
                 
 % Specify quantity of interest
 QoI = 'Power'; % 'Axial_Force' or 'Power'
