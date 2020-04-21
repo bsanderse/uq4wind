@@ -19,9 +19,9 @@ r_i = [13,19,30,37]; % Measurement radial stations
 D_i = spline(r_a,D_a,r_i); % Interpolated data
 
 %% Write interpolated data
-T = table(r_i',D_i');
-writetable(T,'output.txt','Delimiter','\t','WriteRowNames',true);
-type output.txt
+T = table(r_i',D_i','VariableNames',{'r_i','aero_data'});
+writetable(T,'output.dat','Delimiter','\t','WriteVariableNames',true);
+type output.dat
 
 
 

@@ -57,3 +57,7 @@ for i = 3:size(listing,1)
     end
     
 end
+
+T = table(mFy');
+writetable(T,'output_e.txt','Delimiter','\t','WriteRowNames',true);
+type output_e.txt
