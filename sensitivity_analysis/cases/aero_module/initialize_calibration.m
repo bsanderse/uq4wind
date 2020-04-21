@@ -10,10 +10,10 @@ Model.mHandle = @aero_module_axial;
 % array P
 P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
-Model.isVectorized = false;
+Model.isVectorized = true;
 
 %% data description
-Data.y = 96832; % need to put in data (N/m)
+Data.y = [1;2;3;4]; % need to put in data (N/m)
 Data.Name = 'Axial force';
 
 %% likelihood description
