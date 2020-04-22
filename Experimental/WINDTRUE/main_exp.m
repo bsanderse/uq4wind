@@ -58,6 +58,6 @@ for i = 3:size(listing,1)
     
 end
 
-T = table(mFy');
-writetable(T,'output_e.txt','Delimiter','\t','WriteRowNames',true);
-type output_e.txt
+T = table(mFy', 'VariableNames',{'exp_data'});
+writetable(T,'output_e.dat','Delimiter','\t','WriteRowNames',true);
+type output_e.dat

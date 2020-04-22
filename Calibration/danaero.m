@@ -249,13 +249,19 @@ if (Pt4==1)
     % Display input properties
     uq_print(myPriorDist);
     uq_display(myPriorDist);
+
+%     % Surrogate model
+%     MetaOpts.Type = 'Metamodel';
+%     MetaOpts.MetaType = 'PCE';
+%     MetaOpts.ExpDesign.NSamples = 50;
+%     mySurrogateModel = uq_createModel(MetaOpts);
     
     % Forward model
     ModelOpts1.Name = 'Axial force';
     ModelOpts1.mFile = 'dan_model_bayes';
     forwardModels(1).Model = uq_createModel(ModelOpts1);
     forwardModels(1).PMap = [1 2 3 4 5];
-    
+
     % Experimental data
     myData(1).y = F_n4*F_max;
     myData(1).Name = 'Axial force 4';
