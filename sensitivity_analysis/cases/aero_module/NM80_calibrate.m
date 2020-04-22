@@ -436,4 +436,4 @@ uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
 %      {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
                 
 % Specify quantity of interest
-QoI = 'Axial_Force'; % 'Axial_Force' or 'Power'
+QoI = 'axial'; % 'Axial_Force' or 'Power'

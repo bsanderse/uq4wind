@@ -24,3 +24,6 @@ axial_exp = output_e.exp_data;
 plot(rad,axial_aero,'g--o')
 hold on
 plot(rad,axial_exp,'r--x')
+xlabel('r [m]')
+ylabel('F_n [N/m]')
+legend('AeroModule', 'Experimental')

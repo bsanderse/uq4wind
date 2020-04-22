@@ -5,7 +5,7 @@ turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
 
 %% model description 
 % Name of Matlab file representing the model
-Model.mHandle = @aero_module;
+Model.mHandle = @aero_module_axial;
 % Optionally, one can pass parameters to the model stored in the cell
 % array P
 P = getParameterAeroModule(turbineName);
