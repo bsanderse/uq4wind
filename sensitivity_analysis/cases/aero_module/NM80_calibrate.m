@@ -203,29 +203,29 @@ counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 1; % Corresponds to section 3
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-0.5 0.5];
-Input.Marginals(counter).Bounds = [-0.5 0.5];
+Input.Marginals(counter).Parameters = [-2 2];
+Input.Marginals(counter).Bounds = [-2 2];
 
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 2; % Corresponds to section 5
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-0.5 0.5];
-Input.Marginals(counter).Bounds = [-0.5 0.5];
+Input.Marginals(counter).Parameters = [-2 2];
+Input.Marginals(counter).Bounds = [-2 2];
 
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 3; % Corresponds to section 8
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-0.5 0.5];
-Input.Marginals(counter).Bounds = [-0.5 0.5];
+Input.Marginals(counter).Parameters = [-2 2];
+Input.Marginals(counter).Bounds = [-2 2];
 
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 4; % Corresponds to section 10
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-0.5 0.5];
-Input.Marginals(counter).Bounds = [-0.5 0.5];
+Input.Marginals(counter).Parameters = [-2 2];
+Input.Marginals(counter).Bounds = [-2 2];
 
 % Define PDF for CD
 counter = counter+1;

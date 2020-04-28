@@ -3,8 +3,8 @@
 clear; close all; clc;
 
 %% Prior parameters 
-a = 1;
-b = 4;
+a = 8;
+b = 8;
 
 %% Data
 N = 1000;
