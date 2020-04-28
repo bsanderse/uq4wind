@@ -10,11 +10,16 @@ Model.mHandle = @aero_module_axial;
 % array P
 P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
-Model.isVectorized = true;
+Model.isVectorized = false;
 
 %% data description
-Data.y = [1;2;3;4]; % need to put in data (N/m)
+
+filename_exp = ('..\..\..\Experimental/WINDTRUE\output_e.dat');
+output_e = importfile1(filename_exp, 2);
+axial_exp = output_e.exp_data;
+Data.y = [axial_exp]'; % need to put in data (N/m)
 Data.Name = 'Axial force';
+
 
 %% likelihood description
 % for simplicity, assume a value for sigma, i.e. the standard deviation
@@ -24,12 +29,51 @@ sigma = 0.1;
 DiscrepancyOptsKnown.Type = 'Gaussian';
 DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
 
+
 %% Bayes options
+
+% MCMC parameters
 Solver.Type = 'MCMC';
-% Adaptive Metropolis:
-Solver.MCMC.Sampler = 'MH';
-Solver.MCMC.Steps = 1e2;
-Solver.MCMC.NChains = 1e1;
+% MCMC algorithms available in UQLab
+MH = 1; % Metropolis-Hastings
+AM = 0; % Adaptive Metropolis
+AIES = 0; % Affine invariant ensemble
+HMC = 0; % Hamilton Monte Carlo
+
+if (MH==1)
+    Solver.MCMC.Sampler = 'MH';
+    Solver.MCMC.Steps = 1e2;
+    Solver.MCMC.NChains = 1e2;
+    Solver.MCMC.T0 = 1e1;
+end
+
+if (AM==1)
+    Solver.MCMC.Sampler = 'AM';
+    Solver.MCMC.Steps = 1e3;
+    Solver.MCMC.NChains = 1e2;
+    Solver.MCMC.T0 = 1e1;
+    Solver.MCMC.Epsilon = 1e-4;
+end
+
+if (AIES==1)
+    Solver.MCMC.Sampler = 'AIES';
+    Solver.MCMC.Steps = 1e3;
+    Solver.MCMC.NChains = 1e2;
+    Solver.MCMC.a = 2;
+end
+
+if (HMC==1)
+    Solver.MCMC.Sampler = 'HMC';
+    Solver.MCMC.LeapfrogSteps = 1e3;
+    Solver.MCMC.LeapfrogSize = 0.01;
+    Solver.MCMC.Mass = 100;
+end
+% Solver.Type = 'MCMC';
+% % Adaptive Metropolis:
+% Solver.MCMC.Sampler = 'MH';
+% Solver.MCMC.Steps = 1e1;
+% Solver.MCMC.NChains = 1e1;
+
 %Solver.MCMC.T0 = 1e2;
 %     Solver.MCMC.Proposal.PriorScale = 0.1;
 % AIES:

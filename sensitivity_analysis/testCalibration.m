@@ -13,7 +13,7 @@ input_file = caseName; % specify directory which contains test case settings and
 addpath([pwd,'/AEROmoduleWrapper/']);
 addpath([pwd,'/NURBS/']);
 addpath([pwd,'/Geometry/']);
-
+addpath([pwd,'/AEROmodule/NM80_calibrate/output']);
 %% initialize UQlab
 % add path
 run('config.m');
@@ -40,4 +40,17 @@ ForwardModel = uq_createModel(Model);
 BayesianAnalysis = uq_createAnalysis(BayesOpts);
 
 %% postprocessing
+uq_print(BayesianAnalysis)
 uq_display(BayesianAnalysis)
+uq_display(BayesianAnalysis, 'meanConvergence', 'all')
+uq_display(BayesianAnalysis, 'trace', 'all')
+uq_display(BayesianAnalysis, 'acceptance', 'true')
+uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP')
+uq_postProcessInversion(BayesianAnalysis,'gelmanRubin', 'true')
+R_hat = BayesianAnalysis.Results.PostProc.MPSRF;
+
+if R_hat <= 1.5
+    disp('The MCMC simulation has converged')
+else
+    disp('The MCMC simulation has not converged. Increase the number of samples or fine tune the algorithm.')
+end
