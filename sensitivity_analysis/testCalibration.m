@@ -1,9 +1,7 @@
 %% Bayesian calibration with UQLab
-
 clc
 close all
 clearvars
-
 rng default
 
 caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
