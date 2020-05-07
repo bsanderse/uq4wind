@@ -2,7 +2,6 @@
 turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
 % check NM80.m or AVATAR.m or (turbine_name).m for turbine-specific
 % settings and definition of uncertainties
-
 %% model description 
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module_axial;
@@ -10,14 +9,18 @@ Model.mHandle = @aero_module_axial;
 P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
 Model.isVectorized = false;
-
-%% data description
-filename_exp = ('..\..\..\Experimental/WINDTRUE\output_e.dat');
-output_e = importfile1(filename_exp, 2);
-axial_exp = output_e.exp_data;
-Data.y = [axial_exp]'; % need to put in data (N/m)
+%% Experimental data
+filename_exp = ('..\..\..\Experimental/WINDTRUE\output_exp.dat');
+output_e = importfile2(filename_exp, 2);
+axial_mean = output_e.mean;
+axial_sd = output_e.sd;
+Data.y = [axial_mean(1), axial_mean(1)+axial_sd(1),  axial_mean(1)-axial_sd(1);...
+          axial_mean(2), axial_mean(2)+axial_sd(2),  axial_mean(2)-axial_sd(2);...
+          axial_mean(3), axial_mean(3)+axial_sd(3),  axial_mean(3)-axial_sd(3);...
+          axial_mean(4), axial_mean(4)+axial_sd(4),  axial_mean(4)-axial_sd(4)]';...
+          % Need to specify the data (N/m)
+          % Marco's script
 Data.Name = 'Axial force';
-
 %% likelihood description
 % for simplicity, assume a value for sigma, i.e. the standard deviation
 % between model output and data
@@ -37,7 +40,7 @@ HMC = 0; % Hamilton Monte Carlo
 
 if (MH==1)
     Solver.MCMC.Sampler = 'MH';
-    Solver.MCMC.Steps = 1e3;
+    Solver.MCMC.Steps = 1e2;
     Solver.MCMC.NChains = 1e2;
     Solver.MCMC.T0 = 1e1;
 end

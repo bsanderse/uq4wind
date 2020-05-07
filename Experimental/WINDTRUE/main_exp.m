@@ -57,7 +57,11 @@ for i = 3:size(listing,1)
     end
     
 end
-
+%%
+N = table(mFy',sFy', 'VariableNames',{'mean','sd'});
+writetable(N,'output_exp.dat','Delimiter','\t','WriteRowNames',true);
+type output_exp.dat
 T = table(mFy', 'VariableNames',{'exp_data'});
 writetable(T,'output_e.dat','Delimiter','\t','WriteRowNames',true);
 type output_e.dat
+
