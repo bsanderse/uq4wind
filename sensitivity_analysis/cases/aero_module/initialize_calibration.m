@@ -21,6 +21,17 @@ Data.y = [axial_mean(1), axial_mean(1)+axial_sd(1),  axial_mean(1)-axial_sd(1);.
           % Need to specify the data (N/m)
           % Marco's script
 Data.Name = 'Axial force';
+
+%% Surrogate model
+
+MetaOpts.Type = 'Metamodel';
+MetaOpts.MetaType = 'PCE';
+MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
+
+MetaOpts.ExpDesign.Sampling = 'Sobol';
+MetaOpts.ExpDesign.NSamples = 60;
+MetaOpts.Degree = 14;
+
 %% likelihood description
 % for simplicity, assume a value for sigma, i.e. the standard deviation
 % between model output and data
@@ -33,9 +44,9 @@ DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
-MH = 1; % Metropolis-Hastings
+MH = 0; % Metropolis-Hastings
 AM = 0; % Adaptive Metropolis
-AIES = 0; % Affine invariant ensemble
+AIES = 1; % Affine invariant ensemble
 HMC = 0; % Hamilton Monte Carlo
 
 if (MH==1)
@@ -55,7 +66,7 @@ end
 
 if (AIES==1)
     Solver.MCMC.Sampler = 'AIES';
-    Solver.MCMC.Steps = 1e2;
+    Solver.MCMC.Steps = 1e3;
     Solver.MCMC.NChains = 1e2;
     Solver.MCMC.a = 2;
 end
@@ -66,20 +77,7 @@ if (HMC==1)
     Solver.MCMC.LeapfrogSize = 0.01;
     Solver.MCMC.Mass = 100;
 end
-% Solver.Type = 'MCMC';
-% % Adaptive Metropolis:
-% Solver.MCMC.Sampler = 'MH';
-% Solver.MCMC.Steps = 1e1;
-% Solver.MCMC.NChains = 1e1;
 
-%Solver.MCMC.T0 = 1e2;
-%     Solver.MCMC.Proposal.PriorScale = 0.1;
-% AIES:
-%     Solver.MCMC.Sampler = 'AIES';
-
-% show MCMC chain convergence:
-%     Solver.MCMC.Visualize.Parameters = 1;
-%     Solver.MCMC.Visualize.Interval = 100;
 
 BayesOpts.Data = Data;
 BayesOpts.Type = 'Inversion';

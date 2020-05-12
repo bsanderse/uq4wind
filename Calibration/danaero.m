@@ -314,6 +314,19 @@ if (HMC==1)
     BayesOpts.Solver.MCMC.Mass = 100;
 end
 
+
+%% Surrogate
+MetaOpts.Type = 'Metamodel';
+MetaOpts.MetaType = 'PCE';
+MetaOpts.ExpDesign.NSamples = 3;
+mySurrogateModel = uq_createModel(MetaOpts);
+
+BayesOpts.ForwardModel.Model = mySurrogateModel;
+myBayesianAnalysis_surrogateModel = uq_createAnalysis(BayesOpts);
+uq_print(myBayesianAnalysis_surrogateModel)
+uq_display(myBayesianAnalysis_surrogateModel)
+
+
 %% Postprocessing
 
 myBayesianAnalysis = uq_createAnalysis(BayesOpts);

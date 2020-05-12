@@ -1,14 +1,14 @@
 %% INVERSION: SURROGATE MODEL ACCELERATED CALIBRATION
 %
-% In this example, it is shown how a surrogate model can be constructed 
+% In this example, it is shown how a surrogate model can be constructed
 % and then used instead of the original forward model in a Bayesian inversion
 % analysis. For a computationally expensive forward model, this approach
-% can yield considerable time savings in the analysis. 
+% can yield considerable time savings in the analysis.
 %
 % The problem considered here is similar to the one in
 % |uq_Example_Inversion_01_Beam|. The inversion analysis is rerun and
-% compared to an analysis using a polynomial chaos expansion (PCE) 
-% surrogate of the full computational model. 
+% compared to an analysis using a polynomial chaos expansion (PCE)
+% surrogate of the full computational model.
 
 %% 1 - INITIALIZE UQLAB
 %
@@ -34,7 +34,6 @@ ModelOpts.mFile = 'uq_SimplySupportedBeam';
 ModelOpts.isVectorized = true;
 
 myForwardModel = uq_createModel(ModelOpts);
-
 %%
 % For more information about the function |uq_SimplySupportedBeam(X)|,
 % refer to |uq_Example_Inversion_01_Beam|.
@@ -43,17 +42,17 @@ myForwardModel = uq_createModel(ModelOpts);
 %
 % The prior information about the model parameters is gathered in a
 % probabilistic model that includes both known (constant) and unknown
-% parameters. 
+% parameters.
 
-PriorOpts.Marginals(1).Name = 'b';               % beam width 
+PriorOpts.Marginals(1).Name = 'b';               % beam width
 PriorOpts.Marginals(1).Type = 'Constant';
 PriorOpts.Marginals(1).Parameters = [0.15];      % (m)
 
-PriorOpts.Marginals(2).Name = 'h';               % beam height 
+PriorOpts.Marginals(2).Name = 'h';               % beam height
 PriorOpts.Marginals(2).Type = 'Constant';
 PriorOpts.Marginals(2).Parameters = [0.3];       % (m)
 
-PriorOpts.Marginals(3).Name = 'L';               % beam length 
+PriorOpts.Marginals(3).Name = 'L';               % beam length
 PriorOpts.Marginals(3).Type = 'Constant';
 PriorOpts.Marginals(3).Parameters = 5;           % (m)
 
@@ -61,7 +60,7 @@ PriorOpts.Marginals(4).Name = 'E';               % Young's modulus
 PriorOpts.Marginals(4).Type = 'LogNormal';
 PriorOpts.Marginals(4).Moments = [30000 4500];   % (MPa)
 
-PriorOpts.Marginals(5).Name = 'p';               % uniform load 
+PriorOpts.Marginals(5).Name = 'p';               % uniform load
 PriorOpts.Marginals(5).Type = 'Gaussian';
 PriorOpts.Marginals(5).Moments = [0.012 0.012*0.05]; % (kN/m)
 
@@ -72,7 +71,14 @@ myPriorDist = uq_createInput(PriorOpts);
 % |myForwardModel|:
 MetaOpts.Type = 'Metamodel';
 MetaOpts.MetaType = 'PCE';
+MetaOpts.Method = 'LARS';
+
+MetaOpts.ExpDesign.Sampling = 'Sobol';
 MetaOpts.ExpDesign.NSamples = 50;
+MetaOpts.Degree = 10;
+
+MetaOpts.Input = myPriorDist;
+MetaOpts.FullModel = myForwardModel;
 mySurrogateModel = uq_createModel(MetaOpts);
 
 %%
@@ -82,7 +88,7 @@ mySurrogateModel = uq_createModel(MetaOpts);
 
 %% 5 - MEASUREMENT DATA
 %
-% The measurement data consists of $N = 5$ independent measurements of 
+% The measurement data consists of $N = 5$ independent measurements of
 % the beam mid-span deflection.
 % The data is stored in the column vector |y|:
 myData.y = [12.84; 13.12; 12.13; 12.19; 12.67]/1000;  % (m)
@@ -94,19 +100,23 @@ myData.Name = 'Mid-span deflection';
 % the following structure:
 BayesOpts.Type = 'Inversion';
 BayesOpts.Data = myData;
+BayesOpts.Solver.Type = 'MCMC';
+BayesOpts.Solver.MCMC.Sampler = 'MH';
+BayesOpts.Solver.MCMC.Steps = 1e3;
+BayesOpts.Solver.MCMC.NChains = 1e2;
+BayesOpts.Solver.MCMC.T0 = 1e1;
+% %%
+% % To use the original forward model |myForwardModel| in the analysis,
+% % set the following option:
+% BayesOpts.ForwardModel.Model = myForwardModel;
 
-%%
-% To use the original forward model |myForwardModel| in the analysis,
-% set the following option:
-BayesOpts.ForwardModel.Model = myForwardModel;
+% %%
+% % Run the Bayesian inversion analysis:
+% myBayesianAnalysis_fullModel = uq_createAnalysis(BayesOpts);
 
-%%
-% Run the Bayesian inversion analysis:
-myBayesianAnalysis_fullModel = uq_createAnalysis(BayesOpts);
-
-%%
-% Print out a report of the results:
-uq_print(myBayesianAnalysis_fullModel)
+% %%
+% % Print out a report of the results:
+% uq_print(myBayesianAnalysis_fullModel)
 
 %%
 % For comparison, the analysis is now rerun using the surrogate model

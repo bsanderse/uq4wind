@@ -34,21 +34,32 @@ uq_display(myPrior);
 %% set forward model
 ForwardModel = uq_createModel(Model);
 
-%% start Bayesian calibration
-BayesianAnalysis = uq_createAnalysis(BayesOpts);
+%% Surrogate
+MetaOpts.Input = myPrior;
+MetaOpts.FullModel = ForwardModel;
+mySurrogateModel = uq_createModel(MetaOpts);
+% |mySurrogateModel| in lieu of the original |myForwardModel|:
+BayesOpts.ForwardModel.Model = mySurrogateModel;
 
-%% postprocessing
-uq_print(BayesianAnalysis)
-uq_display(BayesianAnalysis)
-uq_display(BayesianAnalysis, 'meanConvergence', 'all')
-uq_display(BayesianAnalysis, 'trace', 'all')
-uq_display(BayesianAnalysis, 'acceptance', 'true')
-uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP')
-uq_postProcessInversion(BayesianAnalysis,'gelmanRubin', 'true')
-R_hat = BayesianAnalysis.Results.PostProc.MPSRF;
+%% Bayesian analysis for surrogate model
+% Run the Bayesian inversion analysis:
+myBayesianAnalysis_surrogateModel = uq_createAnalysis(BayesOpts);
+
+%% Post-processing
+% Print out a report of the results:
+uq_print(myBayesianAnalysis_surrogateModel)
+uq_display(myBayesianAnalysis_surrogateModel)
+uq_display(myBayesianAnalysis_surrogateModel, 'meanConvergence', 'all')
+uq_display(myBayesianAnalysis_surrogateModel, 'trace', 'all')
+uq_display(myBayesianAnalysis_surrogateModel, 'acceptance', 'true')
+uq_postProcessInversion(myBayesianAnalysis_surrogateModel,'pointEstimate', 'MAP')
+uq_postProcessInversion(myBayesianAnalysis_surrogateModel,'gelmanRubin', 'true')
+R_hat = myBayesianAnalysis_surrogateModel.Results.PostProc.MPSRF;
 
 if R_hat <= 1.5
     disp('The MCMC simulation has converged')
 else
     disp('The MCMC simulation has not converged. Increase the number of samples or fine tune the algorithm.')
 end
+
+
