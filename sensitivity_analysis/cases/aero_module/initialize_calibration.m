@@ -10,16 +10,12 @@ P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
 Model.isVectorized = false;
 %% Experimental data
+% Marco's script reading data in N/m
 filename_exp = ('..\..\..\Experimental/WINDTRUE\output_exp.dat');
 output_e = importfile2(filename_exp, 2);
 axial_mean = output_e.mean;
 axial_sd = output_e.sd;
-Data.y = [axial_mean(1), axial_mean(1)+axial_sd(1),  axial_mean(1)-axial_sd(1);...
-          axial_mean(2), axial_mean(2)+axial_sd(2),  axial_mean(2)-axial_sd(2);...
-          axial_mean(3), axial_mean(3)+axial_sd(3),  axial_mean(3)-axial_sd(3);...
-          axial_mean(4), axial_mean(4)+axial_sd(4),  axial_mean(4)-axial_sd(4)]';...
-          % Need to specify the data (N/m)
-          % Marco's script
+Data.y = [axial_mean, axial_mean+axial_sd, axial_mean-axial_sd]';
 Data.Name = 'Axial force';
 
 %% Surrogate model
