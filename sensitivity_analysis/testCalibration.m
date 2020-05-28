@@ -31,6 +31,7 @@ uq_display(myPrior);
 
 %% set forward model
 ForwardModel = uq_createModel(Model);
+BayesOpts.Input = myPrior;
 
 %% Surrogate
 MetaOpts.Input = myPrior;

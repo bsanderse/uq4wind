@@ -2,6 +2,7 @@
 turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
 % check NM80.m or AVATAR.m or (turbine_name).m for turbine-specific
 % settings and definition of uncertainties
+
 %% model description 
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module_axial;
@@ -9,6 +10,7 @@ Model.mHandle = @aero_module_axial;
 P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
 Model.isVectorized = false;
+
 %% Experimental data
 % Marco's script reading data in N/m
 filename_exp = ('..\..\..\Experimental/WINDTRUE\output_exp.dat');
@@ -19,14 +21,7 @@ Data.y = [axial_mean, axial_mean+axial_sd, axial_mean-axial_sd]';
 Data.Name = 'Axial force';
 
 %% Surrogate model
-
-MetaOpts.Type = 'Metamodel';
-MetaOpts.MetaType = 'PCE';
-MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
-
-MetaOpts.ExpDesign.Sampling = 'Sobol';
-MetaOpts.ExpDesign.NSamples = 60;
-MetaOpts.Degree = 14;
+load surrogate.mat
 
 %% likelihood description
 % for simplicity, assume a value for sigma, i.e. the standard deviation
@@ -40,7 +35,7 @@ DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
-MH = 0; % Metropolis-Hastings
+MH = 1; % Metropolis-Hastings
 AM = 0; % Adaptive Metropolis
 AIES = 1; % Affine invariant ensemble
 HMC = 0; % Hamilton Monte Carlo
@@ -62,7 +57,7 @@ end
 
 if (AIES==1)
     Solver.MCMC.Sampler = 'AIES';
-    Solver.MCMC.Steps = 1e3;
+    Solver.MCMC.Steps = 1e2;
     Solver.MCMC.NChains = 1e2;
     Solver.MCMC.a = 2;
 end
@@ -73,7 +68,6 @@ if (HMC==1)
     Solver.MCMC.LeapfrogSize = 0.01;
     Solver.MCMC.Mass = 100;
 end
-
 
 BayesOpts.Data = Data;
 BayesOpts.Type = 'Inversion';
