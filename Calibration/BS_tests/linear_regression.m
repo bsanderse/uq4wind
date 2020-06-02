@@ -13,8 +13,8 @@ rng default
 % select which methods to run
 runOLS = 1; % Ordinary Least Squares
 runUQLab = 1; % UQLab
-runIQR = 1; % Implicit quadrature rule
-runSampling = 1; % Brute-force sampling of prior 
+runIQR = 0; % Implicit quadrature rule
+runSampling = 0; % Brute-force sampling of prior 
 
 %% input settings
 p = 2; % dimension of parameters to be calibrated

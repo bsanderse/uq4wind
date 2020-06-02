@@ -1,0 +1,112 @@
+\documentclass[a4paper]{jpconf}
+
+%\journal{ }
+
+% packages
+%\usepackage{microtype}
+%\usepackage{algorithm}
+%\usepackage[noend]{algpseudocode}
+%\usepackage[a4paper, total={6.2in, 9in}]{geometry}
+%\renewcommand{\baselinestretch}{1.2} 
+%\usepackage{color}
+%\usepackage[x11names]{xcolor}
+%\usepackage[utf8]{inputenc}
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+%\usepackage{tikz}
+% \usepackage{array}
+\usepackage{mathtools}
+\usepackage{relsize}
+%\usepackage[T1]{fontenc}
+\usepackage{cases}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{multirow}
+%\usepackage{stix2}
+%\usepackage[labelfont=bf,font=footnotesize]{caption}
+\usepackage{tabularx,ragged2e,booktabs}
+\usepackage{todonotes}
+%\usepackage{lineno}
+%\modulolinenumbers[5]
+%\usepackage[toc]{appendix}
+\usepackage{placeins}
+\usepackage{hyperref}
+
+
+%\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\newcommand{\lnorm}{\left|\left|}
+\newcommand{\rnorm}{\right|\right|}
+\newcommand{\Ld}{L^2(\mathcal{D})}
+\newcommand{\Lomtd}{L^2(\Omega;\mathcal{T};\mathcal{D})}
+%\newcommand{\Lomd}{L^2(\Omega;L^2(\mathcal{D}))}
+\newcommand{\Lomd}{L^2(\Omega,\mathcal{D})}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\hl}[1]{\textcolor{blue}{#1}}
+
+
+% bibliography
+\newcommand{\myreferences}{../../references,../../Mendeley_refs}
+\bibliographystyle{iopart-num} %elsarticle-num}
+
+
+\numberwithin{equation}{section}
+\graphicspath{{./images/}}
+
+%\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+\pagestyle{myheadings}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%\author{Jacky Mucklow}
+
+%\address{Production Editor, \jpcs, \iopp, Dirac House, Temple Back, Bristol BS1~6BE, UK}
+
+%\ead{jacky.mucklow@iop.org}
+
+\title{Global sensitivity analysis of model uncertainty in aeroelastic wind turbine models}
+
+%$^{\mathsf{1}}$ Centrum Wiskunde \& Informatica, Science Park 123, Amsterdam, The Netherlands.
+
+\author{P.~Kumar$^{1}$, B.~Sanderse$^{1}$, K.~Boorsma$ ^{2}$, M.~Caboni$^{2}$} \ead{b.sanderse@cwi.nl}
+\address{$^{1}$ Centrum Wiskunde \& Informatica (CWI), Amsterdam, The Netherlands}
+\address{$^{2}$ TNO, Westerduinweg 3, Petten, The Netherlands}
+
+%\author{Benjamin~Sanderse}
+%\textsl{•}
+
+\begin{abstract}
+A framework is presented for performing global sensitivity analysis of model parameters associated with the Blade Element Momentum (BEM) models.  Sobol indices based on adaptive sparse polynomial expansions are used as a measure of global sensitivities. The sensitivity analysis workflow is developed using the uncertainty quantification toolbox \texttt{UQLab} that is integrated with TNO's \texttt{Aero-Module} aeroelastic code. Uncertainties in chord, twist, and lift- and drag-coefficients have been parametrized through the use of NURBS curves. Sensitivity studies are performed on the NM80 wind turbine model from the DanAero project, for a case with 19 uncertainties in both model and geometry. The combination of parametrization and sparse adaptive polynomial chaos yields a new efficient framework for global sensitivity analysis of aeroelastic wind turbine models, paving the way to effective model calibration. 
+\end{abstract}
+
+\vspace{-1cm}
+%\begin{keyword}
+%BEM, global sensitivity analysis, model uncertainty, Sobol indices
+%\end{keyword}
+%\end{frontmatter}
+
+%\linenumbers
+
+\input{content}
+
+\section*{Acknowledgements}
+The research was sponsored by the Topsector Energy Subsidy from the Dutch Ministry of Economic Affairs and Climate.
+
+%\newpage
+\section*{References}
+\bibliography{\myreferences}
+
+%\newpage
+
+%\appendix
+%\input{literature_overview}
+
+\end{document}
