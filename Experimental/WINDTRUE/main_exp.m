@@ -57,6 +57,13 @@ for i = 3:size(listing,1)
     end
     
 end
+%% Read the raw data
+
+R1 = daqwin(:,142); % Fy03
+R2 = daqwin(:,143); % Fy05
+R3 = daqwin(:,144); % Fy08
+R4 = daqwin(:,145); % Fy10
+
 %%
 N = table(mFy',sFy', 'VariableNames',{'mean','sd'});
 writetable(N,'output_exp.dat','Delimiter','\t','WriteRowNames',true);
@@ -64,4 +71,6 @@ type output_exp.dat
 T = table(mFy', 'VariableNames',{'exp_data'});
 writetable(T,'output_e.dat','Delimiter','\t','WriteRowNames',true);
 type output_e.dat
-
+Raw = table(R1,R2,R3,R4, 'VariableNames',{'Fy03','Fy05','Fy08','Fy10'});
+writetable(Raw,'raw.dat','Delimiter','\t','WriteRowNames',true);
+type raw.dat; 
