@@ -19,24 +19,28 @@ Data.y = [output_raw.Fy03, output_raw.Fy05, output_raw.Fy08, output_raw.Fy10]; %
 % Data.y = [mean(output_raw.Fy03), mean(output_raw.Fy05), mean(output_raw.Fy08),...
 %           mean(output_raw.Fy10)]; % Mean data
 Data.Name = 'Axial force';
-%% Surrogate model
-load_surrogate = 0;
 
-if (load_surrogate == 1)
-    load surrogate.mat;
+%% Surrogate model options
+% do Bayesian analysis with the AeroModule or with the surrogate model
+Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
+
+% if Bayes_full = 0, we need to specify options for loading a surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+
+% options for loading a surrogate model
+Surrogate_model_filename = 'surrogate.mat';
+
+% options for creating a surrogate model
+% these are used if Bayes_full = 0 and Surrogate_model_type = 1
+MetaOpts.Type = 'Metamodel';
+MetaOpts.MetaType = 'PCE';
+MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
+
+MetaOpts.ExpDesign.Sampling = 'LHS';
+MetaOpts.ExpDesign.NSamples = 5;
+MetaOpts.Degree = 1:4;
+MetaOpts.TruncOptions.qNorm = 0.75;
     
-elseif (load_surrogate == 0)
-
-    MetaOpts.Type = 'Metamodel';
-    MetaOpts.MetaType = 'PCE';
-    MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
-
-    MetaOpts.ExpDesign.Sampling = 'LHS';
-    MetaOpts.ExpDesign.NSamples = 5;
-    MetaOpts.Degree = 1:4;
-    MetaOpts.TruncOptions.qNorm = 0.75;
-    
-end
 
 %% likelihood description
 % for simplicity, assume a value for sigma, i.e. the standard deviation
