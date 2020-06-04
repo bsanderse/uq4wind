@@ -13,23 +13,31 @@ Model.isVectorized = false;
 
 %% Experimental data
 % Marco's script reading data in N/m
-filename_exp = ('..\..\..\Experimental/WINDTRUE\raw.dat');
+filename_exp = ('../../../Experimental/WINDTRUE/raw.dat');
 output_raw = importfile3(filename_exp, 2);
-Data.y = [output_raw.Fy03, output_raw.Fy05, output_raw.Fy08,
-          output_raw.Fy10]; % Raw data
+Data.y = [output_raw.Fy03, output_raw.Fy05, output_raw.Fy08, output_raw.Fy10]; % Raw data
 % Data.y = [mean(output_raw.Fy03), mean(output_raw.Fy05), mean(output_raw.Fy08),...
 %           mean(output_raw.Fy10)]; % Mean data
 Data.Name = 'Axial force';
 %% Surrogate model
-%load surrogate.mat
-MetaOpts.Type = 'Metamodel';
-MetaOpts.MetaType = 'PCE';
-MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
+load_surrogate = 0;
 
-MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 5;
-MetaOpts.Degree = 1:4;
-MetaOpts.TruncOptions.qNorm = 0.75;
+if (load_surrogate == 1)
+    load surrogate.mat;
+    
+elseif (load_surrogate == 0)
+
+    MetaOpts.Type = 'Metamodel';
+    MetaOpts.MetaType = 'PCE';
+    MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
+
+    MetaOpts.ExpDesign.Sampling = 'LHS';
+    MetaOpts.ExpDesign.NSamples = 5;
+    MetaOpts.Degree = 1:4;
+    MetaOpts.TruncOptions.qNorm = 0.75;
+    
+end
+
 %% likelihood description
 % for simplicity, assume a value for sigma, i.e. the standard deviation
 % between model output and data
