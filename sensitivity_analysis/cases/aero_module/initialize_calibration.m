@@ -15,10 +15,10 @@ Model.isVectorized = false;
 % Marco's script reading data in N/m
 filename_exp = ('../../../Experimental/WINDTRUE/raw.dat');
 output_raw = importfile3(filename_exp, 2);
-Data.y = [output_raw.Fy03, output_raw.Fy05, output_raw.Fy08,...
-          output_raw.Fy10]; % Raw data
-% Data.y = [mean(output_raw.Fy03), mean(output_raw.Fy05), mean(output_raw.Fy08),...
-%           mean(output_raw.Fy10)]; % Mean data
+% Data.y = [output_raw.Fy03, output_raw.Fy05, output_raw.Fy08,...
+%           output_raw.Fy10]; % Raw data
+Data.y = [mean(output_raw.Fy03), mean(output_raw.Fy05), mean(output_raw.Fy08),...
+          mean(output_raw.Fy10)]; % Mean data
 Data.Name = 'Axial force';
 %% Surrogate model
 %load surrogate.mat
@@ -27,7 +27,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 5;
+MetaOpts.ExpDesign.NSamples = 60;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 %% likelihood description
@@ -38,32 +38,18 @@ sigma = 0.1;
 DiscrepancyOptsKnown.Type = 'Gaussian';
 DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
 
-
-% SigmaOpts.Name = 'Prior of sigma2';
-% SigmaOpts.Marginals.Name = 'sigma2';
-% SigmaOpts.Marginals.Type = 'Uniform';
-% SigmaOpts.Marginals.Parameters = [0 20];
-% 
-% mySigmaDist = uq_createInput(SigmaOpts);
-% 
-% DiscrepancyOpts.Type = 'Gaussian';
-% DiscrepancyOpts.Prior = mySigmaDist;
-
-
-
-
 %% Bayes options
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
-MH = 1; % Metropolis-Hastings
+MH = 0; % Metropolis-Hastings
 AM = 0; % Adaptive Metropolis
-AIES = 0; % Affine invariant ensemble
+AIES = 1; % Affine invariant ensemble
 HMC = 0; % Hamilton Monte Carlo
 
 if (MH==1)
     Solver.MCMC.Sampler = 'MH';
-    Solver.MCMC.Steps = 1e2;
+    Solver.MCMC.Steps = 1e3;
     Solver.MCMC.NChains = 1e2;
     Solver.MCMC.T0 = 1e1;
 end
