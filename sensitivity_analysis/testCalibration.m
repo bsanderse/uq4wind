@@ -32,29 +32,33 @@ BayesOpts.Input = myPrior;
 uq_print(myPrior);
 uq_display(myPrior);
 
+
 %% set forward model
 myForwardModel = uq_createModel(Model);
 
 %% Surrogate
 if (Bayes_full == 0) % create a PCE surrogate model to be used
     if (Surrogate_model_type == 0)
-        disp(['loading surrogate model from file: ' Surrogate_model_filename]);        
+        disp(['loading surrogate model from file: ' Surrogate_model_filename]);
         loaded_surrogate_model = load(Surrogate_model_filename);
-
+        BayesOpts.ForwardModel.Model = loaded_surrogate_model.mySurrogateModel;
     elseif (Surrogate_model_type == 1)
-        disp('creating surrogate model');        
+        disp('creating surrogate model');
         % use prior also as input uncertainties
         MetaOpts.Input     = myPrior;
-        MetaOpts.FullModel = myForwardModel;   
+        MetaOpts.FullModel = myForwardModel;
         mySurrogateModel   = uq_createModel(MetaOpts);
+        BayesOpts.ForwardModel.Model = mySurrogateModel;
+        %         s =  MetaOpts.ExpDesign.NSamples;
+        %         %fname = sprintf('surrogate_%PCE.mat', s);
+        %         save surrogate/surrogatePCE_2.mat mySurrogateModel
     end
-    % |mySurrogateModel| in lieu of the original |myForwardModel|:   
-    BayesOpts.ForwardModel.Model = loaded_surrogate_model.mySurrogateModel;
-
+    % |mySurrogateModel| in lieu of the original |myForwardModel|:
+    %BayesOpts.ForwardModel.Model = loaded_surrogate_model.mySurrogateModel;
+    %BayesOpts.ForwardModel.Model = mySurrogateModel;
 else % do Bayes with full model
     BayesOpts.ForwardModel.Model = myForwardModel;
 end
-
 
 
 

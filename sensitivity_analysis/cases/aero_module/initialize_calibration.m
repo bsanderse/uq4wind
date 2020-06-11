@@ -26,10 +26,10 @@ Data.Name = 'Axial force';
 Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % if Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % options for loading a surrogate model
-Surrogate_model_filename = 'surrogate.mat';
+Surrogate_model_filename = 'surrogate/PCE_90.mat'; % Specify the surrogate model file to be used
 
 % options for creating a surrogate model
 % these are used if Bayes_full = 0 and Surrogate_model_type = 1
@@ -38,7 +38,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 5;
+MetaOpts.ExpDesign.NSamples = 10;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
@@ -47,23 +47,38 @@ MetaOpts.TruncOptions.qNorm = 0.75;
 % for simplicity, assume a value for sigma, i.e. the standard deviation
 % between model output and data
 % this needs to be changed! sigma should be part of the calibration
-sigma = 0.1;
+sigma = 1;
 DiscrepancyOptsKnown.Type = 'Gaussian';
 DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
+
+
+% DiscrepancyOptsKnown.Name = 'Prior of discrepancy';
+% DiscrepancyOptsKnown.Marginals.Name = 'Sigma2';
+% DiscrepancyOptsKnown.Marginals.Type = 'Gaussian';
+% DiscrepancyOptsKnown.Marginals.Parameters = [0, 1e-2]; % this is sigma^2
+% myD = uq_createInput(DiscrepancyOptsKnown);
+% 
+% DiscrepancyOptsKnown.Type = 'Gaussian';
+% DiscrepancyOptsKnown.Prior = myD;
+
+
+
+
+
 
 %% Bayes options
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
-MH = 0; % Metropolis-Hastings
+MH = 1; % Metropolis-Hastings
 AM = 0; % Adaptive Metropolis
-AIES = 1; % Affine invariant ensemble
+AIES = 0; % Affine invariant ensemble
 HMC = 0; % Hamilton Monte Carlo
 
 if (MH==1)
     Solver.MCMC.Sampler = 'MH';
     Solver.MCMC.Steps = 1e3;
-    Solver.MCMC.NChains = 1e2;
+    Solver.MCMC.NChains = 1e4;
     Solver.MCMC.T0 = 1e1;
 end
 
