@@ -17,16 +17,33 @@ filename_exp = ('../../../Experimental/WINDTRUE/raw.dat');
 output_raw = importfile3(filename_exp, 2);
 % Data.y = [output_raw.Fy03, output_raw.Fy05, output_raw.Fy08,...
 %           output_raw.Fy10]; % Raw data
-Data.y = [mean(output_raw.Fy03), mean(output_raw.Fy05), mean(output_raw.Fy08),...
-          mean(output_raw.Fy10)]; % Mean data
-Data.Name = 'Axial force';
+% Data.y = [mean(output_raw.Fy03), mean(output_raw.Fy05), mean(output_raw.Fy08),...
+%           mean(output_raw.Fy10)]; % Mean data
+% Data.Name = 'Axial force';
+
+Data(1).y = mean(output_raw.Fy03); % specify column vectors
+Data(1).Name = 'Fy03';
+Data(1).MOMap = 1; % Model Output Map
+
+Data(2).y = mean(output_raw.Fy05);
+Data(2).Name = 'Fy05';
+Data(2).MOMap = 2; % Model Output Map
+
+Data(3).y = mean(output_raw.Fy08); % specify column vectors
+Data(3).Name = 'Fy08';
+Data(3).MOMap = 3; % Model Output Map
+
+Data(4).y = mean(output_raw.Fy10);
+Data(4).Name = 'Fy10';
+Data(4).MOMap = 4; % Model Output Map
+
 
 %% Surrogate model options
 % do Bayesian analysis with the AeroModule or with the surrogate model
 Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % if Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % options for loading a surrogate model
 Surrogate_model_filename = 'surrogate/PCE_90.mat'; % Specify the surrogate model file to be used
@@ -47,19 +64,52 @@ MetaOpts.TruncOptions.qNorm = 0.75;
 % for simplicity, assume a value for sigma, i.e. the standard deviation
 % between model output and data
 % this needs to be changed! sigma should be part of the calibration
-sigma = 1;
-DiscrepancyOptsKnown.Type = 'Gaussian';
-DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
-
-
-% DiscrepancyOptsKnown.Name = 'Prior of discrepancy';
-% DiscrepancyOptsKnown.Marginals.Name = 'Sigma2';
-% DiscrepancyOptsKnown.Marginals.Type = 'Gaussian';
-% DiscrepancyOptsKnown.Marginals.Parameters = [0, 1e-2]; % this is sigma^2
-% myD = uq_createInput(DiscrepancyOptsKnown);
-% 
+% sigma = 1;
 % DiscrepancyOptsKnown.Type = 'Gaussian';
-% DiscrepancyOptsKnown.Prior = myD;
+% DiscrepancyOptsKnown.Parameters = sigma^2; % this is sigma^2
+
+
+sigma1 = 0.5;
+sigma2 = 0.2;
+sigma3 = 0.6;
+sigma4 = 0.5;
+
+DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
+DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma21';
+DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 4*sigma1^2];
+DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
+
+DiscrepancyOpts(1).Type = 'Gaussian';
+DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
+
+DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
+DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma22';
+DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 4*sigma2^2];
+DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
+
+DiscrepancyOpts(2).Type = 'Gaussian';
+DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
+
+DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
+DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma23';
+DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 4*sigma3^2];
+DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
+
+DiscrepancyOpts(3).Type = 'Gaussian';
+DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
+
+DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
+DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma22';
+DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 4*sigma4^2];
+DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
+
+DiscrepancyOpts(4).Type = 'Gaussian';
+DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
+
 
 
 
@@ -106,7 +156,7 @@ end
 
 BayesOpts.Data = Data;
 BayesOpts.Type = 'Inversion';
-BayesOpts.Discrepancy = DiscrepancyOptsKnown;
+BayesOpts.Discrepancy = DiscrepancyOpts;
 BayesOpts.Solver = Solver;
 
 %% Assemble the Input.Marginal for Bayesian calibration through text comparison
