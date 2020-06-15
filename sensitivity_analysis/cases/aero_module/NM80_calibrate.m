@@ -408,35 +408,6 @@ Input.Marginals(counter).Type = 'Gaussian';
 Input.Marginals(counter).Parameters = [BL_Acd, BL_Acd_Std];
 Input.Marginals(counter).Bounds = [BL_Acd_LB BL_Acd_UB];
 
-% =======================sigma====================
-% Define PDF for sigma
-counter = counter+1;
-Input.Marginals(counter).Name = 'sigma2_';
-Input.Marginals(counter).Index = 1; % Corresponds to section 3
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [466.3 60];
-%Input.Marginals(counter).Bounds = [-0.5 0.5];
-
-counter = counter+1;
-Input.Marginals(counter).Name = 'sigma2_';
-Input.Marginals(counter).Index = 2; % Corresponds to section 5
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [804.7 90];
-%Input.Marginals(counter).Bounds = [-0.5 0.5];
-
-counter = counter+1;
-Input.Marginals(counter).Name = 'sigma2_';
-Input.Marginals(counter).Index = 3; % Corresponds to section 8
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [1216.7 120];
-%Input.Marginals(counter).Bounds = [-0.5 0.5];
-
-counter = counter+1;
-Input.Marginals(counter).Name = 'sigma2_';
-Input.Marginals(counter).Index = 4; % Corresponds to section 10
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [1253 110];
-%Input.Marginals(counter).Bounds = [-0.5 0.5];
 
 %% Specify uncertain parameters to be considered in the calibration
 % The parameter should be defined in the following format {name,index,rel_perturbation} where
@@ -459,8 +430,7 @@ Input.Marginals(counter).Parameters = [1253 110];
 %                    {'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
 %                    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''},{'BL_Tvl','',''},{'BL_Acd','',''}};
 
-uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2},...
-                    {'sigma2_',1,0.2},{'sigma2_',2,0.2},{'sigma2_',3,0.2},{'sigma2_',4,0.2}};
+uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2}};%,...
 %                     {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}};
 
 % uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...

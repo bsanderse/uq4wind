@@ -75,59 +75,55 @@ sigma4 = 0.05;
 
 
 
-DiscrepancyOpts(1).Type = 'Gaussian';
-DiscrepancyOpts(1).Parameters = sigma1; % this is sigma^2
-
-DiscrepancyOpts(2).Type = 'Gaussian';
-DiscrepancyOpts(2).Parameters = sigma2; % this is sigma^2
-
-DiscrepancyOpts(3).Type = 'Gaussian';
-DiscrepancyOpts(3).Parameters = sigma3; % this is sigma^2
-
-DiscrepancyOpts(4).Type = 'Gaussian';
-DiscrepancyOpts(4).Parameters = sigma4; % this is sigma^2
+% DiscrepancyOpts(1).Type = 'Gaussian';
+% DiscrepancyOpts(1).Parameters = sigma1; % this is sigma^2
+% 
+% DiscrepancyOpts(2).Type = 'Gaussian';
+% DiscrepancyOpts(2).Parameters = sigma2; % this is sigma^2
+% 
+% DiscrepancyOpts(3).Type = 'Gaussian';
+% DiscrepancyOpts(3).Parameters = sigma3; % this is sigma^2
+% 
+% DiscrepancyOpts(4).Type = 'Gaussian';
+% DiscrepancyOpts(4).Parameters = sigma4; % this is sigma^2
 
 %% Benjamin's version 
 % 
-% DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
-% DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma21';
-% DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
-% DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 4*sigma1^2];
-% DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
-% 
-% DiscrepancyOpts(1).Type = 'Gaussian';
-% DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
-% 
-% DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
-% DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma22';
-% DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
-% DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 4*sigma2^2];
-% DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
-% 
-% DiscrepancyOpts(2).Type = 'Gaussian';
-% DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
-% 
-% DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
-% DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma23';
-% DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
-% DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 4*sigma3^2];
-% DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
-% 
-% DiscrepancyOpts(3).Type = 'Gaussian';
-% DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
-% 
-% DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
-% DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma22';
-% DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
-% DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 4*sigma4^2];
-% DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
-% 
-% DiscrepancyOpts(4).Type = 'Gaussian';
-% DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
+DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
+DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma21';
+DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 4*sigma1^2];
+DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
 
+DiscrepancyOpts(1).Type = 'Gaussian';
+DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
 
+DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
+DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma22';
+DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 4*sigma2^2];
+DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
 
+DiscrepancyOpts(2).Type = 'Gaussian';
+DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
 
+DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
+DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma23';
+DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 4*sigma3^2];
+DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
+
+DiscrepancyOpts(3).Type = 'Gaussian';
+DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
+
+DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
+DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma24';
+DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
+DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 4*sigma4^2];
+DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
+
+DiscrepancyOpts(4).Type = 'Gaussian';
+DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
 
 
@@ -142,7 +138,7 @@ HMC = 0; % Hamilton Monte Carlo
 
 if (MH==1)
     Solver.MCMC.Sampler = 'MH';
-    Solver.MCMC.Steps = 1e2;
+    Solver.MCMC.Steps = 1e3;
     Solver.MCMC.NChains = 1e1;
     Solver.MCMC.T0 = 1e1;
 end
@@ -169,11 +165,6 @@ if (HMC==1)
     Solver.MCMC.Mass = 100;
 end
 
-BayesOpts.Data = Data;
-BayesOpts.Type = 'Inversion';
-BayesOpts.Discrepancy = DiscrepancyOpts;
-BayesOpts.Solver = Solver;
-BayesOpts.Prior = DiscrepancyOpts;
 
 %% Assemble the Input.Marginal for Bayesian calibration through text comparison
 % NOTE: check getParameterAeroModule.m to see the definition of the P array
@@ -197,7 +188,7 @@ for i=1:ndim
             Prior.Marginals(i).Name =  [P{26}{i}{1},num2str(P{26}{i}{2})];
             Prior.Marginals(i).Type = P{25}.Marginals(j).Type; 
             Prior.Marginals(i).Parameters = P{25}.Marginals(j).Parameters;
-            Prior.Marginals(i).Bounds = P{25}.Marginals(j).Bounds;
+%             Prior.Marginals(i).Bounds = P{25}.Marginals(j).Bounds;
             
             if(P{26}{i}{3} ==1) % Get the index and parameter of discrete variable
                 discrete_index = [discrete_index i];

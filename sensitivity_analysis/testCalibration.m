@@ -26,7 +26,6 @@ run(['cases/' input_file '/initialize_calibration.m']);
 
 %% Set prior distribution
 myPrior = uq_createInput(Prior);
-BayesOpts.Input = myPrior;
 
 % display input properties
 uq_print(myPrior);
@@ -60,8 +59,16 @@ else % do Bayes with full model
     BayesOpts.ForwardModel.Model = myForwardModel;
 end
 
+%% set Bayes options
+BayesOpts.Prior = myPrior;           % Prior
+BayesOpts.Data  = Data;              % measurement data
+BayesOpts.Type  = 'Inversion';       
+BayesOpts.Discrepancy = DiscrepancyOpts;    % likelihood
+BayesOpts.Solver = Solver;           % MCMC
 
+%% Run the Bayesian inversion analysis
+BayesianAnalysis = uq_createAnalysis(BayesOpts);
 
-%% Bayesian analysis options
+%% postprocess Bayesian analysis options
 run(['cases/' input_file '/PostProcessingCalibration.m']);
 

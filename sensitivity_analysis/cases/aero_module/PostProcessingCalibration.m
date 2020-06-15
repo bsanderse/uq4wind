@@ -1,6 +1,4 @@
 % ================================== PLOTTING and POSTPROCESSING =========================
-% Run the Bayesian inversion analysis
-BayesianAnalysis = uq_createAnalysis(BayesOpts);
 % Print out a report of the results:
 uq_print(BayesianAnalysis)
 uq_display(BayesianAnalysis)
