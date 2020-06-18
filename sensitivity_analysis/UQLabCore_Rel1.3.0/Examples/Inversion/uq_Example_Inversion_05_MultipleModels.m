@@ -183,7 +183,7 @@ DiscrepancyOpts(2).Prior = SigmaDist2;
 % algorithm is employed in this example, with $200$ iterations
 % and $100$ parallel chains:
 Solver.Type = 'MCMC';
-Solver.MCMC.Sampler = 'AIES';
+Solver.MCMC.Sampler = 'MH';
 Solver.MCMC.Steps = 200;
 Solver.MCMC.NChains = 100;
 

@@ -162,9 +162,9 @@ DiscrepancyOpts(2).Prior = SigmaDist2;
 % To sample from the posterior distribution, the affine invariant ensemble
 % algorithm is chosen, with $400$ iterations and $100$ parallel chains:
 Solver.Type = 'MCMC';
-Solver.MCMC.Sampler = 'AIES';
+Solver.MCMC.Sampler = 'MH';
 Solver.MCMC.Steps = 400;
-Solver.MCMC.NChains = 100;
+Solver.MCMC.NChains = 10;
 
 %%
 % Enable progress visualization during iteration for the initial prey
