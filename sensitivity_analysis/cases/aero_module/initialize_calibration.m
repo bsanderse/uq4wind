@@ -18,19 +18,19 @@ filename_exp = ('../../../Experimental/WINDTRUE/raw.dat');
 output_raw = read_exp_data(filename_exp, 2);
 % Because the model has different discrepancy options at different radial locations, 
 % the measurement data is stored in four different data structures:
-Data(1).y = mean(output_raw.Fy03); % [N/m]
+Data(1).y = [mean(output_raw.Fy03); mean(output_raw.Fy03)+5; mean(output_raw.Fy03)-5 ]; % [N/m]
 Data(1).Name = 'Fy03';
 Data(1).MOMap = 1; % Model Output Map 1
 
-Data(2).y = mean(output_raw.Fy05); % [N/m]
+Data(2).y = [mean(output_raw.Fy05); mean(output_raw.Fy05)+5; mean(output_raw.Fy05)-5]; % [N/m]
 Data(2).Name = 'Fy05';
 Data(2).MOMap = 2; % Model Output Map 2
 
-Data(3).y = mean(output_raw.Fy08); % [N/m]
+Data(3).y = [mean(output_raw.Fy08); mean(output_raw.Fy08)+5; mean(output_raw.Fy08)-5]; % [N/m]
 Data(3).Name = 'Fy08';
 Data(3).MOMap = 3; % Model Output Map 3
 
-Data(4).y = mean(output_raw.Fy10); % [N/m]
+Data(4).y = [mean(output_raw.Fy10); mean(output_raw.Fy10)+5; mean(output_raw.Fy10)-5]; % [N/m]
 Data(4).Name = 'Fy10';
 Data(4).MOMap = 4; % Model Output Map 4
 
@@ -39,10 +39,10 @@ Data(4).MOMap = 4; % Model Output Map 4
 Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
-Surrogate_model_filename = 'surrogate/PCE_120.mat'; % Specify the surrogate model file to be used
+Surrogate_model_filename = 'surrogate/test.mat'; % Specify the surrogate model file to be used
 
 % Options for creating a surrogate model
 % These are used if Bayes_full = 0 and Surrogate_model_type = 1
@@ -110,8 +110,8 @@ HMC = 0; % Hamilton Monte Carlo
 
 if (MH==1)
     Solver.MCMC.Sampler = 'MH';
-    Solver.MCMC.Steps = 1e3;
-    Solver.MCMC.NChains = 1e3;
+    Solver.MCMC.Steps = 1e2;
+    Solver.MCMC.NChains = 1e2;
     Solver.MCMC.T0 = 1e1;
 end
 
@@ -126,8 +126,8 @@ end
 if (AIES==1)
     Solver.MCMC.Sampler = 'AIES';
     Solver.MCMC.Steps = 1e2;
-    Solver.MCMC.NChains = 1e2;
-    Solver.MCMC.a = 2;
+    Solver.MCMC.NChains = 1e3;
+    Solver.MCMC.a = 5;
 end
 
 if (HMC==1)

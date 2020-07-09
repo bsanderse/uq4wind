@@ -203,29 +203,29 @@ counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 1; % Corresponds to section 3
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-3 3];
-Input.Marginals(counter).Bounds = [-3 3];
+Input.Marginals(counter).Parameters = [-1.5 1.5];
+Input.Marginals(counter).Bounds = [-1.5 1.5];
 
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 2; % Corresponds to section 5
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-3 3];
-Input.Marginals(counter).Bounds = [-3 3];
+Input.Marginals(counter).Parameters = [-1.5 1.5];
+Input.Marginals(counter).Bounds = [-1.5 1.5];
 
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 3; % Corresponds to section 8
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-3 3];
-Input.Marginals(counter).Bounds = [-3 3];
+Input.Marginals(counter).Parameters = [-1.5 1.5];
+Input.Marginals(counter).Bounds = [-1.5 1.5];
 
 counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Index = 4; % Corresponds to section 10
 Input.Marginals(counter).Type = 'Uniform'; 
-Input.Marginals(counter).Parameters = [-3 3];
-Input.Marginals(counter).Bounds = [-3 3];
+Input.Marginals(counter).Parameters = [-1.5 1.5];
+Input.Marginals(counter).Bounds = [-1.5 1.5];
 
 % Define PDF for CD
 counter = counter+1;
@@ -430,7 +430,7 @@ Input.Marginals(counter).Bounds = [BL_Acd_LB BL_Acd_UB];
 %                    {'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
 %                    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''},{'BL_Tvl','',''},{'BL_Acd','',''}};
 
-uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2}};%,...
+uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.3},{'CL',4,0.3}};%,...
 %                     {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}};
 
 % uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...

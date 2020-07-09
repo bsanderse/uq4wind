@@ -11,7 +11,7 @@ D_a = mean(D{:,3:end},1); % Mean values at different radial stations
 
 %% Interpolation
 % These values are made available from Danaero experiments
-r_i = [13,19,30,37]; % Measurement radial stations
+r_i = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
 data = spline(r_a,D_a,r_i); % Interpolated data using spline
 
 % %% Write interpolated data
