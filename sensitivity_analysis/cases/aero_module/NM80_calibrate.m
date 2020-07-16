@@ -186,7 +186,7 @@ section10_file = fullfile('..','..','AEROmodule','NM80','section10_ref.dat');
 
 % Important: the format of POLARS cell defined below should not be changed 
 POLARS = {4,... % Number of polar files
-    {'section03.dat', 'section05.dat','section08.dat', 'section10.dat'}, ... % Name of polar files
+    {'section03_ref.dat', 'section05_ref.dat','section08_ref.dat', 'section10_ref.dat'}, ... % Name of polar files
     {'Section03', 'Section05', 'Section08', 'Section10'}, ... % Airfoil_Name
     {0.333, 0.243, 0.197, 0.187}, ... % thickness by chord ratio
     1.0E+07, ...

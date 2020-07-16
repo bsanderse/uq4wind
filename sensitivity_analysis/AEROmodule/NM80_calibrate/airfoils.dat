@@ -1,6 +1,6 @@
 ! table with airfoil files
 cylinder.dat
-section03.dat
-section05.dat
-section08.dat
-section10.dat
+section03_ref_c.dat
+section05_ref_c.dat
+section08_ref_c.dat
+section10_ref_c.dat

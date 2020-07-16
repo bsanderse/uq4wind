@@ -73,9 +73,9 @@ MetaOpts.Type = 'Metamodel';
 MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS';
 
-MetaOpts.ExpDesign.Sampling = 'Sobol';
-MetaOpts.ExpDesign.NSamples = 50;
-MetaOpts.Degree = 10;
+MetaOpts.ExpDesign.Sampling = 'LHS';
+MetaOpts.ExpDesign.NSamples = 10;
+MetaOpts.Degree = 1:4;
 
 MetaOpts.Input = myPriorDist;
 MetaOpts.FullModel = myForwardModel;
@@ -101,14 +101,14 @@ myData.Name = 'Mid-span deflection';
 BayesOpts.Type = 'Inversion';
 BayesOpts.Data = myData;
 BayesOpts.Solver.Type = 'MCMC';
-BayesOpts.Solver.MCMC.Sampler = 'MH';
-BayesOpts.Solver.MCMC.Steps = 1e3;
+BayesOpts.Solver.MCMC.Sampler = 'AIES';
+BayesOpts.Solver.MCMC.Steps = 1e2;
 BayesOpts.Solver.MCMC.NChains = 1e2;
 BayesOpts.Solver.MCMC.T0 = 1e1;
 % %%
 % % To use the original forward model |myForwardModel| in the analysis,
 % % set the following option:
-% BayesOpts.ForwardModel.Model = myForwardModel;
+ BayesOpts.ForwardModel.Model = myForwardModel;
 
 % %%
 % % Run the Bayesian inversion analysis:

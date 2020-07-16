@@ -72,3 +72,5 @@ BayesianAnalysis = uq_createAnalysis(BayesOpts);
 %% Post-processing
 run(['cases/' input_file '/PostProcessingCalibration.m']);
 
+%% Write calibration files
+run(['cases/' input_file '/write_calibration.m']);
