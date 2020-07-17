@@ -74,3 +74,20 @@ run(['cases/' input_file '/PostProcessingCalibration.m']);
 
 %% Write calibration files
 run(['cases/' input_file '/write_calibration.m']);
+run(['AEROmodule/NM80_calibrate/cal_files.m']);
+
+%% Cross-validation
+figure()
+R = [13,19,30,37];
+aero = [537.8   869.1   1380.4   1477.8];
+exp = [474.7 817.9 1210.8 1254.3];
+calibrated = [477.9    812.2    1225.5    1253.2];
+plot(R, exp,'g-*', 'LineWidth', 1)
+hold on
+plot(R, aero, 'r-o', 'LineWidth', 1)
+hold on
+plot(R, calibrated, 'b-o', 'LineWidth', 1)
+xlabel('R [m]')
+ylabel('\mu_{n} [N/m]')
+grid on
+legend('Experimental', 'Non-calibrated AeroModule', 'Calibrated AeroModule','Location','southeast')

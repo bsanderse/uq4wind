@@ -111,7 +111,7 @@ HMC = 0; % Hamilton Monte Carlo
 if (MH==1)
     Solver.MCMC.Sampler = 'MH';
     Solver.MCMC.Steps = 1e2;
-    Solver.MCMC.NChains = 1e3;
+    Solver.MCMC.NChains = 1e2;
     Solver.MCMC.T0 = 1e1;
 end
 
