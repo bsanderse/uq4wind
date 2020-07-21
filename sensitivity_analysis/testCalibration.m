@@ -76,18 +76,19 @@ run(['cases/' input_file '/PostProcessingCalibration.m']);
 run(['cases/' input_file '/write_calibration.m']);
 run(['AEROmodule/NM80_calibrate/cal_files.m']);
 
-%% Cross-validation
-figure()
-R = [13,19,30,37];
-aero = [537.8   869.1   1380.4   1477.8];
-exp = [474.7 817.9 1210.8 1254.3];
-calibrated = [477.9    812.2    1225.5    1253.2];
-plot(R, exp,'g-*', 'LineWidth', 1)
-hold on
-plot(R, aero, 'r-o', 'LineWidth', 1)
-hold on
-plot(R, calibrated, 'b-o', 'LineWidth', 1)
-xlabel('R [m]')
-ylabel('\mu_{n} [N/m]')
-grid on
-legend('Experimental', 'Non-calibrated AeroModule', 'Calibrated AeroModule','Location','southeast')
+% %% Cross-validation
+% figure()
+% R = [13,19,30,37];
+% exp = [474.7 817.9 1210.8 1254.3];
+% aero = [0.5378    0.8691    1.3804    1.4778]*10^3;
+% calibrated = [0.4747    0.8179    1.2108    1.2543]*10^3;
+% plot(R, exp,'g-*', 'LineWidth', 1)
+% hold on
+% plot(R, aero, 'r-o', 'LineWidth', 1)
+% hold on
+% plot(R, calibrated, 'b-o', 'LineWidth', 1)
+% xlabel('R [m]')
+% ylabel('\mu_{n} [N/m]')
+% grid on
+% legend('Experimental', 'Non-calibrated AeroModule', 'Calibrated AeroModule','Location','southeast')
+

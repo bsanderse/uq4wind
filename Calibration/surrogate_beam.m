@@ -4,7 +4,7 @@
 % analysis. For a computationally expensive forward model, this approach
 % can yield considerable time savings in the analysis.
 % The problem considered here is for simple beam model calibration.
-%% 1 - INITIALIZE UQLAB
+%% INITIALIZE UQLAB
 % Clear all variables from the workspace, set the random number generator
 % for reproducible results, and initialize the UQLab framework:
 clc
@@ -13,7 +13,15 @@ clearvars
 rng(100,'twister')
 uqlab
 
-%% 2.1 - FORWARD MODEL
+%% 1 - MEASUREMENT DATA
+% The measurement data consists of $N = 5$ independent measurements of
+% the beam mid-span deflection.
+% The data is stored in the column vector |y|:
+myData.y = [12.84; 13.12; 12.13; 12.19; 12.67]/1000;  % (m)
+myData.Name = 'Mid-span deflection';
+
+
+%% 2 - FORWARD MODEL
 % The simply supported beam problem is shown in the following figure:
 uq_figure
 [I,~] = imread('SimplySupportedBeam.png');
@@ -21,14 +29,18 @@ image(I)
 axis equal
 set(gca, 'visible', 'off')
 
-%% 2.2 - FORWARD MODEL (VECTORIZED)
-% Define the forward model as a MODEL object using the function
-% |uq_SimplySupportedBeam(X)|:
 ModelOpts.mFile = 'uq_SimplySupportedBeam';
 ModelOpts.isVectorized = true;
 myForwardModel = uq_createModel(ModelOpts);
 
-%% 3 - PRIOR DISTRIBUTION OF THE MODEL PARAMETERS
+
+%% 3 - LIKELIHOOD
+DiscrepancyOpts.Type = 'Gaussian';
+DiscrepancyOpts.Parameters = 1e-6; % known discrepancy variance
+BayesOpts.Discrepancy = DiscrepancyOpts;
+
+
+%% 4 - PRIOR DISTRIBUTION OF THE MODEL PARAMETERS
 % The prior information about the model parameters is gathered in a
 % probabilistic model that includes both known (constant) and unknown
 % parameters.
@@ -55,14 +67,8 @@ PriorOpts.Marginals(5).Moments = [0.012 0.012*0.05]; % (kN/m)
 
 myPriorDist = uq_createInput(PriorOpts);
 
-%% 4 - MEASUREMENT DATA
-% The measurement data consists of $N = 5$ independent measurements of
-% the beam mid-span deflection.
-% The data is stored in the column vector |y|:
-myData.y = [12.84; 13.12; 12.13; 12.19; 12.67]/1000;  % (m)
-myData.Name = 'Mid-span deflection';
 
-%% 5 - BAYESIAN ANALYSIS
+%% BAYESIAN ANALYSIS
 % The options of the Bayesian inversion analysis are specified with
 % the following structure:
 BayesOpts.Type = 'Inversion';
@@ -74,8 +80,8 @@ BayesOpts.Solver.MCMC.NChains = 1e2;
 BayesOpts.Solver.MCMC.T0 = 1e1;
 BayesOpts.Solver.MCMC.a = 2;
 
-Full = 1; % Full model
-Surrogate = 0; % Surrogate model
+Full = 0; % Full model
+Surrogate = 1; % Surrogate model
 
 if (Full==1)
     BayesOpts.ForwardModel.Model = myForwardModel; % Full model

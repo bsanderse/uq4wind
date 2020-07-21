@@ -126,7 +126,7 @@ end
 if (AIES==1)
     Solver.MCMC.Sampler = 'AIES';
     Solver.MCMC.Steps = 1e2;
-    Solver.MCMC.NChains = 1e3;
+    Solver.MCMC.NChains = 1e2;
     Solver.MCMC.a = 5;
 end
 
