@@ -63,6 +63,10 @@ R1 = daqwin(:,142); % Fy03
 R2 = daqwin(:,143); % Fy05
 R3 = daqwin(:,144); % Fy08
 R4 = daqwin(:,145); % Fy10
+R5 = daqwin(:,138); % Fx03
+R6 = daqwin(:,139); % Fx05
+R7 = daqwin(:,140); % Fx08
+R8 = daqwin(:,141); % Fx10
 
 %%
 N = table(mFy',sFy', 'VariableNames',{'mean','sd'});
@@ -74,3 +78,6 @@ type output_e.dat
 Raw = table(R1,R2,R3,R4, 'VariableNames',{'Fy03','Fy05','Fy08','Fy10'});
 writetable(Raw,'raw.dat','Delimiter','\t','WriteRowNames',true);
 type raw.dat; 
+Raw2 = table(R5,R6,R7,R8, 'VariableNames',{'Fx03','Fx05','Fx08','Fx10'});
+writetable(Raw2,'raw_tan.dat','Delimiter','\t','WriteRowNames',true);
+type raw_tan.dat; 
