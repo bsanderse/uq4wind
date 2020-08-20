@@ -437,4 +437,4 @@ uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.3},{'CL',4,0.3}};%,
 %      {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
                 
 % Specify quantity of interest
-QoI = 'axial'; % Axial force at different radial stations
+QoI = 'force'; % Force at different radial stations

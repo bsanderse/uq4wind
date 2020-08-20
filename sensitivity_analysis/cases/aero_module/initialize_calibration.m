@@ -12,25 +12,39 @@ P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
 Model.isVectorized = false;
 
+
+%% Read interpolated data
+% This function writes the values in 'Y' handle for the QOI obtained
+% from the Aero-Module run. Optionally, one can read any data from the
+% Aero-Module output. For e.g. B1n_BEM.txt for normal force and B1t_BEM.txt
+% for tangential force data.
+data = read_interpolated_val('B1n_BEM.txt'); 
+if(strcmp(P{27},'force'))
+    Y = [data];
+end
+
 %% Experimental data
 % Marco's (ECN) script for reading the data in N/m
-filename_exp = ('../../../Experimental/WINDTRUE/raw.dat');
+% Currently, two options can be passed on:
+% 1. raw_normal.dat for 10 minute normal force measurements
+% 2. raw_tangential.dat for 10 minute tangential force measurements
+filename_exp = ('../../../Experimental/WINDTRUE/raw_normal.dat');
 output_raw = read_exp_data(filename_exp, 2);
 % Because the model has different discrepancy options at different radial locations, 
 % the measurement data is stored in four different data structures:
-Data(1).y = [mean(output_raw.Fy03)]; % [N/m]
+Data(1).y = mean(output_raw.Fy03); % [N/m]
 Data(1).Name = 'Fy03';
 Data(1).MOMap = 1; % Model Output Map 1
 
-Data(2).y = [mean(output_raw.Fy05)]; % [N/m]
+Data(2).y = mean(output_raw.Fy05); % [N/m]
 Data(2).Name = 'Fy05';
 Data(2).MOMap = 2; % Model Output Map 2
 
-Data(3).y = [mean(output_raw.Fy08)]; % [N/m]
+Data(3).y = mean(output_raw.Fy08); % [N/m]
 Data(3).Name = 'Fy08';
 Data(3).MOMap = 3; % Model Output Map 3
 
-Data(4).y = [mean(output_raw.Fy10)]; % [N/m]
+Data(4).y = mean(output_raw.Fy10); % [N/m]
 Data(4).Name = 'Fy10';
 Data(4).MOMap = 4; % Model Output Map 4
 
