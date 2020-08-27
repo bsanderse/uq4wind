@@ -76,7 +76,7 @@ run(['cases/' input_file '/PostProcessingCalibration.m']);
 run(['cases/' input_file '/write_calibration.m']);
 run(['AEROmodule/NM80_calibrate/cal_files.m']);
 
-% %% Cross-validation
+% %% Cross-validation (Optional)
 % figure()
 % R = [13,19,30,37];
 % exp = [474.7 817.9 1210.8 1254.3];

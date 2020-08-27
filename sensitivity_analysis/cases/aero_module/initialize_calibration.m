@@ -8,20 +8,9 @@ turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module_calibration;
 % Optionally, one can pass parameters to model stored in the cell array P
-P = getParameterAeroModule(turbineName);
+P = getParameterAeroModule_cal(turbineName);
 Model.Parameters = P;
 Model.isVectorized = false;
-
-
-%% Read interpolated data
-% This function writes the values in 'Y' handle for the QOI obtained
-% from the Aero-Module run. Optionally, one can read any data from the
-% Aero-Module output. For e.g. B1n_BEM.txt for normal force and B1t_BEM.txt
-% for tangential force data.
-data = read_interpolated_val('B1n_BEM.txt'); 
-if(strcmp(P{27},'force'))
-    Y = [data];
-end
 
 %% Experimental data
 % Marco's (ECN) script for reading the data in N/m
@@ -47,28 +36,6 @@ Data(3).MOMap = 3; % Model Output Map 3
 Data(4).y = mean(output_raw.Fy10); % [N/m]
 Data(4).Name = 'Fy10';
 Data(4).MOMap = 4; % Model Output Map 4
-
-%% Surrogate model options
-% Switch for Bayesian analysis with the AeroModule or with the surrogate model
-Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
-
-% If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
-
-% Options for loading a surrogate model
-Surrogate_model_filename = 'surrogate/PCE_LARS.mat'; % Specify the surrogate model file to be used
-
-% Options for creating a surrogate model
-% These are used if Bayes_full = 0 and Surrogate_model_type = 1
-MetaOpts.Type = 'Metamodel';
-MetaOpts.MetaType = 'PCE';
-MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
-
-MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 100;
-MetaOpts.Degree = 1:4;
-MetaOpts.TruncOptions.qNorm = 0.75;
-
 
 %% Likelihood description 
 % Here, the discrepancy for each data structure |y| are chosen to be
@@ -111,9 +78,28 @@ DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
 DiscrepancyOpts(4).Type = 'Gaussian';
 DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
+%% Forward model options
+% Switch for Bayesian analysis with the AeroModule or with the surrogate model
+Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
+% If Bayes_full = 0, we need to specify options for loading a surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
-%% Bayes options
+% Options for loading a surrogate model
+Surrogate_model_filename = 'surrogate/PCE_LARS.mat'; % Specify the surrogate model file to be used
+
+% Options for creating a surrogate model
+% These are used if Bayes_full = 0 and Surrogate_model_type = 1
+MetaOpts.Type = 'Metamodel';
+MetaOpts.MetaType = 'PCE';
+MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
+
+MetaOpts.ExpDesign.Sampling = 'LHS';
+MetaOpts.ExpDesign.NSamples = 100;
+MetaOpts.Degree = 1:4;
+MetaOpts.TruncOptions.qNorm = 0.75;
+
+%% MCMC options
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
