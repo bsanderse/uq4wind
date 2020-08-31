@@ -88,6 +88,7 @@ if (Full==1)
     myBayesianAnalysis_fullModel = uq_createAnalysis(BayesOpts);
     uq_print(myBayesianAnalysis_fullModel)
     uq_display(myBayesianAnalysis_fullModel)
+    uq_display(myBayesianAnalysis_fullModel, 'trace', 'all')
 end
 
 
@@ -109,5 +110,6 @@ if (Surrogate==1)
     myBayesianAnalysis_surrogateModel = uq_createAnalysis(BayesOpts);
     uq_print(myBayesianAnalysis_surrogateModel)
     uq_display(myBayesianAnalysis_surrogateModel)
+    uq_display(myBayesianAnalysis_surrogateModel, 'trace', 'all')   
 end
 

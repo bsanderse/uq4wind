@@ -45,7 +45,7 @@ Data(4).MOMap = 4; % Model Output Map 4
 DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
 DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
 DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 2*std(output_raw.Fy03)];
+DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 4*std(output_raw.Fy03)];
 DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
 
 DiscrepancyOpts(1).Type = 'Gaussian';
@@ -54,7 +54,7 @@ DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
 DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
 DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
 DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 2*std(output_raw.Fy05)];
+DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 4*std(output_raw.Fy05)];
 DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
 
 DiscrepancyOpts(2).Type = 'Gaussian';
@@ -63,7 +63,7 @@ DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
 DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
 DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma3';
 DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 2*std(output_raw.Fy08)];
+DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 4*std(output_raw.Fy08)];
 DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
 
 DiscrepancyOpts(3).Type = 'Gaussian';
@@ -72,7 +72,7 @@ DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
 DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
 DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma4';
 DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 2*std(output_raw.Fy10)];
+DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 4*std(output_raw.Fy10)];
 DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
 
 DiscrepancyOpts(4).Type = 'Gaussian';
@@ -95,7 +95,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 100;
+MetaOpts.ExpDesign.NSamples = 50;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
