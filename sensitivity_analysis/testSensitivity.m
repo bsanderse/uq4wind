@@ -4,7 +4,7 @@ close all
 clearvars
 
 %% Case study
-caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NM80'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -293,7 +293,10 @@ if (find(strcmp(methods,'PCE_LARS')))
     
 end
 
-%% perform post processing
-run(['cases/' input_file '/postProcessing.m']);
-
-% save('Axial_force_sensitivity')
+%% Post-processing
+pp_file = ['cases/' input_file '/postProcessing.m'];
+if (exist(pp_file,'file')==2)
+    run(pp_file);
+else
+    warning('postprocessing file not available');
+end

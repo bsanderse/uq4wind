@@ -9,8 +9,10 @@ clearvars
 rng default
 
 %% Case study
-caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
-input_file = caseName; % specify directory which contains test case settings and model
+caseName = 'NM80_calibrate'; % 'airfoil_lift','NM80', etc;
+% specify directory which contains test case settings and model
+% often this is simply the caseName
+input_file = caseName; 
 
 %% Initialize UQlab
 % add path
@@ -81,25 +83,10 @@ disp('performing Bayesian analysis');
 BayesianAnalysis = uq_createAnalysis(BayesOpts);
 
 %% Post-processing
-run(['cases/' input_file '/PostProcessingCalibration.m']);
-
-%% Write calibrated polars using mean of posterior
-run(['cases/' input_file '/write_calibration.m']);
-run(['AEROmodule/NM80_calibrate/write_calibrated_polars.m']);
-
-% %% Cross-validation (Optional)
-% figure()
-% R = [13,19,30,37];
-% exp = [474.7 817.9 1210.8 1254.3];
-% aero = [0.5378    0.8691    1.3804    1.4778]*10^3;
-% calibrated = [0.4747    0.8179    1.2108    1.2543]*10^3;
-% plot(R, exp,'g-*', 'LineWidth', 1)
-% hold on
-% plot(R, aero, 'r-o', 'LineWidth', 1)
-% hold on
-% plot(R, calibrated, 'b-o', 'LineWidth', 1)
-% xlabel('R [m]')
-% ylabel('\mu_{n} [N/m]')
-% grid on
-% legend('Experimental', 'Non-calibrated AeroModule', 'Calibrated AeroModule','Location','southeast')
+pp_file = ['cases/' input_file '/PostProcessingCalibration.m'];
+if (exist(pp_file,'file')==2)
+    run(pp_file);
+else
+    warning('postprocessing file not available');
+end
 
