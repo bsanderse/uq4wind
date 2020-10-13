@@ -8,3 +8,4 @@
 *.gz
 *.out
 *.DS_Store
+sensitivity_analysis/AEROmodule/NM80_calibrate/output/
