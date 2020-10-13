@@ -1,1 +1,0 @@
-             time[s]        azimuth[deg]        nrOfCalls[-]          u_hub[m/s]          v_hub[m/s]          w_hub[m/s]      v_tot_hub[m/s]      v_tot_ave[m/s]   AeroTorque_B1[Nm]   AeroTorque_B2[Nm]   AeroTorque_B3[Nm]       AxForce_B1[N]       AxForce_B2[N]       AxForce_B3[N]   AeroMoment_B1[Nm]   AeroMoment_B2[Nm]   AeroMoment_B3[Nm]
