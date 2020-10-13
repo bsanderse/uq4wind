@@ -1,4 +1,4 @@
-%% Writing calibrated files with headerlines
+%% Adding headerlines to calibrated polars
 
 % Fy03
 fidin1 = fopen('3c.dat', 'rt');
