@@ -7,7 +7,7 @@ D = readtable(filename,'HeaderLines', 4,"ReadVariableNames",true,...
                                    % specified .txt file
 r_a = str2double(D.Properties.VariableNames(3:end)); % Radial stations
 %% Calculate mean
-D_a = mean(D{:,3:end},1); % Mean values at different radial stations
+D_a = mean(D{:,3:end},1); % Mean (average in time) values at different radial stations
 
 %% Interpolation
 % These values are made available from Danaero experiments

@@ -10,7 +10,7 @@ P ={};
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
           RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input,...
           uncertain_params, QoI, WINDSPEED, POLARS, DYNSTALLTYPE, CORR3DTYPE, ...
-          BL_A1,BL_A2,BL_b1,BL_b2,BL_Ka,BL_Tp,BL_Tf,BL_Tv,BL_Tvl,BL_Acd,aero_module_outputfile]  = turbineData();
+          BL_A1,BL_A2,BL_b1,BL_b2,BL_Ka,BL_Tp,BL_Tf,BL_Tv,BL_Tvl,BL_Acd]  = turbineData();
 
 %% Other parameters related to AERO module software
 % Top and the end of AeroPower.dat file
@@ -63,4 +63,4 @@ P{41} = BL_Tv;
 P{42} = BL_Tvl;
 P{43} = BL_Acd;
 % Output file
-P{44} = aero_module_outputfile;
+%P{44} = aero_module_outputfile;

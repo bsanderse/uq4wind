@@ -4,9 +4,9 @@ turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
 % check |NM80_calibrate.m| or |(TurbineName_calibrate).m| for turbine-specific
 % settings and definition of uncertainties
 
-%% Forward model description 
+%% Forward model description
 % Name of Matlab file representing the model
-Model.mHandle = @aero_module_calibration;
+Model.mHandle = @aero_module;
 % Optionally, one can pass parameters to model stored in the cell array P
 P = getParameterAeroModule_cal(turbineName);
 Model.Parameters = P;
@@ -19,7 +19,7 @@ Model.isVectorized = false;
 % 2. raw_tangential.dat for 10 minute tangential force measurements
 filename_exp = ('../../../Experimental/WINDTRUE/raw_normal.dat');
 output_raw = read_exp_data(filename_exp, 2);
-% Because the model has different discrepancy options at different radial locations, 
+% Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
 Data(1).y = mean(output_raw.Fy03); % [N/m]
 Data(1).Name = 'Fy03';
@@ -37,7 +37,7 @@ Data(4).y = mean(output_raw.Fy10); % [N/m]
 Data(4).Name = 'Fy10';
 Data(4).MOMap = 4; % Model Output Map 4
 
-%% Likelihood description 
+%% Likelihood description
 % Here, the discrepancy for each data structure |y| are chosen to be
 % independent and identically distributed Gaussian random variables.
 % For the current case, 2*standard deviations of the experimental
@@ -80,10 +80,10 @@ DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
 %% Forward model options
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
-Bayes_full = 0; % 0: use surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
+Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 Surrogate_model_filename = 'surrogate/PCE_LARS.mat'; % Specify the surrogate model file to be used
@@ -95,7 +95,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 100;
+MetaOpts.ExpDesign.NSamples = 10;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
@@ -103,64 +103,66 @@ MetaOpts.TruncOptions.qNorm = 0.75;
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
-MH = 0; % Metropolis-Hastings
-AM = 0; % Adaptive Metropolis
-AIES = 1; % Affine invariant ensemble
-HMC = 0; % Hamilton Monte Carlo
+MCMC_type = 'AIES'; % 'MH': Metropolis-Hastings, 'AM': Adaptive Metropolis
+                    % 'AIES': Affine invariant ensemble, 'HMC': Hamilton Monte Carlo
 
-if (MH==1)
-    Solver.MCMC.Sampler = 'MH';
-    Solver.MCMC.Steps = 1e2;
-    Solver.MCMC.NChains = 1e2;
-    Solver.MCMC.T0 = 1e1;
-end
-
-if (AM==1)
-    Solver.MCMC.Sampler = 'AM';
-    Solver.MCMC.Steps = 1e2;
-    Solver.MCMC.NChains = 1e2;
-    Solver.MCMC.T0 = 1e1;
-    Solver.MCMC.Epsilon = 1e-2;
-end
-
-if (AIES==1)
-    Solver.MCMC.Sampler = 'AIES';
-    Solver.MCMC.Steps = 1e2;
-    Solver.MCMC.NChains = 1e2;
-    Solver.MCMC.a = 5;
-end
-
-if (HMC==1)
-    Solver.MCMC.Sampler = 'HMC';
-    Solver.MCMC.LeapfrogSteps = 1e3;
-    Solver.MCMC.LeapfrogSize = 0.01;
-    Solver.MCMC.Mass = 100;
+switch MCMC_type
+    
+    case 'MH'
+        
+        Solver.MCMC.Sampler = 'MH';
+        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.NChains = 1e2;
+        Solver.MCMC.T0 = 1e1;
+        
+    case 'AM'
+        Solver.MCMC.Sampler = 'AM';
+        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.NChains = 1e2;
+        Solver.MCMC.T0 = 1e1;
+        Solver.MCMC.Epsilon = 1e-2;
+        
+    case 'AIES'
+        Solver.MCMC.Sampler = 'AIES';
+        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.NChains = 1e2;
+        Solver.MCMC.a = 5;
+        
+    case 'HMC'
+        Solver.MCMC.Sampler = 'HMC';
+        Solver.MCMC.LeapfrogSteps = 1e3;
+        Solver.MCMC.LeapfrogSize = 0.01;
+        Solver.MCMC.Mass = 100;
+        
+    otherwise
+        error('wrong MCMC type provided');
+        
 end
 
 
 %% Assemble the Input.Marginal for Bayesian calibration through text comparison
 % NOTE: check getParameterAeroModule.m to see the definition of the P array
 % P{26} contains the uncertain parameters for which we will do calibration
-ndim = length(P{26}); 
+ndim = length(P{26});
 % P{25} contains all possible parameters, deterministic and uncertain, of
 % which a subset is used in the sensitivity study (as defined in P{25})
-ntot = length(P{25}.Marginals); 
+ntot = length(P{25}.Marginals);
 discrete_index = [];
 cont_index = [];
 discrete_param_vals = [];
 
 % loop over P{26} and for each uncertain parameter get the distribution as
 % stored in P{25}
-for i=1:ndim    
+for i=1:ndim
     for j = 1:ntot
         % find which index we need by looking in struct P{25}
         % store the required information in Input.Marginals(i), which will
         % be used by UQLab
         if(strcmp([P{25}.Marginals(j).Name,num2str(P{25}.Marginals(j).Index)],[P{26}{i}{1},num2str(P{26}{i}{2})]))
             Prior.Marginals(i).Name =  [P{26}{i}{1},num2str(P{26}{i}{2})];
-            Prior.Marginals(i).Type = P{25}.Marginals(j).Type; 
+            Prior.Marginals(i).Type = P{25}.Marginals(j).Type;
             Prior.Marginals(i).Parameters = P{25}.Marginals(j).Parameters;
-%             Prior.Marginals(i).Bounds = P{25}.Marginals(j).Bounds;
+            %             Prior.Marginals(i).Bounds = P{25}.Marginals(j).Bounds;
             
             if(P{26}{i}{3} ==1) % Get the index and parameter of discrete 2*stdiable
                 discrete_index = [discrete_index i];

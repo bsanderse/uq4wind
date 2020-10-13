@@ -3,6 +3,7 @@ clc
 close all
 clearvars
 
+%% Case study
 caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 

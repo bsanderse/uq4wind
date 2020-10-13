@@ -12,12 +12,6 @@ rng default
 caseName = 'aero_module'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
-%% Add paths for dependent routines located in the directories:'NURBS','AEROmoduleWrapper' and 'Geometry'
-addpath([pwd,'/AEROmoduleWrapper/']);
-addpath([pwd,'/NURBS/']);
-addpath([pwd,'/Geometry/']);
-addpath([pwd,'/AEROmodule/NM80_calibrate/output']);
-
 %% Initialize UQlab
 % add path
 run('config.m');
@@ -28,16 +22,26 @@ uqlab
 %% Initialization
 run(['cases/' input_file '/initialize_calibration.m']);
 
+%% Add paths for dependent routines located in the directories:'NURBS','AEROmoduleWrapper' and 'Geometry'
+addpath([pwd,'/AEROmoduleWrapper/']);
+addpath([pwd,'/NURBS/']);
+addpath([pwd,'/Geometry/']);
+%addpath(strcat(pwd,'/AEROmodule/',turbineName,'/output'));
+
+%% empty the contents of the output folder of the AeroModule to prevent that old information is being loaded
+delete(strcat(pwd,'/AEROmodule/',turbineName,'/output/*'));
+
 %% Set prior distribution
 myPrior = uq_createInput(Prior);
 % display input properties
 uq_print(myPrior);
 uq_display(myPrior);
+pause(0.01)
 
 %% Set forward model
 % The Aero-Module model has been implemented in the function
 % |uq_createModel(Model)| supplied with UQLab. The function
-% evaluates the model using the input parameters |P| given 
+% evaluates the model using the input parameters |P| given
 % in the structure |getParameterAeroModule(turbineName)|.
 myForwardModel = uq_createModel(Model);
 
@@ -46,10 +50,16 @@ if (Bayes_full == 0) % create a PCE surrogate model to be used
     if (Surrogate_model_type == 0)
         disp(['loading surrogate model from file: ' Surrogate_model_filename]);
         loaded_surrogate_model = load(Surrogate_model_filename);
+        % check whether loaded surrogate model is having same features as
+        % the uncertainties given in the prior (those we are trying to calibrate)
+        if (~isequaln(myPrior.Marginals,loaded_surrogate_model.mySurrogateModel.Options.Input.Marginals))
+            error('Marginals specified for Prior do not correspond with marginals used in surrogate model');
+        end
         BayesOpts.ForwardModel.Model = loaded_surrogate_model.mySurrogateModel;
+        
     elseif (Surrogate_model_type == 1)
         disp('creating surrogate model');
-        % use prior also as input uncertainties
+        % use prior also as input uncertainties for surrogate model
         MetaOpts.Input     = myPrior;
         MetaOpts.FullModel = myForwardModel;
         mySurrogateModel   = uq_createModel(MetaOpts);
@@ -67,6 +77,7 @@ BayesOpts.Discrepancy = DiscrepancyOpts;    % Likelihood
 BayesOpts.Solver = Solver;                  % MCMC
 
 %% Run the Bayesian inversion analysis
+disp('performing Bayesian analysis');
 BayesianAnalysis = uq_createAnalysis(BayesOpts);
 
 %% Post-processing

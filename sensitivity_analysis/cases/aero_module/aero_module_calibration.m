@@ -11,6 +11,6 @@ chdir(workingDir)
 % This function writes the values in 'Y' handle for the QOI obtained
 % from the Aero-Module run. 
 data = read_interpolated_val(P{44}); 
-if(strcmp(P{27},'force'))
+if(strcmp(P{27},'Axial_Force'))
     Y = [data];
 end

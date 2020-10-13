@@ -2,12 +2,12 @@ function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, ve
           BLADELENGTH, BLADEROOT, HUBHEIGHT, TILTANGLE, PITCHANGLE, XNAC2HUB, ...
           RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, ...
           uncertain_params, QoI, WINDSPEED, POLARS, DYNSTALLTYPE, CORR3DTYPE, ...
-          BL_A1,BL_A2,BL_b1,BL_b2,BL_Ka,BL_Tp,BL_Tf,BL_Tv,BL_Tvl,BL_Acd,aero_module_outputfile]  = NM80_calibrate()
+          BL_A1,BL_A2,BL_b1,BL_b2,BL_Ka,BL_Tp,BL_Tf,BL_Tv,BL_Tvl,BL_Acd]  = NM80_calibrate()
 %% ===============Variables for user selection====================
 
 uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.3},{'CL',4,0.3}};                
-QoI = 'force'; % Force at different radial stations
-aero_module_outputfile = 'B1n_BEM.txt'; % Aero-Module data to be calibrated
+QoI = 'Sectional_normal_force'; % Force at different radial stations
+%aero_module_outputfile = 'B1n_BEM.txt'; % Aero-Module data to be calibrated
 
 % The parameter should be defined in the following format {name,index,rel_perturbation} where
 % rel_pertubation defines the amount of relative perturbation for B-spline
