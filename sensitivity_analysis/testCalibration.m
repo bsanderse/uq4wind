@@ -83,9 +83,9 @@ BayesianAnalysis = uq_createAnalysis(BayesOpts);
 %% Post-processing
 run(['cases/' input_file '/PostProcessingCalibration.m']);
 
-%% Write calibration files
+%% Write calibrated polars using mean of posterior
 run(['cases/' input_file '/write_calibration.m']);
-run(['AEROmodule/NM80_calibrate/cal_files.m']);
+run(['AEROmodule/NM80_calibrate/write_calibrated_polars.m']);
 
 % %% Cross-validation (Optional)
 % figure()

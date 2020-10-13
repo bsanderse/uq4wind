@@ -8,8 +8,14 @@ turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module;
 % Optionally, one can pass parameters to model stored in the cell array P
-P = getParameterAeroModule_cal(turbineName);
+P = getParameterAeroModule(turbineName);
 Model.Parameters = P;
+%  note that the model output is (in general) a vector, containing e.g. the
+%  force at different radial sections; this does not require any additional
+%  specification in UQLab
+%  the model is however not vectorized in the sense that we cannot give all
+%  the possible parameter values at once as input to AeroModule, but
+%  instead we need to do this sequentially
 Model.isVectorized = false;
 
 %% Experimental data
@@ -86,7 +92,7 @@ Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model 
 Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
-Surrogate_model_filename = 'surrogate/PCE_LARS.mat'; % Specify the surrogate model file to be used
+Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS.mat'; % Specify the surrogate model file to be used
 
 % Options for creating a surrogate model
 % These are used if Bayes_full = 0 and Surrogate_model_type = 1

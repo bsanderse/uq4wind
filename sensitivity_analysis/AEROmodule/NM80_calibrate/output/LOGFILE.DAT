@@ -1,17 +1,17 @@
 ************************************************************
 ************************************************************
-**** ECN Aero-Module version nr   255_CWI2 Windows 64-bit       
-**** Calculation started at DD-MM-YY hh:mm 13-10-20 11:07
+**** ECN Aero-Module version nr    255_CWI Windows 64-bit       
+**** Calculation started at DD-MM-YY hh:mm 13-10-20 13:48
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
-INPUTFILENAME            W:\\input.txt
-INCLUDEFILENAME          W:\\
-WINDFILENAME             W:\\WIND.DAT
-COEFFFILENAME            W:\\AIRFOILS.DAT
-LOGFILENAME              W:\\output\LOGFILE.DAT
-AERORESULTSFILE          W:\\output\aeroresultsout.dat
-GEOMRESULTSFILE          W:\\output\geomresultsout.dat
+INPUTFILENAME            X:\\input.txt
+INCLUDEFILENAME          X:\\
+WINDFILENAME             X:\\WIND.DAT
+COEFFFILENAME            X:\\AIRFOILS.DAT
+LOGFILENAME              X:\\output\LOGFILE.DAT
+AERORESULTSFILE          X:\\output\aeroresultsout.dat
+GEOMRESULTSFILE          X:\\output\geomresultsout.dat
  ----------------GeneralData-----------------------------
 AEROMODEL                  1
 TURBINETYPE                1
@@ -41,7 +41,6 @@ BL_TV                      6.0000
 BL_TVL                     5.0000
 MAXAOALIN                  5.0000
 MINAOALIN                 -3.0000
-SNEL3DFACTOR               3.1000
  ----------------EnvironmentData-------------------------
 WINDTYPE                   1
 WINDINTERPL                2
@@ -134,3 +133,20 @@ ZNAC2HUB                   1.6000
           38.000           0.620           0.163           0.930         -25.000          -1.416           0.062          38.652           2.771          -6.167
           38.400           0.480           0.157           2.320         -25.000          -1.459           0.041          39.053           4.422          -6.151
           38.800           0.070           0.148           6.130         -25.000          -1.502           0.000          39.467           5.779          -6.112
+ ----------------Used variables at 1st iteration--------------------------
+                            B1        B2        B3
+     Yaw angle [deg]      0.00      0.00      0.00
+    Tilt angle [deg]      0.00      0.00      0.00
+    Cone angle [deg]      0.00      0.00      0.00
+ Azimuth angle [deg]      0.00   -120.00    120.00
+Aero root radius [m]      5.81      5.81      5.81
+     Root radius [m]      1.24      1.24      1.24
+      Tip radius [m]     40.04     40.04     40.04
+  Rotorspeed [rad/s]      1.29      1.29      1.29
+       Hubheight [m]     57.19     57.19     57.19
+ 
+                             u         v         w
+ Windspeed@hub [m/s]      6.10      0.00      0.00
+                             x         y         z
+      Tower base [m]      0.00      0.00      0.00
+       Tower top [m]      0.00      0.00     55.59

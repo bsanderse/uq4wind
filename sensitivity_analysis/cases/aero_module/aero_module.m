@@ -26,6 +26,8 @@ switch P{27}
         [Times,Azimuthdeg,PowerWatt,Axial_ForceN] = AeroPower(filename, P{23}, P{24});
         Y = mean(Axial_ForceN); 
     case 'Sectional_normal_force'   
+        % in this case the QoI is a vector, returning the time-averaged force at
+        % each section
         Y = read_interpolated_val(strcat(output_dir,'B1n_BEM.txt')); 
     otherwise
         error(strcat('QoI type unknown; check the turbine file ',P{29}));
