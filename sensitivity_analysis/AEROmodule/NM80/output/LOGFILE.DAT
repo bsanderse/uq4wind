@@ -1,17 +1,17 @@
 ************************************************************
 ************************************************************
-**** ECN Aero-Module version nr    252_CWI Windows 64-bit       
-**** Calculation started at DD-MM-YY hh:mm 26-08-20 10:31
+**** ECN Aero-Module version nr   255_CWI2 Windows 64-bit       
+**** Calculation started at DD-MM-YY hh:mm 13-10-20 11:25
 ************************************************************
 ************************************************************
  ----------------Filenames-----------------------------
-INPUTFILENAME            C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\input.txt
-INCLUDEFILENAME          C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\
-WINDFILENAME             C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\WIND.DAT
-COEFFFILENAME            C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\AIRFOILS.DAT
-LOGFILENAME              C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\output\LOGFILE.DAT
-AERORESULTSFILE          C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\output\aeroresultsout.dat
-GEOMRESULTSFILE          C:\Users\kriek\Desktop\windtrue\sensitivity_analysis\AEROmodule\NM80\output\geomresultsout.dat
+INPUTFILENAME            X:\\input.txt
+INCLUDEFILENAME          X:\\
+WINDFILENAME             X:\\WIND.DAT
+COEFFFILENAME            X:\\AIRFOILS.DAT
+LOGFILENAME              X:\\output\LOGFILE.DAT
+AERORESULTSFILE          X:\\output\aeroresultsout.dat
+GEOMRESULTSFILE          X:\\output\geomresultsout.dat
  ----------------GeneralData-----------------------------
 AEROMODEL                  1
 TURBINETYPE                1
@@ -41,6 +41,7 @@ BL_TV                      6.0000
 BL_TVL                     5.0000
 MAXAOALIN                  5.0000
 MINAOALIN                 -3.0000
+SNEL3DFACTOR               3.1000
  ----------------EnvironmentData-------------------------
 WINDTYPE                   1
 WINDINTERPL                2
@@ -68,7 +69,7 @@ ATRANSITION                0.3800
 AEROOUTPUTINCREMENT       -10
 CENTEREDCONTRPOINTS         0
 EXTFIELDFLAG                0
-FREESTRMWISEWAKEPOINTS      0
+FREESTRMWISEWAKEPOINTS    -10
 GROUNDFLAG                  2
 GEOMOUTPUTINCREMENT       -10
 LOGTRACESWITCH              0
@@ -80,7 +81,7 @@ PARALLEL                    0
 PRSCRBWAKE                  0
 STARTSMOOTHINGS             3
 STDOUTSWITCH                0
-STREAMWISEWAKEPOINTS        0
+STREAMWISEWAKEPOINTS      -10
 TIMEENDAERO               -10
 TIMEENDGEOM               -10
 TIMESTARTAERO             -10
