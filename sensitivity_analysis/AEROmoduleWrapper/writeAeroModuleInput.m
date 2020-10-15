@@ -290,8 +290,7 @@ fprintf(fid,'! Blade definition ------------------------------------------------
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'AEROPROPS\n');
 fprintf(fid,'!zB [m] chord [m] t/c [-] twist [deg]  C14 [%%c] xB [m] yB [m]\n');
-
-
+% loop over all radial points
 for i = 1:P{10}
     fprintf(fid,'%f    %f    %f    %f    %f    %f    %f \n', P{3}(i), chord(i), thickness(i)/chord(i), twist(i), P{7}(i), P{8}(i), P{9}(i));
 end
@@ -404,7 +403,7 @@ for i = 1:P{31}{1} % Loop over the polar files
     filename = fullfile(pwd,'AEROmodule',P{29},P{31}{2}{i});
 %     filename = [pwd,'\AEROmodule\',P{29},'\',P{31}{2}{i}]; 
     fid = fopen(filename,'w');
-    fprintf(fid,'! Aero mudule input file for airfoil data\n');
+    fprintf(fid,'! Aero module input file for airfoil data\n');
     fprintf(fid,'\n');
     fprintf(fid, 'Airfoil_Name  %s\n',P{31}{3}{i});
     fprintf(fid,'t/c            %f         ! thickness ratio w.r.t. chord\n', P{31}{4}{i});

@@ -33,6 +33,7 @@ QoI = 'Sectional_normal_force'; % Force at different radial stations
 AEROMODEL = 1;
 TURBINETYPE = 1;
 
+% radial positions used for twist, chord, thickness
 zB = [0 2 4 6 8 10 12 14 16 18 20 22 ...
       24 26 28 30 32 34 36 37 38 38.4 38.8];
   
@@ -201,10 +202,10 @@ Input.Marginals(counter).Bounds = [0 8-10^-20];
 %% ====================Polars=====================
 % Import the reference polar curves
 % using fullfile works both on Windows and Linux and Mac
-section03_file = fullfile('..','..','AEROmodule','NM80','section03_ref.dat');
-section05_file = fullfile('..','..','AEROmodule','NM80','section05_ref.dat');
-section08_file = fullfile('..','..','AEROmodule','NM80','section08_ref.dat');
-section10_file = fullfile('..','..','AEROmodule','NM80','section10_ref.dat');
+section03_file = fullfile('..','..','AEROmodule','NM80_calibrate','reference','section03_ref.dat');
+section05_file = fullfile('..','..','AEROmodule','NM80_calibrate','reference','section05_ref.dat');
+section08_file = fullfile('..','..','AEROmodule','NM80_calibrate','reference','section08_ref.dat');
+section10_file = fullfile('..','..','AEROmodule','NM80_calibrate','reference','section10_ref.dat');
 [alpha, CL_section03, CD_section03, CM_section03] = importPolars(section03_file);
 [alpha, CL_section05, CD_section05, CM_section05] = importPolars(section05_file);
 [alpha, CL_section08, CD_section08, CM_section08] = importPolars(section08_file);

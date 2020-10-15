@@ -20,7 +20,7 @@ endRow = round(TEND/TIMESTEP)+ startRow; % depends on the TEND and TIMESTEP
 %% Populate the elements of P. NOTE: The order of elements in P should not be changed!
 P{1} = AEROMODEL; 
 P{2} = TURBINETYPE;
-P{3} = zB;
+P{3} = zB; % the raial distance along the blade pitch axis from the blade root
 P{4} = ref_chord;
 P{5} = t_by_c;
 P{6} = ref_twist;
