@@ -18,16 +18,22 @@ end
 
 % store the MAP into myBayesianAnalysis.Results.PostProc.PointEstimate:
 uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP')
+
 % Delta interpretation using the MAP of the posterior
-Delta_1 = BayesianAnalysis.Results.PostProc.PointEstimate.X(1)*0.2;
-Delta_2 = BayesianAnalysis.Results.PostProc.PointEstimate.X(2)*0.2;
-Delta_3 = BayesianAnalysis.Results.PostProc.PointEstimate.X(3)*0.3;
-Delta_4 = BayesianAnalysis.Results.PostProc.PointEstimate.X(4)*0.3;
+% multiply by the scaling value set in NM80_calibrate.m, which is stored in
+% P{26}
+for i=1:ndim
+    Delta(i) = BayesianAnalysis.Results.PostProc.PointEstimate.X(i)*P{26}{i}{3};
+end
+% Delta_1 = BayesianAnalysis.Results.PostProc.PointEstimate.X(1)*0.2;
+% Delta_2 = BayesianAnalysis.Results.PostProc.PointEstimate.X(2)*0.2;
+% Delta_3 = BayesianAnalysis.Results.PostProc.PointEstimate.X(3)*0.3;
+% Delta_4 = BayesianAnalysis.Results.PostProc.PointEstimate.X(4)*0.3;
 
 
 %% Write calibrated polars using mean of posterior
 run('write_calibration.m');
-run('../../AEROmodule/NM80_calibrate/write_calibrated_polars.m');
+% run('../../AEROmodule/NM80_calibrate/write_calibrated_polars.m');
 
 % %% Cross-validation (Optional)
 % figure()

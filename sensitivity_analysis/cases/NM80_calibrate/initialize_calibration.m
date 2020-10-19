@@ -92,7 +92,7 @@ DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS.mat'; % Specify the surrogate model file to be used
@@ -133,7 +133,7 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e3;
+        Solver.MCMC.Steps = 1e2;
         Solver.MCMC.NChains = 1e2;
         Solver.MCMC.a = 5;
         
@@ -154,7 +154,7 @@ end
 % P{26} contains the uncertain parameters for which we will do calibration
 ndim = length(P{26});
 % P{25} contains all possible parameters, deterministic and uncertain, of
-% which a subset is used in the sensitivity study (as defined in P{25})
+% which a subset is used in the calibration study (as defined in P{25})
 ntot = length(P{25}.Marginals);
 discrete_index = [];
 cont_index = [];
