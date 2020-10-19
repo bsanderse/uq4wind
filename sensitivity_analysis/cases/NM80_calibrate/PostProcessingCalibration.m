@@ -26,8 +26,8 @@ Delta_4 = BayesianAnalysis.Results.PostProc.PointEstimate.X(4)*0.3;
 
 
 %% Write calibrated polars using mean of posterior
-run(['cases/' input_file '/write_calibration.m']);
-run(['AEROmodule/NM80_calibrate/write_calibrated_polars.m']);
+run('write_calibration.m');
+run('../../AEROmodule/NM80_calibrate/write_calibrated_polars.m');
 
 % %% Cross-validation (Optional)
 % figure()

@@ -1,4 +1,4 @@
-function  samplesChord = computeChord(samples,index, randVec, pc, plotSamples,bladeLength,...
+function  pertChord = computeChord(samples,index, randVec, pc, plotSamples,bladeLength,...
                                       interpolationLocations,referenceChord,...
                                       t0,n,sampledLocations,sampledValues)
 
@@ -6,8 +6,8 @@ function  samplesChord = computeChord(samples,index, randVec, pc, plotSamples,bl
 % Example: 
 % samplesChord = computeChord(1,[3:5], rand(10,3), 0.1*ones(3,1), 1)
 
-% This routine computes the random samples of Chord vector using the purturbed
-% control points of NURB curve
+% This routine computes the random samples of Chord vector using the perturbed
+% control points of NURBS curve
 
 % Input arguments
 % 'samples' Number of samples of perturbed Chord
@@ -40,27 +40,42 @@ if nargin < 6 % Default function argument values corresponding to NM80 turbine
     sampledLocations = [0 4 10 16 20 30 34 37 38.8]; 
     sampledValues = [2.42 2.65 3.14 2.79 2.38 1.68 1.41 0.98 0.07]; 
     
-    pc_mod = zeros(1,numel(sampledLocations));
-    pc_mod(index) = pc;
-    
-    randVec_mod = zeros(1,numel(sampledLocations));
-    randVec_mod(index) = randVec;
 end
 
+%% set up NURBS
+
+% normalize inputs
 interpolationLocations = interpolationLocations/bladeLength; % Normalized between [0,1]
-sampledLocations = sampledLocations/bladeLength; % Normalized between [0,1]
+sampledLocations       = sampledLocations/bladeLength; % Normalized between [0,1]
+
+% get NURBS basis function matrix
+[Bref, t] = getNURBSBasisMatrix(sampledLocations,t0,n); % get basis matrix
+% get control points by solving the NURBS equation system
+c = getControlPoints(Bref,sampledValues); % control points for NURBS curve
+
+% now the NURBS curve is fully defined and can be evaluated at different
+% positions
+% 'samplesCurve' is the function values of NURBS curve interpolated at interpolationLocations
+Bu  = getNURBSBasisMatrix(interpolationLocations,t0,n);
+samplesChord = evalNURBS(Bu,c);
 
 
-c = getControlPoints(sampledLocations,sampledValues,t0,n); % control points for NURB curve
-t = [t0(1)*ones(1,n-1) t0 t0(end)*ones(1,n-1)]; % padded knot vector obtained by padding n-1 elements at front and end. 
-j = 0: numel(t)- n-1; % Index of B-spline from 0 =< j < numel(t)-n
+%% now create perturbations
+% create vector for perturbations
+pc_mod = zeros(numel(sampledLocations),1);
+% magnitude of perturbation that is used to scale the random numbers
+pc_mod(index(:)) = pc;
 
-samplesChord = zeros(1,numel(interpolationLocations)); % 'sampleChord' is the function values of NURB curve interpolated at sampleLocations
+% value of random variable
+randVec_mod = zeros(numel(sampledLocations),1);
+randVec_mod(index(:)) = randVec;
 
-for i = 1:numel(j)
-    [y,interpolationLocations] = bspline_basis(j(i),n,t,interpolationLocations);
-    samplesChord = samplesChord + c(i)*y;
-end
+% this is a key step, where the perturbation is added to the baseline
+c_pert    = c.*(1+pc_mod.*randVec_mod);
+pertChord = evalNURBS(Bu,c_pert);
+
+
+%% make plots
 
 if plotSamples == 1
     % Plot to check the Chord variation along the blade span. This can be used to 
@@ -70,14 +85,9 @@ if plotSamples == 1
     hold on
     plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
     plot(sampledLocations,sampledValues,'marker','x','markersize',8,'linestyle','none','linewidth',2) % plot sampled points
-    plot(interpolationLocations,samplesChord,'linewidth',2,'color','b')
-end
-samplesChord = perturbNURBS(t0,n,interpolationLocations,c, pc_mod,samples,randVec_mod);
-
-if plotSamples == 1
-    plot(interpolationLocations,samplesChord','color','k','linestyle','--','HandleVisibility','off')
-    plot(interpolationLocations,samplesChord(1,:),'color','k','linestyle','--')
-    legend('reference Chord','control points','sampled data', 'NURB curve','random samples')
+    plot(interpolationLocations,samplesChord,'linewidth',2)
+    plot(interpolationLocations,pertChord,'linestyle','--')
+    legend('reference Chord','control points','sampled data', 'NURBS approximation to reference','perturbed curve')
     hold off
 end
 return

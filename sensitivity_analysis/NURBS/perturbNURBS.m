@@ -1,6 +1,6 @@
 function S = perturbNURBS(t0,n,xu,c, pc,samples, randVec)
 % This routine perturbs (using a uniform distribution) the control points 
-% obtained from the baseline curves and generates perturbed smooth curves
+% obtained from the baseline curves and generates perturbed smooth curvesin
 
 % Input:
 % 't' is the knot vector

@@ -1,4 +1,4 @@
-  function  samplesTwist = computeTwist(samples, index, randVec, pc, plotSamples,bladeLength,...
+  function  pertTwist = computeTwist(samples, index, randVec, pc, plotSamples,bladeLength,...
                                       interpolationLocations,referenceTwist,...
                                       t0,n,sampledLocations,sampledValues)
 % This routine computes the random samples of Twist vector using the purturbed
@@ -7,7 +7,7 @@
 % Input arguments
 % 'samples' Number of samples of perturbed twist
 % 'randVec' a samples-by-numOfControlPoints matrix of random numbers
-% 'pc' is vector with each element bw [0,1] representing fraction of perturbation for each control point from their baseline value.
+% 'pc' is vector with each element between [0,1] representing fraction of perturbation for each control point from their baseline value.
 % 'plotSamples' 0 for no plot, 1 (default) to plot the generated samples, the baseline curve and the control points
 % 'interpolationLocations' Points along the blade length according to ECNAERO module input file 
 % 'referenceTwist' Reference values of twist obtained from ECNAERO module input file
@@ -33,44 +33,55 @@ if nargin < 6 % Default function argument values corresponding to NM80 turbine
     sampledLocations =interpolationLocations([1 2 4 6 7 9 11 15 18 20 21 23]); 
     sampledValues = referenceTwist([1 2 4 6 7 9 11 15 18 20 21 23]); 
 
-    pc_mod = zeros(1,numel(sampledLocations));
-    pc_mod(index) = pc;
-    
-    randVec_mod = zeros(1,numel(sampledLocations));
-    randVec_mod(index) = randVec;
 end
 
+%% set up NURBS
+
+% normalize inputs
 interpolationLocations = interpolationLocations/bladeLength; % Normalized between [0,1]
-sampledLocations = sampledLocations/bladeLength; % Normalized between [0,1]
+sampledLocations       = sampledLocations/bladeLength; % Normalized between [0,1]
+
+% get NURBS basis function matrix
+[Bref, t] = getNURBSBasisMatrix(sampledLocations,t0,n); % get basis matrix
+% get control points by solving the NURBS equation system
+c = getControlPoints(Bref,sampledValues); % control points for NURBS curve
+
+% now the NURBS curve is fully defined and can be evaluated at different
+% positions
+% 'samplesCurve' is the function values of NURBS curve interpolated at interpolationLocations
+Bu  = getNURBSBasisMatrix(interpolationLocations,t0,n);
+samplesTwist = evalNURBS(Bu,c);
 
 
-c = getControlPoints(sampledLocations,sampledValues,t0,n); % control points for NURB curve
-t = [t0(1)*ones(1,n-1) t0 t0(end)*ones(1,n-1)]; % padded knot vector obtained by padding n-1 elements at front and end. 
-j = 0: numel(t)- n-1; % Index of B-spline from 0 =< j < numel(t)-n
+%% now create perturbations
+% create vector for perturbations
+pc_mod = zeros(numel(sampledLocations),1);
+% magnitude of perturbation that is used to scale the random numbers
+pc_mod(index(:)) = pc;
 
-samplesTwist = zeros(1,numel(interpolationLocations)); % 'sampleTwist' is the function values of NURB curve interpolated at sampleLocations
+% value of random variable
+randVec_mod = zeros(numel(sampledLocations),1);
+randVec_mod(index(:)) = randVec;
 
-for i = 1:numel(j)
-    [y,interpolationLocations] = bspline_basis(j(i),n,t,interpolationLocations);
-    samplesTwist = samplesTwist + c(i)*y;
-end
+% this is a key step, where the perturbation is added to the baseline
+c_pert    = c.*(1+pc_mod.*randVec_mod);
+pertTwist = evalNURBS(Bu,c_pert);
 
+
+%% make plots
+% plotSamples=1;
 if plotSamples == 1
-    % Plot to check the Twist variation along the blade span. This can be used to 
-    % select the knot locations 
+    % Plot to check the twist variation along the blade span. This can be used to 
+    % select the knot locations     
     figure
     plot(interpolationLocations,referenceTwist,'linewidth',2) 
     hold on
-%     plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
+    plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
     plot(sampledLocations,sampledValues,'marker','x','markersize',8,'linestyle','none','linewidth',2) % plot sampled points
-%     plot(interpolationLocations,samplesTwist,'linewidth',2,'color','g')
-end
-samplesTwist = perturbNURBS(t0,n,interpolationLocations,c, pc_mod,samples,randVec_mod);
-
-if plotSamples == 1
-    plot(interpolationLocations,samplesTwist','color','k','linestyle','--','HandleVisibility','off')
-    plot(interpolationLocations,samplesTwist(1,:),'color','k','linestyle','--')
-    legend('reference Twist','control points','sampled data', 'NURB curve','random samples')
+    plot(interpolationLocations,samplesTwist,'linewidth',2)
+    plot(interpolationLocations,pertTwist,'linestyle','--')
+    legend('reference twist','control points','sampled data', 'NURBS approximation to reference','perturbed curve')
     hold off
 end
+
 return

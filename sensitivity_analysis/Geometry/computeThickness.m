@@ -1,4 +1,4 @@
-function  samplesThickness = computeThickness(samples, index, randVec, pc, plotSamples,bladeLength,...
+function  pertThickness = computeThickness(samples, index, randVec, pc, plotSamples,bladeLength,...
                                       interpolationLocations,referenceThickness,...
                                       t0,n,sampledLocations,sampledValues)
 
@@ -6,16 +6,16 @@ function  samplesThickness = computeThickness(samples, index, randVec, pc, plotS
 % control points of NURBS curve
 
 % Input arguments
-% 'samples' Number of samples of perturbed Chord
+% 'samples' Number of samples of perturbed thickness
 % 'randVec' a samples-by-numOfControlPoints matrix of random numbers
 % 'pc' is vector with each element bw [0,1] representing fraction of perturbation for each control point from their baseline value.
 % 'plotSamples' 0 for no plot, 1 (default) to plot the generated samples, the baseline curve and the control points
 % 'interpolationLocations' Points along the blade length according to ECNAERO module input file 
-% 'referenceThickness' Reference values of Chord*(t/c) obtained from ECNAERO module input file
+% 'referenceThickness' Reference values of thickness*(t/c) obtained from ECNAERO module input file
 % 't0' Knot vector b/w [0,1], the number of resulting basis function is numel(t0)+1
 % 'n' NURBS order: 2 for linear B-splines, 3 for Quadratic, so on. The polynomial degree of B-spline is n-1.
-% 'sampledLocations' Locations where the value of chord is sample. NOTE: numel(sampleLocations) =  numel(t0) + 1
-% 'sampledValues' Vales of chord at sampled location
+% 'sampledLocations' Locations where the value of thickness is sample. NOTE: numel(sampleLocations) =  numel(t0) + 1
+% 'sampledValues' Values of thickness at sampled location
 % 'pc' is vector with each element bw [0,1] representing fraction of perturbation for control points from their baseline value. The numel(pc) = numel(sampledLocations)  
 
 % Output argument
@@ -38,45 +38,56 @@ if nargin < 6 % Default function argument values corresponding to NM80 turbine
     n = 3;
     sampledLocations = interpolationLocations([1 3 6 9 11 16 18 20 23]);
     sampledValues = referenceThickness([1 3 6 9 11 16 18 20 23]); 
-
-    pc_mod = zeros(1,numel(sampledLocations));
-    pc_mod(index) = pc;
-    
-    randVec_mod = zeros(1,numel(sampledLocations));
-    randVec_mod(index) = randVec;
-    
-    
+        
 end
 
+
+%% set up NURBS
+
+% normalize inputs
 interpolationLocations = interpolationLocations/bladeLength; % Normalized between [0,1]
-sampledLocations = sampledLocations/bladeLength; % Normalized between [0,1]
-c = getControlPoints(sampledLocations,sampledValues,t0,n); % control points for NURB curve
-t = [t0(1)*ones(1,n-1) t0 t0(end)*ones(1,n-1)]; % padded knot vector obtained by padding n-1 elements at front and end. 
-j = 0: numel(t)- n-1; % Index of B-spline from 0 =< j < numel(t)-n
+sampledLocations       = sampledLocations/bladeLength; % Normalized between [0,1]
 
-samplesThickness = zeros(1,numel(interpolationLocations)); % 'sampleThickness' is the function values of NURB curve interpolated at sampleLocations
+% get NURBS basis function matrix
+[Bref, t] = getNURBSBasisMatrix(sampledLocations,t0,n); % get basis matrix
+% get control points by solving the NURBS equation system
+c = getControlPoints(Bref,sampledValues); % control points for NURBS curve
 
-for i = 1:numel(j)
-    [y,interpolationLocations] = bspline_basis(j(i),n,t,interpolationLocations);
-    samplesThickness = samplesThickness + c(i)*y;
-end
+% now the NURBS curve is fully defined and can be evaluated at different
+% positions
+% 'samplesCurve' is the function values of NURBS curve interpolated at interpolationLocations
+Bu  = getNURBSBasisMatrix(interpolationLocations,t0,n);
+samplesThickness = evalNURBS(Bu,c);
 
+%% now create perturbations
+% create vector for perturbations
+pc_mod = zeros(numel(sampledLocations),1);
+% magnitude of perturbation that is used to scale the random numbers
+pc_mod(index(:)) = pc;
+
+% value of random variable
+randVec_mod = zeros(numel(sampledLocations),1);
+randVec_mod(index(:)) = randVec;
+
+% this is a key step, where the perturbation is added to the baseline
+c_pert    = c.*(1+pc_mod.*randVec_mod);
+pertThickness = evalNURBS(Bu,c_pert);
+
+
+
+%% make plots
+% plotSamples=1;
 if plotSamples == 1
-    % Plot to check the Thickness variation along the blade span. This can be used to 
+    % Plot to check the thickness variation along the blade span. This can be used to 
     % select the knot locations     
     figure
     plot(interpolationLocations,referenceThickness,'linewidth',2) 
     hold on
     plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points
     plot(sampledLocations,sampledValues,'marker','x','markersize',8,'linestyle','none','linewidth',2) % plot sampled points
-    plot(interpolationLocations,samplesThickness,'linewidth',2,'color','g')
-end
-samplesThickness = perturbNURBS(t0,n,interpolationLocations,c, pc_mod,samples,randVec_mod);
-
-if plotSamples == 1
-    plot(interpolationLocations,samplesThickness','color','k','linestyle','--','HandleVisibility','off')
-    plot(interpolationLocations,samplesThickness(1,:),'color','k','linestyle','--')
-    legend('reference Thickness','control points','sampled data', 'NURB curve','random samples')
+    plot(interpolationLocations,samplesThickness,'linewidth',2)
+    plot(interpolationLocations,pertThickness,'linestyle','--')
+    legend('reference thickness','control points','sampled data', 'NURBS approximation to reference','perturbed curve')
     hold off
 end
 return

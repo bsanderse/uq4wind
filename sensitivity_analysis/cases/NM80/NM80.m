@@ -3,6 +3,40 @@ function [AEROMODEL,TURBINETYPE,zB, ref_chord, t_by_c,ref_twist, C14, xB, yB, ve
           RPM, TBEGIN, TEND, TIMESTEP, YAWANGLE, NROFBEMELEMENTS, ZNAC2HUB, Input, ...
           uncertain_params, QoI, WINDSPEED, POLARS, DYNSTALLTYPE, CORR3DTYPE, ...
           BL_A1,BL_A2,BL_b1,BL_b2,BL_Ka,BL_Tp,BL_Tf,BL_Tv,BL_Tvl,BL_Acd]  = NM80()
+
+%% Specify uncertain parameters to be considered in the sensitivity analysis
+% The parameter should be defined in the following format {name,index,rel_perturbation} where
+% rel_pertubation defines the amount of relative perturbation for B-spline
+% curves. For example, {'Twist',2,0.2} defines the uncertainty in the
+% second control point of Twist curve and 0.2 means a relative uncertainty of plus minus 10% for this  control point. 
+% This parameter may not be required for other scalar random
+% variables. 
+
+% NOTE: the index associated to Twist, Thickness and Chord is the
+% associated to the zB vector
+% the index associated to Cl, Cd, and Cm is associated to the available airfoil
+% polars, which is generally at a different section
+
+% uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
+%                    {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
+%                    {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
+%                    {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}, ...
+%                    {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2}, ...
+%                    {'CD',1, 0.2}, {'CD',2, 0.2}, {'CD',3, 0.2},{'CD',4,0.2}, ...
+%                    {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}
+%                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''},...
+%                    {'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
+%                    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''},{'BL_Tvl','',''},{'BL_Acd','',''}};
+
+ uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
+
+%uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
+%    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
+                
+% Specify quantity of interest
+QoI = 'Power'; % 'Axial_Force' or 'Power'
+
+
 %% Variables of input file extracted from reference test case from DANAERO turbine NM80
 AEROMODEL = 1;
 TURBINETYPE = 1;
@@ -409,29 +443,4 @@ Input.Marginals(counter).Parameters = [BL_Acd, BL_Acd_Std];
 Input.Marginals(counter).Bounds = [BL_Acd_LB BL_Acd_UB];
 
 
-%% Specify uncertain parameters to be considered in the sensitivity analysis
-% The parameter should be defined in the following format {name,index,rel_perturbation} where
-% rel_pertubation defines the amount of relative perturbation for B-spline
-% curves. For example, {'Twist',2,0.2} defines the uncertainty in the
-% second control point of Twist curve and 0.2 means a relative uncertainty of plus minus 10% for this  control point. 
-% This parameter may not be required for other scalar random
-% variables. 
 
-% uncertain_params = {{'Twist',2,0.2},{'Twist',3,0.2},{'Twist',4,0.2},{'Twist',5,0.2},{'Twist',6,0.2},{'Twist',7,0.2},...
-%                    {'Chord',2,0.2},{'Chord',4,0.2},{'Chord',6,0.2},{'Chord',8,0.2}, ...
-%                    {'Thickness',2,0.2},{'Thickness',3,0.2},{'Thickness',4,0.2},{'Thickness',5,0.2},...
-%                    {'YAW','',''},{'WINDSPEED','',''},{'RPM','',''},{'PITCHANGLE','',''}, ...
-%                    {'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2},{'CL',4,0.2}, ...
-%                    {'CD',1, 0.2}, {'CD',2, 0.2}, {'CD',3, 0.2},{'CD',4,0.2}, ...
-%                    {'CM',1, 0.2}, {'CM',2, 0.2}, {'CM',3, 0.2},{'CM',4,0.2}
-%                    {'DYNSTALLTYPE','',''}, {'CORR3DTYPE','',''},...
-%                    {'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
-%                    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''},{'BL_Tvl','',''},{'BL_Acd','',''}};
-
- uncertain_params = {{'CL',1, 0.2}, {'CL',2, 0.2}, {'CL',3, 0.2}, {'CL',4,0.2}};
-
-%uncertain_params = {{'BL_A1','',''},{'BL_A2','',''},{'BL_b1','',''},{'BL_b2','',''},...
-%    {'BL_Ka','',''},{'BL_Tp','',''},{'BL_Tf','',''},{'BL_Tv','',''}};
-                
-% Specify quantity of interest
-QoI = 'Power'; % 'Axial_Force' or 'Power'

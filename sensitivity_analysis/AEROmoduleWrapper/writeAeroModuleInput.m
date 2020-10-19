@@ -15,8 +15,15 @@ for i=1:ndim
     end
 end
 
-if(length(TWIST_PERTURB)>1)
+if(length(TWIST_PERTURB)>=1)
+    % short hand:
     twist = computeTwist(1, TWIST_INDEX, X_TWIST, TWIST_PERTURB, 0); % computeTwist routine uses the specifications of NM80 turbine by default
+    % full specification:
+    %computeTwist(samples, index, randVec, pc, plotSamples,bladeLength,...
+    %                                  interpolationLocations,referenceTwist,...
+    %                                  t0,n,sampledLocations,sampledValues)
+    %twist = computeTwist(1, TWIST_INDEX, X_TWIST, TWIST_PERTURB, 0, ...
+    %     P{11},); % computeTwist routine uses the specifications of NM80 turbine by default
 else
     twist = P{6};
 end
@@ -31,7 +38,7 @@ for i=1:ndim
         X_CHORD = [X_CHORD X(i)];
     end
 end
-if(length(CHORD_PERTURB)>1)
+if(length(CHORD_PERTURB)>=1)
     chord = computeChord(1,CHORD_INDEX, X_CHORD, CHORD_PERTURB, 0); % computeChord routine uses the specifications of NM80 turbine by default
 else
     chord = P{4};
@@ -47,7 +54,7 @@ for i=1:ndim
         X_THICKNESS = [X_THICKNESS X(i)];
     end
 end
-if(length(THICKNESS_INDEX)>1)
+if(length(THICKNESS_INDEX)>=1)
     thickness = computeThickness(1, THICKNESS_INDEX, X_THICKNESS, THICKNESS_PERTURB, 0); % computeThickness routine uses the specifications of NM80 turbine by default
 else
     thickness =P{5}.*P{4};
@@ -209,7 +216,10 @@ for i = 1:n_polar % Loop over all possible polar files
 %                                       interpolationLocations,referenceCurve,NURBS_order,sampledIndices)
             % X_CL gives a sample between [-0.5,0.5]
             % this is multiplied by the value of CL_PERTURB
-            CL{i} = computeCurves(1, ind_aoa, X_CL(i)*d, CL_PERTURB(i)*d, 0, ...
+            % computeCurves constructs a NURBS in Cl-alpha space
+            % ind_aoa consists of the indices that are perturbed
+            plotCurve = 0;
+            CL{i} = computeCurves(1, ind_aoa, X_CL(i)*d, CL_PERTURB(i)*d, plotCurve, ...
                 aoa, P{31}{6+i}{1}, 3, 1:length(aoa));
         end
     end
@@ -236,7 +246,8 @@ d = ones(length(ind_aoa),1);
 for i = 1:n_polar % Loop over all possible polar files
     for j = 1:length(CD_INDEX)
         if(CD_INDEX(j)== i)
-            CD{i} = computeCurves(1, ind_aoa, X_CD(i)*d, CD_PERTURB(i)*d, 0, ...
+            plotCurve = 0;
+            CD{i} = computeCurves(1, ind_aoa, X_CD(i)*d, CD_PERTURB(i)*d, plotCurve, ...
                 aoa, P{31}{6+i}{2}, 3, 1:length(aoa));
 %             CD{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CD(i)*ones(length(P{31}{7+P{31}{1}}),1), ...
 %                 CD_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{2},3,1:length(P{31}{6}));
@@ -263,7 +274,8 @@ d = ones(length(ind_aoa),1);
 for i = 1:n_polar % Loop over all possible polar files
     for j = 1:length(CM_INDEX)
         if(CM_INDEX(j)==i)
-            CM{i} = computeCurves(1, ind_aoa, X_CM(i)*d, CM_PERTURB(i)*d, 0, ...
+            plotCurve = 0;
+            CM{i} = computeCurves(1, ind_aoa, X_CM(i)*d, CM_PERTURB(i)*d, plotCurve, ...
                 aoa, P{31}{6+i}{3}, 3, 1:length(aoa));
 %             CM{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CM(i)*ones(length(P{31}{7+P{31}{1}}),1), ...
 %                 CM_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{3}, 3, 1:length(P{31}{6}));
@@ -411,6 +423,7 @@ for i = 1:P{31}{1} % Loop over the polar files
     fprintf(fid,'format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm\n');
     fprintf(fid,'\n');
     fprintf(fid,'Reynolds_Nr %f\n',P{31}{5});
+    % loop over angle of attack
     for j = 1:length(P{31}{6})
         fprintf(fid,'%f    %f    %f    %f\n', P{31}{6}(j), CL{i}(j), CD{i}(j), CM{i}(j));
     end

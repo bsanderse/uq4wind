@@ -25,6 +25,9 @@ Model.isVectorized = false;
 % 2. raw_tangential.dat for 10 minute tangential force measurements
 filename_exp = ('../../../Experimental/WINDTRUE/raw_normal.dat');
 output_raw = read_exp_data(filename_exp, 2);
+
+r_exp_data = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
+
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
 Data(1).y = mean(output_raw.Fy03); % [N/m]

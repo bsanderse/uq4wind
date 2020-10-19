@@ -6,7 +6,11 @@ D = readtable(filename,'HeaderLines', 4,"ReadVariableNames",true,...
     "PreserveVariableNames",true); % Reads the variable data from the 
                                    % specified .txt file
 r_a = str2double(D.Properties.VariableNames(3:end)); % Radial stations
+
 %% Calculate mean
+% column 1 is time, 
+% column 2 is azimuth,
+% columns 3:end correspond to different radial locations
 D_a = mean(D{:,3:end},1); % Mean (average in time) values at different radial stations
 
 %% Interpolation

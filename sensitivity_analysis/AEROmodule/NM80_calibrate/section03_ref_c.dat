@@ -1,3 +1,11 @@
+! Aero mudule input file for airfoil data
+
+Airfoil_Name  Section03
+t/c            0.333000         ! thickness ratio w.r.t. chord
+
+format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm
+
+Reynolds_Nr 10000000.000000
 -180 0 0 0
 -175 0.129151942159955 0.0099 0.0218
 -170 0.254435277757515 0.0392 0.0434
