@@ -22,7 +22,7 @@ uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP')
 % Delta interpretation using the MAP of the posterior
 % multiply by the scaling value set in NM80_calibrate.m, which is stored in
 % P{26}
-for i=1:ndim
+for i=1:4
     Delta(i) = BayesianAnalysis.Results.PostProc.PointEstimate.X(i)*P{26}{i}{3};
 end
 % Delta_1 = BayesianAnalysis.Results.PostProc.PointEstimate.X(1)*0.2;

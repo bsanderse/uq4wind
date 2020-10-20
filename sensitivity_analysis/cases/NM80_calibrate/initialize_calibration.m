@@ -92,7 +92,7 @@ DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS.mat'; % Specify the surrogate model file to be used

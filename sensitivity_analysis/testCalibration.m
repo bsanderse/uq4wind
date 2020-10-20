@@ -83,7 +83,7 @@ disp('performing Bayesian analysis');
 BayesianAnalysis = uq_createAnalysis(BayesOpts);
 
 %% Post-processing
-pp_file = ['cases/' input_file '/PostProcessingCalibration.m'];
+pp_file = ['cases/' input_file '/postProcessing_calibration.m'];
 if (exist(pp_file,'file')==2)
     run(pp_file);
 else

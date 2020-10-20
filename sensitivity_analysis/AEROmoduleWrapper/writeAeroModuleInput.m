@@ -284,7 +284,7 @@ for i = 1:n_polar % Loop over all possible polar files
 end
 
 %% Write to the input.txt file for aeromodule
-filename = fullfile(pwd,'AEROmodule',P{29},'input.txt');
+filename = fullfile(pwd,'AEROmodule',P{29},'current','input.txt');
 %filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
@@ -400,7 +400,7 @@ fprintf(fid,'NROFBEMELEMENTS                   %d\n', P{21});
 fclose(fid);
 
 %% Change windspeed file
-filename = fullfile(pwd,'AEROmodule',P{29},'wind.dat');
+filename = fullfile(pwd,'AEROmodule',P{29},'current','wind.dat');
 % filename = [pwd,'\AEROmodule\',P{29},'\wind.dat'];
 fid = fopen(filename,'w');
 fprintf(fid,'!time [s]  u [m/s]  v [m/s]  w [m/s]\n');
@@ -412,7 +412,7 @@ fclose(fid);
 
 %% Change the Polar file
 for i = 1:P{31}{1} % Loop over the polar files
-    filename = fullfile(pwd,'AEROmodule',P{29},P{31}{2}{i});
+    filename = fullfile(pwd,'AEROmodule',P{29},'current',P{31}{2}{i});
 %     filename = [pwd,'\AEROmodule\',P{29},'\',P{31}{2}{i}]; 
     fid = fopen(filename,'w');
     fprintf(fid,'! Aero module input file for airfoil data\n');
@@ -432,7 +432,7 @@ end
 
 
 %% Change specialist.txt file
-filename = fullfile(pwd,'AEROmodule',P{29},'specialist_input.txt');
+filename = fullfile(pwd,'AEROmodule',P{29},'current','specialist_input.txt');
 % filename = [pwd,'\AEROmodule\',P{29},'\specialist_input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
