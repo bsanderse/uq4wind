@@ -9,7 +9,7 @@ clearvars
 rng default
 
 %% Case study
-caseName = 'NM80_calibrate'; % 'airfoil_lift','NM80', etc;
+caseName = 'NewMexico_calibrate'; % 'airfoil_lift','NM80', etc;
 % specify directory which contains test case settings and model
 % often this is simply the caseName
 input_file = caseName; 
@@ -31,7 +31,7 @@ addpath([pwd,'/Geometry/']);
 %addpath(strcat(pwd,'/AEROmodule/',turbineName,'/output'));
 
 %% empty the contents of the output folder of the AeroModule to prevent that old information is being loaded
-delete(strcat(pwd,'/AEROmodule/',turbineName,'/output/*'));
+delete(strcat(pwd,'/AEROmodule/',turbineName,'/current/output/*'));
 
 %% Set prior distribution
 myPrior = uq_createInput(Prior);
@@ -46,6 +46,14 @@ pause(0.01)
 % evaluates the model using the input parameters |P| given
 % in the structure |getParameterAeroModule(turbineName)|.
 myForwardModel = uq_createModel(Model);
+
+% do a test run with the forward model at unperturbed settings
+if (exist('test_run','var'))
+    if (test_run == 1)
+        disp('Performing test run at unperturbed settings');
+        uq_evalModel(zeros(1,ndim));
+    end
+end
 
 %% Loading full/surrogate model for Bayesian analysis
 if (Bayes_full == 0) % create a PCE surrogate model to be used
@@ -62,6 +70,8 @@ if (Bayes_full == 0) % create a PCE surrogate model to be used
     elseif (Surrogate_model_type == 1)
         disp('creating surrogate model');
         % use prior also as input uncertainties for surrogate model
+        % other MetaOpts should have been set in the initialize_calibration
+        % file
         MetaOpts.Input     = myPrior;
         MetaOpts.FullModel = myForwardModel;
         mySurrogateModel   = uq_createModel(MetaOpts);

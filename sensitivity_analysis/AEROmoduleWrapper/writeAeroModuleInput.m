@@ -181,18 +181,19 @@ for i = 1:ndim
     end
 end
 
+%% POLARS
+n_polar = P{31}{1};
+
 %% ========== Get CL sample ==============
 CL_INDEX = [];
 CL_PERTURB = [];
 X_CL = [];
-n_polar = P{31}{1};
-ind_aoa = P{31}{7+n_polar}; % indices that are perturbed
-aoa  = P{31}{6};
-% note the perturbed angle of attack is aoa(ind_aoa)
 
 CL =cell(n_polar); % initialize, P{31} contains the polars
 for i = 1:n_polar % Loop over all possible polar files, P{31}{1} contains number of polars
-    CL{i} = P{31}{6+i}{1}; % CL of each polar, corresponding to a certain section
+    CL{i} = P{31}{5+i}{1}; % CL of each polar, corresponding to a certain section
+    alpha{i} = P{31}{5+i}{4};
+    alpha_pert{i} = P{31}{5+i}{5}; % indices that are perturbed
 end
 
 % note:
@@ -207,22 +208,22 @@ end
 % now that the value of Cl and perturbation are defined, 
 % the Cl curves can be constructed
 % i.e. the Cl-alpha curve at a certain section
-d = ones(length(ind_aoa),1);
-for i = 1:n_polar % Loop over all possible polar files
-    for j = 1:length(CL_INDEX)
-        if(CL_INDEX(j)==i)
-            % note the syntax:
-            % computeCurves(samples,index, randVec, pc, plotSamples,...
+
+for j = 1:length(CL_INDEX)
+    i = CL_INDEX(j);
+        % note the syntax:
+        % computeCurves(samples,index, randVec, pc, plotSamples,...
 %                                       interpolationLocations,referenceCurve,NURBS_order,sampledIndices)
-            % X_CL gives a sample between [-0.5,0.5]
-            % this is multiplied by the value of CL_PERTURB
-            % computeCurves constructs a NURBS in Cl-alpha space
-            % ind_aoa consists of the indices that are perturbed
-            plotCurve = 0;
-            CL{i} = computeCurves(1, ind_aoa, X_CL(i)*d, CL_PERTURB(i)*d, plotCurve, ...
-                aoa, P{31}{6+i}{1}, 3, 1:length(aoa));
-        end
-    end
+        % X_CL gives a sample between [-0.5,0.5]
+        % this is multiplied by the value of CL_PERTURB
+        % computeCurves constructs a NURBS in Cl-alpha space
+        % alpha_pert consists of the indices that are perturbed
+        plotCurve = 0;
+        d = ones(length(alpha_pert{i}),1);
+        CL_pert{i} = computeCurves(1, alpha_pert{i}, X_CL(j)*d, CL_PERTURB(j)*d, plotCurve, ...
+            alpha{i}, CL{i}, 3, 1:length(alpha{i}));
+        CL{i} = CL_pert{i};
+
 end
 
 %% ========== Get CD sample ==============
@@ -230,10 +231,12 @@ CD_INDEX = [];
 CD_PERTURB = [];
 X_CD = [];
 
-CD =cell(n_polar); % initialize, P{31} contains the polars
+CD = cell(n_polar); % initialize, P{31} contains the polars
 
 for i = 1:n_polar % Loop over all possible polar files
-    CD{i} = P{31}{6+i}{2}; % CD of each polar, corresponding to a certain section
+    CD{i} = P{31}{5+i}{2}; % CD of each polar, corresponding to a certain section
+    alpha{i} = P{31}{5+i}{4};
+    alpha_pert{i} = P{31}{5+i}{5}; % indices that are perturbed    
 end
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'CD'))
@@ -242,26 +245,27 @@ for i=1:ndim
         X_CD = [X_CD X(i)];
     end
 end
-d = ones(length(ind_aoa),1);
-for i = 1:n_polar % Loop over all possible polar files
-    for j = 1:length(CD_INDEX)
-        if(CD_INDEX(j)== i)
-            plotCurve = 0;
-            CD{i} = computeCurves(1, ind_aoa, X_CD(i)*d, CD_PERTURB(i)*d, plotCurve, ...
-                aoa, P{31}{6+i}{2}, 3, 1:length(aoa));
-%             CD{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CD(i)*ones(length(P{31}{7+P{31}{1}}),1), ...
-%                 CD_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{2},3,1:length(P{31}{6}));
-        end
-    end
+
+for j = 1:length(CD_INDEX)
+    i = CD_INDEX(j);
+    
+    plotCurve = 0;
+    d = ones(length(alpha_pert{i}),1);
+    CD_pert{i} = computeCurves(1, alpha_pert{i}, X_CD(j)*d, CD_PERTURB(j)*d, plotCurve, ...
+            alpha{i}, CD{i}, 3, 1:length(alpha{i}));
+    CD{i} = CD_pert{i};    
 end
 
 %% ========== Get CM sample ==============
 CM_INDEX = [];
 CM_PERTURB = [];
 X_CM = [];
+
 CM = cell(n_polar);
 for i = 1:n_polar % Loop over all possible polar files, P{31}{1} contains number of polars
-    CM{i} = P{31}{6+i}{3}; % CM of each polar, corresponding to a certain section
+    CM{i} = P{31}{5+i}{3}; % CM of each polar, corresponding to a certain section
+    alpha{i} = P{31}{5+i}{4};
+    alpha_pert{i} = P{31}{5+i}{5}; % indices that are perturbed    
 end
 for i=1:ndim
     if(strcmp(P{26}{i}{1},'CM'))
@@ -270,17 +274,12 @@ for i=1:ndim
         X_CM = [X_CM X(i)];
     end
 end
-d = ones(length(ind_aoa),1);
-for i = 1:n_polar % Loop over all possible polar files
-    for j = 1:length(CM_INDEX)
-        if(CM_INDEX(j)==i)
-            plotCurve = 0;
-            CM{i} = computeCurves(1, ind_aoa, X_CM(i)*d, CM_PERTURB(i)*d, plotCurve, ...
-                aoa, P{31}{6+i}{3}, 3, 1:length(aoa));
-%             CM{i} = computeCurves(1,P{31}{7+P{31}{1}}, X_CM(i)*ones(length(P{31}{7+P{31}{1}}),1), ...
-%                 CM_PERTURB(i)*ones(length(P{31}{7+P{31}{1}}),1), 0, P{31}{6}, P{31}{6+i}{3}, 3, 1:length(P{31}{6}));
-        end
-    end
+for j = 1:length(CM_INDEX)
+    i = CM_INDEX(j);
+    plotCurve = 0;
+    CM_pert{i} = computeCurves(1, alpha_pert{i}, X_CM(j)*d, CM_PERTURB(j)*d, plotCurve, ...
+            alpha{i}, CM{i}, 3, 1:length(alpha{i}));
+    CM{i} = CM_pert{i};    
 end
 
 %% Write to the input.txt file for aeromodule
@@ -291,8 +290,8 @@ fprintf(fid,'!------------------------------------------------------------------
 fprintf(fid,'! General ------------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'AEROMODEL                        %d	! 1:BEM 2: AWSM\n', P{1}); 
-fprintf(fid,'!TURBINETYPE                     %d	! 1:HAWT 2: VAWT\n', P{2});
-fprintf(fid,'!INCLUDE                         specialist_input.txt\n');
+fprintf(fid,'TURBINETYPE                     %d	! 1:HAWT 2: VAWT\n', P{2});
+fprintf(fid,'INCLUDE                         specialist_input.txt\n');
 fprintf(fid,'!INTERPOL                        2  	! 1:Linear 2: Spline\n');
 fprintf(fid,'LOGFILENAME                      logfile.dat\n');
 fprintf(fid,'DEBUGFILE                        1\n');
@@ -344,7 +343,7 @@ fprintf(fid,'FSMETHOD	                2\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! Environment --------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
-fprintf(fid,'AIRDENSITY                      1.231\n');
+fprintf(fid,'AIRDENSITY                      %f\n', P{44});
 fprintf(fid,'HORSHEAR                        0.0\n');
 fprintf(fid,'SHEAREXP                        0.0\n');
 fprintf(fid,'DYNVISC                         1.7879e-5\n');
@@ -422,24 +421,24 @@ for i = 1:P{31}{1} % Loop over the polar files
     fprintf(fid,'\n');
     fprintf(fid,'format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm\n');
     fprintf(fid,'\n');
-    fprintf(fid,'Reynolds_Nr %f\n',P{31}{5});
+    fprintf(fid,'Reynolds_Nr %f\n',P{31}{5}{i});
     % loop over angle of attack
-    for j = 1:length(P{31}{6})
-        fprintf(fid,'%f    %f    %f    %f\n', P{31}{6}(j), CL{i}(j), CD{i}(j), CM{i}(j));
+    for j = 1:length(alpha{i})
+        fprintf(fid,'%f    %f    %f    %f\n', alpha{i}(j), CL{i}(j), CD{i}(j), CM{i}(j));
     end
     fclose(fid);
 end
 
 
-%% Change specialist.txt file
+%% Change specialist_input.txt file
 filename = fullfile(pwd,'AEROmodule',P{29},'current','specialist_input.txt');
 % filename = [pwd,'\AEROmodule\',P{29},'\specialist_input.txt'];
 fid = fopen(filename,'w');
 fprintf(fid,'!---------------------------------------------------------------------\n');
 fprintf(fid,'! General ------------------------------------------------------------\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
-fprintf(fid,'!TURBINETYPE                     1	! 1:HAWT 2: VAWT\n');
-fprintf(fid,'!INTERPOL                        2  	! 1:Linear 2: Spline\n');
+fprintf(fid,'TURBINETYPE                     1	! 1:HAWT 2: VAWT\n');
+fprintf(fid,'INTERPOL                        2  	! 1:Linear 2: Spline\n');
 fprintf(fid,'!SUBITERFLAG                     1	! 0:dt>0 1:all dt 2:>=9+extr 3:1 and >=9\n');
 fprintf(fid,'DEBUGFILE                       1\n');
 fprintf(fid,'!---------------------------------------------------------------------\n');
@@ -452,16 +451,6 @@ fprintf(fid,'!MAXAOALIN 	            	 5.000	!8.00\n');
 fprintf(fid,'!---\n');
 fprintf(fid,'!Beddoes Leishman Parameters -----------------------------------------\n');
 fprintf(fid,'!---\n');
-% fprintf(fid,'BL_A1	                    0.30\n');
-% fprintf(fid,'BL_A2	                    0.70\n');
-% fprintf(fid,'BL_b1	                    0.14\n');
-% fprintf(fid,'BL_b2	                    0.53\n');
-% fprintf(fid,'BL_Ka	                    0.75\n');
-% fprintf(fid,'BL_Tp	                    1.50\n');
-% fprintf(fid,'BL_Tf	                    5.00\n');
-% fprintf(fid,'BL_Tv	                    6.00\n');
-% fprintf(fid,'BL_Tvl	                    5.00\n');
-% fprintf(fid,'BL_Acd	                    0.13\n');
 fprintf(fid,'BL_A1	                    %f\n', X_BL_A1);
 fprintf(fid,'BL_A2	                    %f\n', X_BL_A2);
 fprintf(fid,'BL_B1	                    %f\n', X_BL_b1);

@@ -11,9 +11,12 @@
 sensitivity_analysis/AEROmodule/NM80_calibrate/current/output/
 sensitivity_analysis/AEROmodule/NM80_calibrate/reference/output/
 sensitivity_analysis/AEROmodule/NM80_calibrate/calibrated/output/
-sensivitiy_analysis/AEROmodule/NM80_calibrate/output/
+sensivitity_analysis/AEROmodule/NM80_calibrate/output/
 sensitivity_analysis/AEROmodule/NM80/current/output/
 sensitivity_analysis/AEROmodule/NM80/output/
 sensitivity_analysis/AEROmodule/NM80/reference/output/
 sensitivity_analysis/AEROmodule/NM80_discrete/output/
 sensitivity_analysis/AEROmodule/AVATAR/output/
+sensitivity_analysis/AEROmodule/NewMexico_calibrate/current/output/
+sensitivity_analysis/AEROmodule/NewMexico_calibrate/reference/output/
+sensitivity_analysis/AEROmodule/NewMexico_calibrate/calibrated/output/

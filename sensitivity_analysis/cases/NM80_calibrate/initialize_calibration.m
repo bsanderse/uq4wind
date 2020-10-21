@@ -26,6 +26,8 @@ Model.isVectorized = false;
 filename_exp = ('../../../Experimental/WINDTRUE/raw_normal.dat');
 output_raw = read_exp_data(filename_exp, 2);
 
+% the position of the sections of the experimental data which are used for
+% interpolation of the aeromodule results: see NM80_calibrate_readoutput.m
 r_exp_data = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
 
 % Because the model has different discrepancy options at different radial locations,
@@ -88,11 +90,13 @@ DiscrepancyOpts(4).Type = 'Gaussian';
 DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
 %% Forward model options
+test_run = 0; % perform test run with Forward Model without uncertainties
+
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS.mat'; % Specify the surrogate model file to be used
@@ -104,7 +108,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 10;
+MetaOpts.ExpDesign.NSamples = 2;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 

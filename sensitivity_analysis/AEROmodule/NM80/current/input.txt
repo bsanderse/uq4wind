@@ -2,8 +2,8 @@
 ! General ------------------------------------------------------------
 !---------------------------------------------------------------------
 AEROMODEL                        1	! 1:BEM 2: AWSM
-!TURBINETYPE                     1	! 1:HAWT 2: VAWT
-!INCLUDE                         specialist_input.txt
+TURBINETYPE                     1	! 1:HAWT 2: VAWT
+INCLUDE                         specialist_input.txt
 !INTERPOL                        2  	! 1:Linear 2: Spline
 LOGFILENAME                      logfile.dat
 DEBUGFILE                        1
@@ -73,7 +73,7 @@ FSMETHOD	                2
 !---------------------------------------------------------------------
 ! Environment --------------------------------------------------------
 !---------------------------------------------------------------------
-AIRDENSITY                      1.231
+AIRDENSITY                      1.231000
 HORSHEAR                        0.0
 SHEAREXP                        0.0
 DYNVISC                         1.7879e-5
