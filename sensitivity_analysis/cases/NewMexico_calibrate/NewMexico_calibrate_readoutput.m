@@ -1,6 +1,6 @@
 function Y = NewMexico_calibrate_readoutput(output_dir,P)
 
-switch P{27}
+switch P.QoI
 
     case 'Sectional_normal_force'   
         % in this case the QoI is a vector, returning the time-averaged force at
@@ -21,7 +21,7 @@ switch P{27}
 
         %% Interpolation
         % These values are made available from NewMexico: 
-        r_i = 2.04*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
+        r_i = 2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
         Y   = spline(r_a,D_a,r_i); % Interpolated data using spline
         
     otherwise
