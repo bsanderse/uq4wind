@@ -51,11 +51,16 @@ myForwardModel = uq_createModel(Model);
 if (exist('test_run','var'))
     if (test_run == 1)
         disp('Performing test run at unperturbed settings');
-        uq_evalModel(zeros(1,ndim));
+        ndim = length(myPrior.Marginals);
+        for i=1:ndim
+            X_test(1,i) = myPrior.Marginals(i).Moments(1);
+        end
+        uq_evalModel(X_test);
     end
 end
 
 %% Loading full/surrogate model for Bayesian analysis
+pause
 if (Bayes_full == 0) % create a PCE surrogate model to be used
     if (Surrogate_model_type == 0)
         disp(['loading surrogate model from file: ' Surrogate_model_filename]);

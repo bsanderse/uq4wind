@@ -2,6 +2,36 @@ function writeAeroModuleInput(X,P)
 % This routine add the random input to the input.txt file used for Aero
 % module. Check getParameterAeroModule.m for order list of parameters
 % stored in variable 'P'
+
+%% alternative: loop over uncertain inputs
+% for i=1:length(X)
+%     j = P.Map(i); % corresponding index in the AllMarginals field
+%    
+%     disp([P.UncertainInputs{i}{1} num2str(P.UncertainInputs{i}{2})]);
+% end
+% 
+% open the reference file
+% filename_in = fullfile(pwd,'AEROmodule',P{29},'reference','input.txt');
+% filename = [pwd,'\AEROmodule\',P{29},'\input.txt'];
+% fid_in       = fopen(filename,'r');
+% filename_out = fullfile(pwd,'AEROmodule',P{29},'current','input.txt');
+% fid_out      = fopen(filename,'w');
+% 
+% while ~feof(fid_in)
+%   l = fgetl(fid_in);   % read line
+%   if strfind(l,'y=')
+%     modify line here
+%     l='whatever new string';
+%   end
+%   fprintf(fido,'%s',l)  % 'fgetl returns \n so it's embedded
+% end
+% 
+% fidi=fclose(fidi);
+% fido=fclose(fido);
+Q = P;
+clear P;
+P{26} = Q.UncertainInputs;
+
 %% ===========Get Twist samples===================
 ndim = length(P{26});
 TWIST_INDEX = [];

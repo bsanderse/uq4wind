@@ -1,6 +1,6 @@
 function Y = NewMexico_calibrate_readoutput(output_dir,P)
 
-switch P.QoI
+switch P.FixedParameters.QoI
 
     case 'Sectional_normal_force'   
         % in this case the QoI is a vector, returning the time-averaged force at

@@ -1,11 +1,11 @@
-! Aero module input file for airfoil data
+! Aero mudule input file for airfoil data
 
 Airfoil_Name  DU 91-W250
-t/c            0.250000         ! thickness ratio w.r.t. chord
+t/c           0.25         ! thickness ratio w.r.t. chord
 
 format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm
 
-Reynolds_Nr 500000.000000
+Reynolds_Nr 5.0E+05
 -180.000000    -0.390500    0.026300    -0.086900
 -179.750000    -0.405700    0.024300    -0.083500
 -179.500000    -0.379900    0.023400    -0.070900

@@ -3,10 +3,10 @@ function Y = aero_module(X,P)
 workingDir = pwd; 
 
 %% Write input data to aeromodule
-writeAeroModuleInput(X,P)
+writeAeroModuleInputReplacement(X,P)
 
 %% Run the Aero module executable 
-aeromodule_dir = fullfile(pwd,'AEROmodule',P{29},'current');
+aeromodule_dir = fullfile(pwd,'AEROmodule',P.FixedParameters.turbineName,'current');
 chdir(aeromodule_dir); % Go to the AERO module directory
 disp('Running AeroModule...'); 
 system('ECNAero.exe'); % Run the executable
@@ -18,7 +18,7 @@ output_dir = fullfile(aeromodule_dir,'output');
 
 % set-up handle to function which will return the output from the
 % AeroModule at the appropriate location
-outputFile = str2func(strcat(P{29},'_readoutput'));
+outputFile = str2func(strcat(P.FixedParameters.turbineName,'_readoutput'));
 
 % this calls for example NM80_calibrate_readoutput()
 % or NM80_readoutput()

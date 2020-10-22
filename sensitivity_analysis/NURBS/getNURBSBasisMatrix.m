@@ -8,7 +8,7 @@ function [B,t_padded] = getNURBSBasisMatrix(x,t,n)
 % Output arguments:
 % 'B' is the basis matrix
 
-t_padded = [t(1)*ones(1,n-1) t t(end)*ones(1,n-1)]; % padded knot vector obtained by padding n-1 elements at front and end. 
+t_padded = [t(1)*ones(1,n-1) t' t(end)*ones(1,n-1)]; % padded knot vector obtained by padding n-1 elements at front and end. 
 j = 0: numel(t_padded)- n-1; % Index of B-spline from 0 =< j < numel(t)-n
 
 B = zeros(numel(x),numel(j)); % Bspline matrix at x

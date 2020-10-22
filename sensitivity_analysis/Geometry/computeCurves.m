@@ -63,7 +63,7 @@ if (n==2)
     t0 = sampledLocations;
 elseif (n==3)
     center = ceil(length(sampledLocations)/2);
-    t0 = [sampledLocations(1:center-1) sampledLocations(center+1:end)];
+    t0 = [sampledLocations(1:center-1); sampledLocations(center+1:end)];
 else
     error("Use n = 2 (linear polynomial) or 3 (quadratic polynomial)")
 end
