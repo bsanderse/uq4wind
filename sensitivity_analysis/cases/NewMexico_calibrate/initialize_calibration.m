@@ -21,6 +21,7 @@ Model.Parameters = P;
 %  instead we need to do this sequentially
 Model.isVectorized = false;
 
+
 %% Experimental data
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 filename_exp = ('../../../Experimental/NewMexicoData/R52P81D940_loads.dat');
@@ -165,4 +166,17 @@ switch MCMC_type
         
 end
 
+
+%% check location of ECNAeroModule
+path_strings = strsplit(getenv('PATH'),';');
+path_found   = false;
+for i=1:length(path_strings)
+    if (strfind(path_strings{i},'ECNAero')>0)
+        disp(['ECNAero location: ' path_strings{i}]);
+        path_found = true;
+    end
+end
+if (~path_found)
+    error('ECNAero path not found');
+end
 

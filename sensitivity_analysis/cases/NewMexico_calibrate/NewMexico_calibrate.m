@@ -3,17 +3,17 @@ function [Input, QoI]  = NewMexico_calibrate()
 QoI = 'Sectional_normal_force';
 
 counter = 1;
+% 
+% RPM     = 425.1;
+% RPM_Std = 1;  % Standard deviation
+% RPM_LB = 10; % Lower bound of trucated Gaussian distribution
+% RPM_UB = 14;  % Upper bound of trucated Gaussian distribution 
+% Input.Marginals(counter).Name = 'RPM';
+% Input.Marginals(counter).Type = 'Gaussian'; 
+% Input.Marginals(counter).Parameters = [RPM, RPM_Std];
+% Input.Marginals(counter).Bounds = [RPM_LB RPM_UB]; 
+% counter = counter+1;
 
-RPM     = 425.1;
-RPM_Std = 1;  % Standard deviation
-RPM_LB = 10; % Lower bound of trucated Gaussian distribution
-RPM_UB = 14;  % Upper bound of trucated Gaussian distribution 
-Input.Marginals(counter).Name = 'RPM';
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [RPM, RPM_Std];
-Input.Marginals(counter).Bounds = [RPM_LB RPM_UB]; 
-
-counter = counter+1;
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Airfoil = 'risoA121.dat';
 Input.Marginals(counter).AlphaPert = [-10 30];
@@ -21,8 +21,8 @@ Input.Marginals(counter).AirfoilIndex = 1; % unique ID corresponding to airfoil
 Input.Marginals(counter).Type = 'Uniform'; 
 Input.Marginals(counter).Parameters = [-1.5 1.5];
 Input.Marginals(counter).Bounds = [-1.5 1.5];
-
 counter = counter+1;
+
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Airfoil = 'du91w250.dat';
 Input.Marginals(counter).AlphaPert = [-10 30];
@@ -30,17 +30,17 @@ Input.Marginals(counter).AirfoilIndex = 3; % unique ID corresponding to airfoil
 Input.Marginals(counter).Type = 'Uniform'; 
 Input.Marginals(counter).Parameters = [-1.5 1.5];
 Input.Marginals(counter).Bounds = [-1.5 1.5];
-
 counter = counter+1;
+
 Input.Marginals(counter).Name = 'CL';
 Input.Marginals(counter).Airfoil = 'naca64418_clean_Re0.7M.dat';
 Input.Marginals(counter).AlphaPert = [-10 30];
 Input.Marginals(counter).AirfoilIndex = 4; % unique ID corresponding to airfoil
 Input.Marginals(counter).Type = 'Uniform'; 
 Input.Marginals(counter).Parameters = [-1.5 1.5];
-Input.Marginals(counter).Bounds = [-1.5 1.5];
-% 
-% counter = counter+1;
+Input.Marginals(counter).Bounds = [-1.5 1.5];% 
+counter = counter+1;
+
 % Input.Marginals(counter).Name = 'CD';
 % Input.Marginals(counter).Airfoil = 'naca64418_clean_Re0.7M.dat';
 % Input.Marginals(counter).AlphaPert = [0 20];
@@ -48,6 +48,17 @@ Input.Marginals(counter).Bounds = [-1.5 1.5];
 % Input.Marginals(counter).Type = 'Uniform'; 
 % Input.Marginals(counter).Parameters = [-1.5 1.5];
 % Input.Marginals(counter).Bounds = [-1.5 1.5];
+% counter = counter+1;
+
+AM11     = 0.445;
+AM11_Std = 0.1;  % Standard deviation
+AM11_LB = 0; % Lower bound of trucated Gaussian distribution
+AM11_UB = 1;  % Upper bound of trucated Gaussian distribution 
+Input.Marginals(counter).Name = 'AM11';
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [AM11, AM11_Std];
+Input.Marginals(counter).Bounds = [AM11_LB AM11_UB]; 
+counter = counter+1;
 
 
 end

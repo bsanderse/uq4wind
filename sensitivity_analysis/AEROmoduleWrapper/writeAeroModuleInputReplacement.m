@@ -145,4 +145,44 @@ for q = 1:length(polar_index)
     fclose(fid_polar);
 end
 
+
+%% repeat but now for specialist_input.txt
+
+% open the reference specialist_input.txt file
+filename_in  = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'reference','specialist_input.txt');
+fid_in       = fopen(filename_in,'r');
+if (fid_in>0)
+    lines        = textscan(fid_in,'%s','delimiter','\n');
+    fid_in       = fclose(fid_in);
+
+    lines = lines{1};
+    lines_new = lines;
+
+    for i=1:length(X)
+        % check if a line starts with the variable name (case sensitive)
+        % this will skip any commented lines, i.e. those that start with !
+        UncertainInputName = UncertainInputs.Marginals(i).Name;
+
+
+        % in this case we don't look at polars or AEROPROPS but only at   
+        % generic scalar variables
+        ind = find(startsWith(lines,UncertainInputName));
+        if (~isempty(ind) && ind>0)
+            lines_new{ind} = [UncertainInputName '      ' num2str(X(i))];
+        end
+
+
+    end
+
+    % write new lines to input.txt
+    filename_out = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'current','specialist_input.txt');
+    fid_out      = fopen(filename_out,'w');
+    for i = 1:length(lines)
+        fprintf(fid_out,'%s\n',lines_new{i});
+    end
+    fid_out = fclose(fid_out);
+else
+    disp('note: no specialist input file');
+end
+    
 end
