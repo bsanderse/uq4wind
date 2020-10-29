@@ -56,11 +56,11 @@ if (exist('test_run','var'))
             X_test(1,i) = myPrior.Marginals(i).Moments(1);
         end
         uq_evalModel(X_test);
+        pause;
     end
 end
 
 %% Loading full/surrogate model for Bayesian analysis
-pause
 if (Bayes_full == 0) % create a PCE surrogate model to be used
     if (Surrogate_model_type == 0)
         disp(['loading surrogate model from file: ' Surrogate_model_filename]);

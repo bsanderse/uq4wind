@@ -6,15 +6,15 @@ workingDir = pwd;
 writeAeroModuleInputReplacement(X,P)
 
 %% Run the Aero module executable 
-aeromodule_dir = fullfile(pwd,'AEROmodule',P.FixedParameters.turbineName,'current');
-chdir(aeromodule_dir); % Go to the AERO module directory
+current_folder  = P.FixedParameters.current_folder;
+chdir(current_folder); % Go to the AERO module directory
 disp('Running AeroModule...'); 
 system('ECNAero.exe'); % Run the executable
 chdir(workingDir)
 
 %% Read output from the AERO module
 % output directory of AeroModule
-output_dir = fullfile(aeromodule_dir,'output');
+output_dir = fullfile(current_folder,'output');
 
 % set-up handle to function which will return the output from the
 % AeroModule at the appropriate location

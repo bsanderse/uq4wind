@@ -6,10 +6,21 @@ function writeAeroModuleInputReplacement(X,P)
 FixedParameters = P.FixedParameters;
 UncertainInputs = P.UncertainInputs;
 
-%% loop over uncertain inputs and replace the ones in the input.txt
+ref_folder  = FixedParameters.ref_folder;
+current_folder  = FixedParameters.current_folder;
+
+%% copy all files from reference folder to current folder
+ref_dir = fullfile(pwd,ref_folder);
+cur_dir = fullfile(pwd,current_folder);
+copyfile(fullfile(ref_dir,'*.dat'),cur_dir);
+copyfile(fullfile(ref_dir,'*.txt'),cur_dir);
+copyfile(fullfile(ref_dir,'*.ini'),cur_dir);
+
+%% now adapt files that need to be changed due to uncertainties
+%loop over uncertain inputs and replace the ones in input.txt
 
 % open the reference input.txt file
-filename_in  = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'reference','input.txt');
+filename_in  = fullfile(cur_dir,'input.txt');
 fid_in       = fopen(filename_in,'r');
 lines        = textscan(fid_in,'%s','delimiter','\n');
 fid_in       = fclose(fid_in);
@@ -20,8 +31,6 @@ lines_new = lines;
 zz = 1;
 
 for i=1:length(X)
-    % check if a line starts with the variable name (case sensitive)
-    % this will skip any commented lines, i.e. those that start with !
     UncertainInputName = UncertainInputs.Marginals(i).Name;
     
     switch UncertainInputName
@@ -35,7 +44,7 @@ for i=1:length(X)
 
             % airfoil filename
             airfoil{index_pol}  = UncertainInputs.Marginals(i).Airfoil;
-            airfoil_file = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'reference',airfoil{index_pol});
+            airfoil_file = fullfile(cur_dir,airfoil{index_pol});
             
             % perturbed indices
             alpha_pert = UncertainInputs.Marginals(i).AlphaPert;
@@ -112,6 +121,9 @@ for i=1:length(X)
             
         otherwise
             %% generic scalar variables
+            % check if a line starts with the variable name (case sensitive)
+            % this will skip any commented lines, i.e. those that start with !
+
             ind = find(startsWith(lines,UncertainInputName));
             if (~isempty(ind) && ind>0)
                 lines_new{ind} = [UncertainInputName '      ' num2str(X(i))];
@@ -122,8 +134,8 @@ for i=1:length(X)
     
 end
 
-% write new lines to input.txt
-filename_out = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'current','input.txt');
+% write new lines to input.txt in current folder
+filename_out = fullfile(cur_dir,'input.txt');
 fid_out      = fopen(filename_out,'w');
 for i = 1:length(lines)
     fprintf(fid_out,'%s\n',lines_new{i});
@@ -131,27 +143,30 @@ end
 fid_out = fclose(fid_out);
 
 % now write the polar files  
-polar_index = unique(polar_index);
-for q = 1:length(polar_index)
-    i = polar_index(q);
-    airfoil_out = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'current',airfoil{i});
-    % write header to airfoil file
-    writecell(header{i},airfoil_out);
-    % write the polar
-    fid_polar = fopen(airfoil_out,'a'); % append data
-    for j = 1:length(alpha{i})
-        fprintf(fid_polar,'%f    %f    %f    %f\n', alpha{i}(j), CL{i}(j), CD{i}(j), CM{i}(j));
+if (exist('polar_index','var'))
+    polar_index = unique(polar_index);
+    for q = 1:length(polar_index)
+        i = polar_index(q);
+        airfoil_out = fullfile(cur_dir,airfoil{i});
+        % write header to airfoil file
+        writecell(header{i},airfoil_out);
+        % write the polar
+        fid_polar = fopen(airfoil_out,'a'); % append data
+        for j = 1:length(alpha{i})
+            fprintf(fid_polar,'%f    %f    %f    %f\n', alpha{i}(j), CL{i}(j), CD{i}(j), CM{i}(j));
+        end
+        fclose(fid_polar);
     end
-    fclose(fid_polar);
 end
 
 
 %% repeat but now for specialist_input.txt
 
 % open the reference specialist_input.txt file
-filename_in  = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'reference','specialist_input.txt');
+filename_in  = fullfile(cur_dir,'specialist_input.txt');
 fid_in       = fopen(filename_in,'r');
-if (fid_in>0)
+
+if (fid_in>0) % check if file exists / was opened successfully
     lines        = textscan(fid_in,'%s','delimiter','\n');
     fid_in       = fclose(fid_in);
 
@@ -174,8 +189,8 @@ if (fid_in>0)
 
     end
 
-    % write new lines to input.txt
-    filename_out = fullfile(pwd,'AEROmodule',FixedParameters.turbineName,'current','specialist_input.txt');
+    % write new lines to specialist_input.txt
+    filename_out = fullfile(cur_dir,'specialist_input.txt');
     fid_out      = fopen(filename_out,'w');
     for i = 1:length(lines)
         fprintf(fid_out,'%s\n',lines_new{i});

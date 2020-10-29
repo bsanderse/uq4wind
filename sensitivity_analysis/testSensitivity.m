@@ -4,13 +4,13 @@ close all
 clearvars
 
 %% Case study
-caseName = 'NM80'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
 SobolOpts.Type        = 'Sensitivity';
 SobolOpts.Method      = 'Sobol';
-SobolOpts.Sobol.Order = 2;
+SobolOpts.Sobol.Order = 1;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
 addpath([pwd,'/AEROmoduleWrapper/']);
@@ -46,7 +46,7 @@ myModel = uq_createModel(Model);
 % create input object with UQLab
 myInput = uq_createInput(Input) ;
 
-% display input properties
+%% display input properties
 uq_print(myInput);
 uq_display(myInput);
 

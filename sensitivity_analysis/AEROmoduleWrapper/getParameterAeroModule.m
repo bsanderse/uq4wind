@@ -4,11 +4,11 @@ function [Parameters, UncertainInputs]  = getParameterAeroModule(turbineName)
 % code. NOTE: The order of element in P should not be changed.
 
 turbineData = str2func(turbineName);
-P ={}; 
+% P ={}; 
 %% Get turbine data and uncertain input specifications
 % [AllMarginals, UncertainInputs, QoI, Parameters]  = turbineData();
 
-[UncertainInputs, QoI]  = turbineData();
+UncertainInputs  = turbineData();
 
 
 %% Other parameters related to AERO module software
@@ -22,7 +22,6 @@ P ={};
 % P{25}=Input;
 % P{26}=uncertain_params;
 % P{27}=QoI;
-Parameters.QoI = QoI;
 Parameters.turbineName = turbineName;
 
 % 

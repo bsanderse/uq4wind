@@ -1,25 +1,12 @@
 %% Turbine input parameters
 % Name of Matlab file representing the turbine data for calibration
 turbineName = 'NewMexico_calibrate'; %
-% check |NM80_calibrate.m| or |(TurbineName_calibrate).m| for turbine-specific
-% settings and definition of uncertainties
+% check NewMexico_calibrate for definition of uncertainties
 
-%% Forward model description
-% Name of Matlab file representing the model
-Model.mHandle = @aero_module;
-% Pass parameters to model via the cell array FixedInputs
-[FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
-P.FixedParameters = FixedParameters;
-% P.AllMarginals = AllMarginals;
-P.UncertainInputs = UncertainInputs;
-Model.Parameters = P;
-%  note that the model output is (in general) a vector, containing e.g. the
-%  force at different radial sections; this does not require any additional
-%  specification in UQLab
-%  the model is however not vectorized in the sense that we cannot give all
-%  the possible parameter values at once as input to AeroModule, but
-%  instead we need to do this sequentially
-Model.isVectorized = false;
+% folder used to get reference input files
+ref_folder      = 'AEROmodule/NewMexico_calibrate/reference/';
+% folder used to write new input files
+current_folder  = 'AEROmodule/NewMexico_calibrate/current/';
 
 
 %% Experimental data
@@ -30,6 +17,8 @@ output_raw = readNewMexico(filename_exp);
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NM80_calibrate_readoutput.m
 r_exp_data = [0.25 0.35 0.6 0.82 0.92]*2.25; 
+
+azi_exp_data = output_raw.Azi;
 
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
@@ -53,8 +42,45 @@ Data(5).y = mean(output_raw.Fn92Npm); % [N/m]
 Data(5).Name = 'Fn05';
 Data(5).MOMap = 5; % Model Output Map 4
 
+
+
+%% Forward model description
+
+% Name of Matlab file representing the model
+Model.mHandle = @aero_module;
+% Quantity of interest
+QoI = 'Sectional_normal_force';
+% choose whether only the time-average of the data is used, or the full dataset
+% 'mean' or 'full'
+QoI_type = 'mean'; 
+
+% Pass parameters to model via the cell array FixedInputs
+[FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
+
+FixedParameters.ref_folder     = ref_folder;
+FixedParameters.current_folder = current_folder;
+FixedParameters.QoI            = QoI;
+FixedParameters.QoI_type       = QoI_type;
+
+FixedParameters.r_exp          = r_exp_data;
+
+P.FixedParameters = FixedParameters;
+P.UncertainInputs = UncertainInputs;
+
+Model.Parameters = P;
+%  note that the model output is (in general) a vector, containing e.g. the
+%  force at different radial sections; this does not require any additional
+%  specification in UQLab
+%  the model is however not vectorized in the sense that we cannot give all
+%  the possible parameter values at once as input to AeroModule, but
+%  instead we need to do this sequentially
+Model.isVectorized = false;
+
+
+
 %% Prior
 % Set the Prior equal to the Input
+ndim  = length(UncertainInputs.Marginals);
 Prior = UncertainInputs;
 
 
@@ -63,14 +89,19 @@ Prior = UncertainInputs;
 % independent and identically distributed Gaussian random variables.
 % For the current case, 2*standard deviations of the experimental
 % measurements is chosen as the prior.
+for i=1:5
+    
 % DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
 % DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
 % DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
 % DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 2*std(output_raw.Fy03)];
 % DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
 % 
-% DiscrepancyOpts(1).Type = 'Gaussian';
-% DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
+DiscrepancyOpts(i).Type = 'Gaussian';
+DiscrepancyOpts(i).Parameters = 1e-6;
+% DiscrepancyOpts(i).Prior = DiscrepancyPrior1;
+end
+
 % 
 % DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
 % DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
@@ -99,10 +130,10 @@ Prior = UncertainInputs;
 % DiscrepancyOpts(4).Type = 'Gaussian';
 % DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
-DiscrepancyOpts.Type = 'Gaussian';
-DiscrepancyOpts.Parameters = 1e-6;
+% DiscrepancyOpts.Type = 'Gaussian';
+% DiscrepancyOpts.Parameters = 1e-6;
 
-%% Forward model options
+%% Surrogate model options
 %
 test_run = 1; % perform test run with Forward Model without uncertainties
 
@@ -151,8 +182,8 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e2;
-        Solver.MCMC.NChains = 1e2;
+        Solver.MCMC.Steps = 1e3;
+        Solver.MCMC.NChains = 1e1;
         Solver.MCMC.a = 5;
         
     case 'HMC'
@@ -168,15 +199,4 @@ end
 
 
 %% check location of ECNAeroModule
-path_strings = strsplit(getenv('PATH'),';');
-path_found   = false;
-for i=1:length(path_strings)
-    if (strfind(path_strings{i},'ECNAero')>0)
-        disp(['ECNAero location: ' path_strings{i}]);
-        path_found = true;
-    end
-end
-if (~path_found)
-    error('ECNAero path not found');
-end
-
+path_found  = findAeroModulePath();

@@ -1,7 +1,18 @@
-function Y = NewMexico_calibrate_readoutput(output_dir,P)
+function Y = NewMexico_readoutput(output_dir,P)
 
 switch P.FixedParameters.QoI
 
+    % return output depending on the QoI we are interested in
+    case 'Power'
+        filename = fullfile(output_dir,'AeroPower.dat'); % location of the AeroPower.dat output file
+        [Times,Azimuthdeg,PowerWatt,Axial_ForceN] = AeroPower(filename); %, P{23}, P{24});
+        Y = mean(PowerWatt);
+        
+    case 'Axial_Force'
+        filename = fullfile(output_dir,'AeroPower.dat'); % location of the AeroPower.dat output file
+        [Times,Azimuthdeg,PowerWatt,Axial_ForceN] = AeroPower(filename); %, P{23}, P{24});
+        Y = mean(Axial_ForceN);
+            
     case 'Sectional_normal_force'   
         % in this case the QoI is a vector, returning the time-averaged force at
         % each section
@@ -14,8 +25,10 @@ switch P.FixedParameters.QoI
         % column 1 is time, 
         % column 2 is azimuth,
         % columns 3:end correspond to different radial locations
-        Fn = D{:,3:end};                                       
-                                           
+        Fn = D{:,3:end};                                               
+        Fn_mean = mean(Fn,1); % Mean (average in time) values at different radial stations
+        
+        
         % Radial stations   
         r_sim = str2double(D.Properties.VariableNames(3:end)); 
         % the radial stations are expressed in % of the blade length,
@@ -27,26 +40,12 @@ switch P.FixedParameters.QoI
         % These values are made available from NewMexico: 
         r_exp = P.FixedParameters.r_exp; %2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
         
-        switch P.FixedParameters.QoI_type
-            
-            case 'mean'
-                % Calculate mean
-                Fn_mean = mean(Fn,1); % Mean (average in time) values at different radial stations
-
-                % Interpolation
-                Y   = spline(r_sim,Fn_mean,r_exp); % Interpolated data using spline                
-                
-            case 'full'
-                % Use full (azimuth dependent) solution
-                
-                % Interpolation
-                Y   = spline(r_sim,Fn,r_exp); % Interpolated data using spline                
-                
-            otherwise
-                error('QoI type unknown');
-        end
+        % Interpolation
+        % These values are made available from NewMexico: 
+        r_i = 2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
+        Y   = spline(r_sim,Fn_mean,r_exp); % Interpolated data using spline
         
     otherwise
-        error(strcat('QoI type unknown'));
+        error(strcat('QoI type unknown; check the turbine file ',P{29}));
         
 end
