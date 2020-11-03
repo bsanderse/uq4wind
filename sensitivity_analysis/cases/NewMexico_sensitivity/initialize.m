@@ -18,7 +18,7 @@ r_exp_data = [0.25 0.35 0.6 0.82 0.92]*2.25;
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module;
 % Quantity of interest
-QoI = 'Axial_Force';
+QoI = 'Axial_Force_Blade';
 
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
@@ -64,19 +64,19 @@ MC_repeat = 1;
 NsamplesMC = 4; %[8 16 32];
 
 % for PCE_Quad, specify the polynomial degrees to be tested
-DegreesQuad = 1:3; %[1 2 3 4 5 6];
+DegreesQuad = 1:6; %[1 2 3 4 5 6];
 
 % for PCE-OLS:
 NsamplesOLS = [8 16 32 64 128]; % if not specified, the number of samples from Quad is taken
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [16]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [512]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 
 
 %% check location of ECNAeroModule
-path_found  = findAeroModulePath();
+%path_found  = findAeroModulePath();
 
 

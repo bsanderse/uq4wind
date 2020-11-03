@@ -8,11 +8,23 @@ switch P.FixedParameters.QoI
         [Times,Azimuthdeg,PowerWatt,Axial_ForceN] = AeroPower(filename); %, P{23}, P{24});
         Y = mean(PowerWatt);
         
-    case 'Axial_Force'
+    case 'Axial_Force' % axial force of the rotor
         filename = fullfile(output_dir,'AeroPower.dat'); % location of the AeroPower.dat output file
         [Times,Azimuthdeg,PowerWatt,Axial_ForceN] = AeroPower(filename); %, P{23}, P{24});
         Y = mean(Axial_ForceN);
-            
+        
+        
+        % (trial)
+    case 'Axial_Force_Blade'
+        % in this case, the cumulative axial force of a blade (1,2 or 3) will be read 
+        filename = fullfile(output_dir,'AeroOutput.txt'); % location of the AeroPower.dat output file
+        V = readtable(filename,"ReadVariableNames",true,...
+            "PreserveVariableNames",true); %, P{23}, P{24});
+        f = V{:,12};
+        f_mean = mean(f);
+        Y = f_mean;
+        
+        
     case 'Sectional_normal_force'   
         % in this case the QoI is a vector, returning the time-averaged force at
         % each section

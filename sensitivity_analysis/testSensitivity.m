@@ -16,6 +16,8 @@ SobolOpts.Sobol.Order = 1;
 addpath([pwd,'/AEROmoduleWrapper/']);
 addpath([pwd,'/NURBS/']);
 addpath([pwd,'/Geometry/']);
+% added 
+addpath([pwd,'/cases/NewMexico_sensitivity/']);
 
 %% initialize UQlab
 
@@ -277,7 +279,7 @@ if (find(strcmp(methods,'PCE_LARS')))
             SobolResults_LARS     = SobolAnalysis_LARS.Results;
             Sobol_LARS_FirstOrder(k, i, 1:ndim) = SobolResults_LARS.FirstOrder;
             Sobol_LARS_Total(k, i, 1:ndim)      = SobolResults_LARS.Total;
-        end
+       end
     end
     
     % take average over first dimension (multiple LARS runs)

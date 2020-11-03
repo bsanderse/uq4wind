@@ -5,7 +5,7 @@ counter = 0;
 
 % define marginals of yaw model
 counter = counter+1;
-AM11     = 0.445;
+AM11     = 0.446;
 AM11_Std = 0.1;  % Standard deviation
 AM11_LB = 0; % Lower bound of truncated Gaussian distribution
 AM11_UB = 1;  % Upper bound of truncated Gaussian distribution 
