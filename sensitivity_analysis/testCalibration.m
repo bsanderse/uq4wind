@@ -9,7 +9,7 @@ clearvars
 rng default
 
 %% Case study
-caseName = 'NewMexico_calibrate'; % 'airfoil_lift','NM80', etc;
+caseName = 'NewMexico_calibrate_allruns'; % 'airfoil_lift','NM80', etc;
 % specify directory which contains test case settings and model
 % often this is simply the caseName
 input_file = caseName; 

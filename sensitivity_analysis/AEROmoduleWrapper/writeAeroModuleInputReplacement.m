@@ -1,7 +1,6 @@
 function writeAeroModuleInputReplacement(X,P)
-% This routine add the random input to the input.txt file used for Aero
-% module. Check getParameterAeroModule.m for order list of parameters
-% stored in variable 'P'
+% This routine adds the random input to the input.txt file used for Aero
+% module. 
 
 FixedParameters = P.FixedParameters;
 UncertainInputs = P.UncertainInputs;
