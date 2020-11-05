@@ -2,6 +2,13 @@
 % Print out a report of the results:
 uq_print(BayesianAnalysis)
 uq_display(BayesianAnalysis)
+hold on
+if (test_run == 1)
+    plot(1:length(Y_test),Y_test,'s');
+end
+% data:
+% plot(1:length(Data.y),Data.y,'s')
+
 uq_display(BayesianAnalysis, 'meanConvergence', 'all')
 uq_display(BayesianAnalysis, 'trace', 'all')
 %uq_display(BayesianAnalysis, 'acceptance', 'true')
