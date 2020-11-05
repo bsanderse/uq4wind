@@ -9,6 +9,17 @@ ref_folder      = 'AEROmodule/NewMexico_calibrate/reference/';
 current_folder  = 'AEROmodule/NewMexico_calibrate/current/';
 
 
+%% Forward model description
+
+% Name of Matlab file representing the model
+Model.mHandle = @aero_module;
+% Quantity of interest
+QoI = 'Sectional_normal_force';
+% choose whether only the time-average of the data is used, or the full dataset
+% 'mean' or 'full'
+QoI_type = 'full'; 
+
+
 %% Experimental data
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 filename_exp = ('../../../Experimental/NewMexicoData/R52P81D940_loads.dat');
@@ -21,39 +32,44 @@ r_exp_data = [0.25 0.35 0.6 0.82 0.92]*2.25;
 azi_exp_data = output_raw.Azi;
 
 % Because the model has different discrepancy options at different radial locations,
-% the measurement data is stored in four different data structures:
-Data(1).y = mean(output_raw.Fn25Npm); % [N/m]
-Data(1).Name = 'Fn01';
-Data(1).MOMap = 1; % Model Output Map 1
+% the measurement data is stored in five different data structures:
+% normal forces at five stations
+Fn_exp_data = table2array(output_raw(:,2:6));
 
-Data(2).y = mean(output_raw.Fn35Npm); % [N/m]
-Data(2).Name = 'Fn02';
-Data(2).MOMap = 2; % Model Output Map 2
-
-Data(3).y = mean(output_raw.Fn60Npm); % [N/m]
-Data(3).Name = 'Fn03';
-Data(3).MOMap = 3; % Model Output Map 3
-
-Data(4).y = mean(output_raw.Fn82Npm); % [N/m]
-Data(4).Name = 'Fn04';
-Data(4).MOMap = 4; % Model Output Map 4
-
-Data(5).y = mean(output_raw.Fn92Npm); % [N/m]
-Data(5).Name = 'Fn05';
-Data(5).MOMap = 5; % Model Output Map 4
+switch QoI_type
+    
+    case 'full'
+    % concatenate all the time-dependent normal forces into one row vector :
+    % [ Fn1(t) Fn2(t) Fn3(t) Fn4(t) Fn5(t)]
+    Data.y = Fn_exp_data(:)'; 
+    Data.Name = 'Normal forces';
 
 
+    case 'mean'
+        
+end
+% Data(1).y = output_raw.Fn25Npm; % [N/m]
+% Data(1).Name = 'Fn01';
+% Data(1).MOMap = 1; % Model Output Map 1
+% 
+% Data(2).y = output_raw.Fn35Npm; % [N/m]
+% Data(2).Name = 'Fn02';
+% Data(2).MOMap = 2; % Model Output Map 2
+% 
+% Data(3).y = output_raw.Fn60Npm; % [N/m]
+% Data(3).Name = 'Fn03';
+% Data(3).MOMap = 3; % Model Output Map 3
+% 
+% Data(4).y = output_raw.Fn82Npm; % [N/m]
+% Data(4).Name = 'Fn04';
+% Data(4).MOMap = 4; % Model Output Map 4
+% 
+% Data(5).y = output_raw.Fn92Npm; % [N/m]
+% Data(5).Name = 'Fn05';
+% Data(5).MOMap = 5; % Model Output Map 5
 
-%% Forward model description
 
-% Name of Matlab file representing the model
-Model.mHandle = @aero_module;
-% Quantity of interest
-QoI = 'Sectional_normal_force';
-% choose whether only the time-average of the data is used, or the full dataset
-% 'mean' or 'full'
-QoI_type = 'mean'; 
-
+%% Get and store uncertain and fixed parameters
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
 
@@ -63,6 +79,8 @@ FixedParameters.QoI            = QoI;
 FixedParameters.QoI_type       = QoI_type;
 
 FixedParameters.r_exp          = r_exp_data;
+FixedParameters.azi_exp        = azi_exp_data;
+
 
 P.FixedParameters = FixedParameters;
 P.UncertainInputs = UncertainInputs;
@@ -89,7 +107,7 @@ Prior = UncertainInputs;
 % independent and identically distributed Gaussian random variables.
 % For the current case, 2*standard deviations of the experimental
 % measurements is chosen as the prior.
-for i=1:5
+for i=1
     
 % DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
 % DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
@@ -153,7 +171,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 10;
+MetaOpts.ExpDesign.NSamples = 2;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 

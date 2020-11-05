@@ -23,6 +23,8 @@ switch P.FixedParameters.QoI
         % to compare to experiments, add the hub radius:
         r_sim = r_sim + 0.21;
         
+        
+        
         % Locations of experimental data
         % These values are made available from NewMexico: 
         r_exp = P.FixedParameters.r_exp; %2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
@@ -38,9 +40,28 @@ switch P.FixedParameters.QoI
                 
             case 'full'
                 % Use full (azimuth dependent) solution
+                % select only the last revolution
+                delta_azi = 10;
+                azi_sim   = D{:,2};
+                ind_last_rev = find(azi_sim<delta_azi,2,'last');
+                Fn_last_rev = Fn(ind_last_rev(1):ind_last_rev(2)-1,:);
+                azi_last_rev = azi_sim(ind_last_rev(1):ind_last_rev(2)-1);
                 
-                % Interpolation
-                Y   = spline(r_sim,Fn,r_exp); % Interpolated data using spline                
+                % Interpolation: columns of Fn_last_rev are interpolated to
+                % yield new columns at r_exp positions
+                Y   = spline(r_sim,Fn_last_rev,r_exp);
+
+                % now interpolate to the azimuth positions of the
+                % experimental data
+                % use transpose to make interpolation of entire matrix
+                % possible
+                azi_exp = P.FixedParameters.azi_exp; %
+                Y   = spline(azi_last_rev',Y',azi_exp)';
+                
+                % alternatively, we could directly do 2D interpolation
+                
+                % put all into a single row vector
+                Y   = Y(:)';                
                 
             otherwise
                 error('QoI type unknown');
