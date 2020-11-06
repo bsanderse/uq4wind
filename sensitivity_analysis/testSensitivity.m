@@ -2,6 +2,9 @@
 clc
 close all
 clearvars
+rng default
+
+root_folder = pwd;
 
 %% Case study
 caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;

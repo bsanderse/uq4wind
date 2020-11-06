@@ -5,12 +5,13 @@ function writeAeroModuleInputReplacement(X,P)
 FixedParameters = P.FixedParameters;
 UncertainInputs = P.UncertainInputs;
 
+root_folder  = FixedParameters.root_folder;
 ref_folder  = FixedParameters.ref_folder;
 current_folder  = FixedParameters.current_folder;
 
 %% copy all files from reference folder to current folder
-ref_dir = fullfile(pwd,ref_folder);
-cur_dir = fullfile(pwd,current_folder);
+ref_dir = fullfile(root_folder,ref_folder);
+cur_dir = fullfile(root_folder,current_folder);
 copyfile(fullfile(ref_dir,'*.dat'),cur_dir);
 copyfile(fullfile(ref_dir,'*.txt'),cur_dir);
 copyfile(fullfile(ref_dir,'*.ini'),cur_dir);

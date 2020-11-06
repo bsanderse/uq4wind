@@ -6,8 +6,9 @@ workingDir = pwd;
 writeAeroModuleInputReplacement(X,P)
 
 %% Run the Aero module executable 
+root_folder     = P.FixedParameters.root_folder;
 current_folder  = P.FixedParameters.current_folder;
-chdir(current_folder); % Go to the AERO module directory
+chdir(fullfile(root_folder,current_folder)); % Go to the AERO module directory
 disp('Running AeroModule...'); 
 system('ECNAero.exe'); % Run the executable
 chdir(workingDir)

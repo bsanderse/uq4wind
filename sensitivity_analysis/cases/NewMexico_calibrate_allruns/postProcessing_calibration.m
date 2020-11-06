@@ -3,7 +3,7 @@
 uq_print(BayesianAnalysis)
 uq_display(BayesianAnalysis)
 hold on
-if (test_run == 1)
+if (exist('test_run','var') && test_run == 1)
     plot(1:length(Y_test),Y_test,'s');
 end
 % data:

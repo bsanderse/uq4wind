@@ -76,6 +76,7 @@ end
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
 
+FixedParameters.root_folder    = root_folder;
 FixedParameters.ref_folder     = ref_folder;
 FixedParameters.current_folder = current_folder;
 FixedParameters.QoI            = QoI;
