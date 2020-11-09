@@ -30,6 +30,10 @@ lines_new = lines;
 
 zz = 1;
 
+write_wind_file = 0; % determines whether the wind.dat file needs to be updated
+
+% loop over all uncertainties (and constants), and look for a match in the
+% input files
 for i=1:length(X)
     UncertainInputName = UncertainInputs.Marginals(i).Name;
     
@@ -118,6 +122,12 @@ for i=1:length(X)
                 error('no AEROPROPS keyword in input.txt');
             end
             
+        case 'VINF'
+            write_wind_file = 1;
+            wind_file_line_id = find(startsWith(lines,'WINDFILENAME'));
+            wind_file_line = strsplit(lines{wind_file_line_id}); % split line in 2; the WINDFILENAME and the actual  name
+            wind_file = wind_file_line{2}; % second entry on the line
+            V_inf = X(i);
             
         otherwise
             %% generic scalar variables
@@ -198,6 +208,24 @@ if (fid_in>0) % check if file exists / was opened successfully
     fid_out = fclose(fid_out);
 else
     disp('note: no specialist input file');
+end
+
+
+%% write the wind.dat file if necessary
+if (write_wind_file == 1)
+    
+    % open the wind.dat file
+    filename_wind  = fullfile(cur_dir,wind_file);
+    
+    % read table
+    wind_data = readtable(filename_wind);
+    % first column: time, second column: u, third: v, fourth: w
+    % set second column equal to specified value
+    wind_data(:,2) = table(V_inf*ones(height(wind_data),1));
+    
+    % write to table, note that headers are skipped
+    writetable(wind_data,filename_wind,'Delimiter','space','WriteVariableNames',false);
+        
 end
     
 end

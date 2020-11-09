@@ -20,16 +20,16 @@ QoI = 'Sectional_normal_force';
 QoI_type = 'mean';
 
 
-%% Experimental data
+%% Experimental dataset
 % load description of datasets
-filename_runs =fullfile(root_folder,'..','Experimental','NewMexicoData','DPN_overview.csv')
+filename_runs = fullfile(root_folder,'..','Experimental','NewMexicoData','DPN_overview.csv')
 % filename_runs = '../../../Experimental/NewMexicoData/DPN_overview.csv';
 data_runs = readtable(filename_runs);
 n_runs = size(data_runs,1);
 
 %%
-changing_conditions = {'AIRDENSITY','PITCHANGLE'};
-select_runs = [940;941]; % this can be a list of run numbers
+changing_conditions = {'AIRDENSITY','PITCHANGLE','VINF'}; % choose the conditions from the table that are used in the input files
+select_runs = [940;941]; % this is the list of the runs that are to be included in the calibration
 n_runs = length(select_runs);
 
 n_oper = length(changing_conditions);
@@ -58,7 +58,7 @@ for i = 1:n_runs
         
     end
     
-    % set up forward model and data for this run
+    % set up forward model and data for this run 
     
     
     %%
