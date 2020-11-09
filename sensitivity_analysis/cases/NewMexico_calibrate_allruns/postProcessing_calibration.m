@@ -2,9 +2,15 @@
 % Print out a report of the results:
 uq_print(BayesianAnalysis)
 uq_display(BayesianAnalysis)
-hold on
+
 if (exist('test_run','var') && test_run == 1)
-    plot(1:length(Y_test),Y_test,'s');
+    f = gcf;
+    k = f.Number - n_runs;
+    for j=1:n_runs
+        figure(k+j)
+        hold on
+        plot(1:length(Y_unpert(j,:)),Y_unpert(j,:),'s');
+    end
 end
 % data:
 % plot(1:length(Data.y),Data.y,'s')
