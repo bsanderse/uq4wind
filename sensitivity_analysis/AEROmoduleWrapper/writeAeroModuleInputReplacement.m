@@ -122,7 +122,7 @@ for i=1:length(X)
                 error('no AEROPROPS keyword in input.txt');
             end
             
-        case 'VINF'
+        case 'WINDSPEED'
             write_wind_file = 1;
             wind_file_line_id = find(startsWith(lines,'WINDFILENAME'));
             wind_file_line = strsplit(lines{wind_file_line_id}); % split line in 2; the WINDFILENAME and the actual  name
@@ -158,12 +158,15 @@ if (exist('polar_index','var'))
     for q = 1:length(polar_index)
         i = polar_index(q);
         airfoil_out = fullfile(cur_dir,airfoil{i});
-        % write header to airfoil file
-        writecell(header{i},airfoil_out);
-        % write the polar
-        fid_polar = fopen(airfoil_out,'a'); % append data
+        % open the polar file
+        fid_polar = fopen(airfoil_out,'w'); 
+        % wrtie header
+        for j = 1:length(header{i})
+            fprintf(fid_polar,'%s \n',header{i}{j});
+        end
+        % print polar
         for j = 1:length(alpha{i})
-            fprintf(fid_polar,'%f    %f    %f    %f\n', alpha{i}(j), CL{i}(j), CD{i}(j), CM{i}(j));
+            fprintf(fid_polar,'%f    %f    %f    %f \n', alpha{i}(j), CL{i}(j), CD{i}(j), CM{i}(j));
         end
         fclose(fid_polar);
     end

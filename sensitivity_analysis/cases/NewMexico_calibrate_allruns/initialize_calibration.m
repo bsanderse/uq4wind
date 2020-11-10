@@ -67,7 +67,7 @@ folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
 filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 % choose the conditions (columns) from the table that are used in the input files
 % these should be strings that match the column headers
-changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','VINF'}; 
+changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
 select_runs = [936;940;949]; 
