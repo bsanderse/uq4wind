@@ -2,6 +2,11 @@
 % Print out a report of the results:
 uq_print(BayesianAnalysis)
 uq_display(BayesianAnalysis)
+hold on
+if (test_run == 1)
+    plot(1:length(Y_test),Y_test,'s');
+end
+
 %uq_display(BayesianAnalysis, 'meanConvergence', 'all')
 uq_display(BayesianAnalysis, 'trace', 'all')
 %uq_display(BayesianAnalysis, 'acceptance', 'true')
@@ -10,7 +15,7 @@ uq_display(BayesianAnalysis, 'trace', 'all')
 uq_postProcessInversion(BayesianAnalysis,'gelmanRubin', 'true')
 R_hat_full = BayesianAnalysis.Results.PostProc.MPSRF;
 
-if R_hat_full <= 5
+if R_hat_full <= 2
     disp('The MCMC simulation has converged')
 else
     disp('The MCMC simulation has not converged. Increase the number of samples or fine tune the algorithm.')
@@ -19,20 +24,10 @@ end
 % store the MAP into myBayesianAnalysis.Results.PostProc.PointEstimate:
 uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP')
 
-% Delta interpretation using the MAP of the posterior
-% multiply by the scaling value set in NM80_calibrate.m, which is stored in
-% P{26}
-for i=1:4
-    Delta(i) = BayesianAnalysis.Results.PostProc.PointEstimate.X(i)*P{26}{i}{3};
-end
-% Delta_1 = BayesianAnalysis.Results.PostProc.PointEstimate.X(1)*0.2;
-% Delta_2 = BayesianAnalysis.Results.PostProc.PointEstimate.X(2)*0.2;
-% Delta_3 = BayesianAnalysis.Results.PostProc.PointEstimate.X(3)*0.3;
-% Delta_4 = BayesianAnalysis.Results.PostProc.PointEstimate.X(4)*0.3;
 
 
 %% Write calibrated polars using mean of posterior
-run('write_calibration.m');
+% run('write_calibration.m');
 % run('../../AEROmodule/NM80_calibrate/write_calibrated_polars.m');
 
 % %% Cross-validation (Optional)

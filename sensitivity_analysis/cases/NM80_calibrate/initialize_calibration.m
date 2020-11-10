@@ -1,30 +1,33 @@
-%% Turbine input parameters
-% Name of Matlab file representing the turbine data for calibration
-turbineName = 'NM80_calibrate'; % 'NM80', 'AVATAR'
-% check |NM80_calibrate.m| or |(TurbineName_calibrate).m| for turbine-specific
-% settings and definition of uncertainties
+%% This file is used to initialize all settings in order to perform the calibration of the AeroModule 
+% for the case that experimental data corresponding to different operating
+% conditions is available
+
+%% Turbine name and folders
+% Name of Matlab file that describes the uncertain parameters used for calibration
+% check this file for definition of uncertainties
+turbineName = 'NM80_calibrate'; 
+
+% folder used to get reference input files
+ref_folder      = 'AEROmodule/NM80_calibrate/reference/';
+% folder used to write new input files
+current_folder  = 'AEROmodule/NM80_calibrate/current/';
+% name of input file is assumed to be input.txt
+
 
 %% Forward model description
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module;
-% Optionally, one can pass parameters to model stored in the cell array P
-P = getParameterAeroModule(turbineName);
-Model.Parameters = P;
-%  note that the model output is (in general) a vector, containing e.g. the
-%  force at different radial sections; this does not require any additional
-%  specification in UQLab
-%  the model is however not vectorized in the sense that we cannot give all
-%  the possible parameter values at once as input to AeroModule, but
-%  instead we need to do this sequentially
-Model.isVectorized = false;
+% Quantity of interest
+QoI = 'Sectional_normal_force';
+
 
 %% Experimental data
 % Marco's (ECN) script for reading the data in N/m
 % Currently, two options can be passed on:
 % 1. raw_normal.dat for 10 minute normal force measurements
 % 2. raw_tangential.dat for 10 minute tangential force measurements
-filename_exp = ('../../../Experimental/WINDTRUE/raw_normal.dat');
-output_raw = read_exp_data(filename_exp, 2);
+filename_exp = fullfile(root_folder,'..','Experimental','WINDTRUE','raw_normal.dat');
+output_raw   = readNM80(filename_exp, 2);
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NM80_calibrate_readoutput.m
@@ -47,6 +50,35 @@ Data(3).MOMap = 3; % Model Output Map 3
 Data(4).y = mean(output_raw.Fy10); % [N/m]
 Data(4).Name = 'Fy10';
 Data(4).MOMap = 4; % Model Output Map 4
+
+%% Get and store uncertain and fixed parameters
+
+% Pass parameters to model via the cell array FixedInputs
+[FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
+
+FixedParameters.root_folder    = root_folder;
+FixedParameters.ref_folder     = ref_folder;
+FixedParameters.current_folder = current_folder;
+FixedParameters.QoI            = QoI;
+FixedParameters.r_exp          = r_exp_data;
+
+P.FixedParameters = FixedParameters;
+P.UncertainInputs = UncertainInputs;
+
+Model.Parameters = P;
+%  note that the model output is (in general) a vector, containing e.g. the
+%  force at different radial sections; this does not require any additional
+%  specification in UQLab
+%  the model is however not vectorized in the sense that we cannot give all
+%  the possible parameter values at once as input to AeroModule, but
+%  instead we need to do this sequentially
+Model.isVectorized = false;
+
+%% Prior
+% Set the Prior equal to the Input
+ndim  = length(UncertainInputs.Marginals);
+Prior = UncertainInputs;
+
 
 %% Likelihood description
 % Here, the discrepancy for each data structure |y| are chosen to be
@@ -89,14 +121,14 @@ DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
 DiscrepancyOpts(4).Type = 'Gaussian';
 DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
-%% Forward model options
+%% Surrogate model options
 test_run = 0; % perform test run with Forward Model without uncertainties
 
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS.mat'; % Specify the surrogate model file to be used
@@ -108,7 +140,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 2;
+MetaOpts.ExpDesign.NSamples = 10;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
@@ -151,41 +183,3 @@ switch MCMC_type
         error('wrong MCMC type provided');
         
 end
-
-
-%% Assemble the Input.Marginal for Bayesian calibration through text comparison
-% NOTE: check getParameterAeroModule.m to see the definition of the P array
-% P{26} contains the uncertain parameters for which we will do calibration
-ndim = length(P{26});
-% P{25} contains all possible parameters, deterministic and uncertain, of
-% which a subset is used in the calibration study (as defined in P{25})
-ntot = length(P{25}.Marginals);
-discrete_index = [];
-cont_index = [];
-discrete_param_vals = [];
-
-% loop over P{26} and for each uncertain parameter get the distribution as
-% stored in P{25}
-for i=1:ndim
-    for j = 1:ntot
-        % find which index we need by looking in struct P{25}
-        % store the required information in Input.Marginals(i), which will
-        % be used by UQLab
-        if(strcmp([P{25}.Marginals(j).Name,num2str(P{25}.Marginals(j).Index)],[P{26}{i}{1},num2str(P{26}{i}{2})]))
-            Prior.Marginals(i).Name =  [P{26}{i}{1},num2str(P{26}{i}{2})];
-            Prior.Marginals(i).Type = P{25}.Marginals(j).Type;
-            Prior.Marginals(i).Parameters = P{25}.Marginals(j).Parameters;
-            %             Prior.Marginals(i).Bounds = P{25}.Marginals(j).Bounds;
-            
-            if(P{26}{i}{3} ==1) % Get the index and parameter of discrete 2*stdiable
-                discrete_index = [discrete_index i];
-                discrete_param_vals = [discrete_param_vals Input.Marginals(i).Parameters(2)];
-            else
-                cont_index = [cont_index i];
-            end
-            break;
-        end
-    end
-end
-
-

@@ -74,3 +74,4 @@ Input.Marginals(counter).AirfoilIndex = 4; % unique ID corresponding to airfoil
 Input.Marginals(counter).Type = 'Uniform'; 
 Input.Marginals(counter).Parameters = [-.5 .5];
 Input.Marginals(counter).Bounds = [-.5 .5];
+

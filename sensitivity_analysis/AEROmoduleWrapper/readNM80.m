@@ -1,9 +1,9 @@
-function raw = read_exp_data(filename, dataLines)
-%IMPORTFILE3 Import data from a text file
-%  RAW = IMPORTFILE3(FILENAME) reads data from text file FILENAME for
+function raw = readNM80(filename, dataLines)
+%readNM80 Import data from a text file
+%  RAW = readNM80(FILENAME) reads data from text file FILENAME for
 %  the default selection.  Returns the data as a table.
 %
-%  RAW = IMPORTFILE3(FILE, DATALINES) reads data for the specified row
+%  RAW = readNM80(FILE, DATALINES) reads data for the specified row
 %  interval(s) of text file FILENAME. Specify DATALINES as a positive
 %  scalar integer or a N-by-2 array of positive scalar integers for
 %  dis-contiguous row intervals.

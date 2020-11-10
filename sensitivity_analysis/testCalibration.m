@@ -17,7 +17,7 @@ ind = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NewMexico_calibrate'; % 'airfoil_lift','NM80', etc;
+caseName = 'NM80_calibrate'; % 'airfoil_lift','NM80', etc;
 % specify directory which contains test case settings and model
 % often this is simply the caseName
 input_file = caseName; 
@@ -68,7 +68,6 @@ if (exist('test_run','var'))
             X_test(1,i) = myPrior.Marginals(i).Moments(1);
         end
         Y_test = uq_evalModel(X_test);
-        pause;
     end
 end
 
@@ -107,6 +106,26 @@ BayesOpts.Solver = Solver;                  % MCMC
 
 %% Run the Bayesian inversion analysis
 disp('performing Bayesian analysis');
+
+% This is a bug fix for UQLab
+% UQLab gives an error if the number of field names in the prior are not
+% the same as in the discrepancy options
+% see https://uqworld.org/t/bayesian-inference-error-when-fields-of-prior-are-different-from-field-of-discrepancy-options/937
+
+% Here we add the fields of the discrepancy to be the same as those of the prior
+for i=1:ndim
+    fieldnames_prior = fieldnames(myPrior.Marginals(i));
+    fieldnames_disc  = fieldnames(DiscrepancyOpts(i).Prior.Marginals);
+    match_fieldnames = isfield(DiscrepancyOpts(i).Prior.Marginals,fieldnames_prior);
+    ind = find(match_fieldnames==0);
+    for j=1:length(ind)
+        add_field = fieldnames_prior(ind(j));
+        % add field and set to be empty
+        DiscrepancyOpts(i).Prior.Marginals.(add_field{1}) = [];
+    end
+end
+
+%%
 BayesianAnalysis = uq_createAnalysis(BayesOpts);
 
 %% Post-processing

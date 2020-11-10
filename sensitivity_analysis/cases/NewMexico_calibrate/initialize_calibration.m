@@ -99,7 +99,6 @@ Model.Parameters = P;
 Model.isVectorized = false;
 
 
-
 %% Prior
 % Set the Prior equal to the Input
 ndim  = length(UncertainInputs.Marginals);
@@ -175,7 +174,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 10;
+MetaOpts.ExpDesign.NSamples = 3;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
@@ -221,4 +220,4 @@ end
 
 
 %% check location of ECNAeroModule
-path_found  = findAeroModulePath();
+% path_found  = findAeroModulePath();
