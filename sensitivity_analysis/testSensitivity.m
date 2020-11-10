@@ -6,8 +6,14 @@ rng default
 
 root_folder = pwd;
 
+% check current path for existence of folders from this working directory
+path_all = strsplit(path,';');
+ind = startsWith(path_all,root_folder);
+% remove those
+rmpath(strjoin(string(path_all(ind)),';'))
+
 %% Case study
-caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NM80'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -16,11 +22,10 @@ SobolOpts.Method      = 'Sobol';
 SobolOpts.Sobol.Order = 1;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
-addpath([pwd,'/AEROmoduleWrapper/']);
-addpath([pwd,'/NURBS/']);
-addpath([pwd,'/Geometry/']);
-% added 
-addpath([pwd,'/cases/NewMexico_sensitivity/']);
+addpath(fullfile(root_folder,'AEROmoduleWrapper'));
+addpath(fullfile(root_folder,'NURBS'));
+addpath(fullfile(root_folder,'Geometry'));
+addpath(fullfile(root_folder,'cases',caseName));
 
 %% initialize UQlab
 
@@ -34,6 +39,11 @@ uqlab
 %% process input files
 run(['cases/' input_file '/initialize.m']);
 
+
+%% empty the contents of the output folder of the AeroModule to prevent that old information is being loaded
+delete(strcat(pwd,'/AEROmodule/',turbineName,'/current/output/*'));
+
+%%
 if (exist('mean_exact','var'))
     compare_mean = 1;
 else

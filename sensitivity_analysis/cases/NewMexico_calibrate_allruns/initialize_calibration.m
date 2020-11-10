@@ -154,7 +154,7 @@ end
 % - set up likelihood and prior
 
 % get the experimental conditions into a table
-data_runs     = readtable(filename_runs);
+data_runs     = readtable(filename_runs,'PreserveVariableNames',true);
 % determine number of experimental runs
 % n_runs = size(data_runs,1);
 % number of runs chosen
@@ -179,6 +179,7 @@ for i = 1:n_runs
     % OperatingConditions for this run that contains the selected operating
     % conditions
     k = 1;
+    conditions_covered = zeros(n_oper,1);
     for col=1:n_cols
         
         % select the column that matches the selected operating conditions
@@ -189,9 +190,17 @@ for i = 1:n_runs
             ind = find(id_var==1);
             OperatingCondition(k).Name = data_runs.Properties.VariableNames{col};
             OperatingCondition(k).Parameters = data_runs(i_run,col).Variables;
+            conditions_covered(k) = 1;
             k=k+1;
+            
         end
         
+    end
+    ind_notcovered = find(conditions_covered==0);
+    if (~isempty(ind_notcovered))
+        for k=ind_notcovered
+            warning(['Variable ' changing_conditions{k} ' not found in the table']);
+        end
     end
     
     % add Operatingconditions to the structure that contains the

@@ -1,4 +1,6 @@
-%% Turbine input parameters
+%% This file is used to initialize all settings in order to perform sensitivity study
+% of the NewMexico case
+
 % Name of Matlab file representing the turbine data for sensitivity
 turbineName = 'NewMexico'; %
 % check NewMexico.m for definition of uncertainties

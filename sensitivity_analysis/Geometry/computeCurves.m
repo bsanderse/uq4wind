@@ -98,7 +98,7 @@ pertCurve = evalNURBS(Bu,c_pert);
 
 %% make plots
 if plotSamples == 1
-    figure
+    figure(101)
     plot(interpolationLocations,referenceCurve,'linewidth',2) 
     hold on
     %plot(sampledLocations,c,'marker','o','linewidth',2) % plot control points

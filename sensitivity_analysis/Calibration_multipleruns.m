@@ -10,6 +10,12 @@ rng default
 
 root_folder = pwd;
     
+% check current path for existence of folders from this working directory
+path_all = strsplit(path,';');
+ind = startsWith(path_all,root_folder);
+% remove those
+rmpath(strjoin(string(path_all(ind)),';'))
+
 %% Case study
 caseName = 'NewMexico_calibrate_allruns'; % 'airfoil_lift','NM80', etc;
 % specify directory which contains test case settings and model
@@ -23,18 +29,18 @@ addpath(genpath(UQLab_path));
 % start uqlab
 uqlab
 
+%% Add paths for dependent routines located in the directories:'NURBS','AEROmoduleWrapper' and 'Geometry'
+% remove folders from the path to prevent that files from wrong folders are called
+addpath(fullfile(root_folder,'AEROmoduleWrapper'));
+addpath(fullfile(root_folder,'NURBS'));
+addpath(fullfile(root_folder,'Geometry'));
+addpath(fullfile(root_folder,'cases',caseName));
+
 %% Initialization
 run(['cases/' input_file '/initialize_calibration.m']);
 
-%% Add paths for dependent routines located in the directories:'NURBS','AEROmoduleWrapper' and 'Geometry'
-addpath([root_folder,'/AEROmoduleWrapper/']);
-addpath([root_folder,'/NURBS/']);
-addpath([root_folder,'/Geometry/']);
-%addpath(strcat(pwd,'/AEROmodule/',turbineName,'/output'));
-
 %% empty the contents of the output folder of the AeroModule to prevent that old information is being loaded
 delete(strcat(root_folder,'/AEROmodule/',turbineName,'/current/output/*'));
-
 
 %% display prior distribution
 uq_print(myPrior);
