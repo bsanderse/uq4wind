@@ -5,9 +5,9 @@ function writeAeroModuleInputReplacement(X,P)
 FixedParameters = P.FixedParameters;
 UncertainInputs = P.UncertainInputs;
 
-root_folder  = FixedParameters.root_folder;
-ref_folder  = FixedParameters.ref_folder;
-current_folder  = FixedParameters.current_folder;
+root_folder    = FixedParameters.root_folder;
+ref_folder     = FixedParameters.ref_folder;
+current_folder = FixedParameters.current_folder;
 
 %% copy all files from reference folder to current folder
 ref_dir = fullfile(root_folder,ref_folder);
@@ -70,26 +70,40 @@ for i=1:ndim
             ind_alpha_pert = find(alpha{index_pol}>=alpha_pert(1) & alpha{index_pol}<=alpha_pert(2));
             d = ones(length(ind_alpha_pert),1);
             plotCurve = 0;
-            
+                        
             switch UncertainInputName
                 
                 case 'CL'
                     CL_pert = computeCurves(1, ind_alpha_pert, X(index_pol)*d, d, plotCurve, ...
-                        alpha{index_pol}, CL{index_pol}, 3, 1:length(alpha{index_pol}));
+                        alpha{index_pol}, CL{index_pol}, 3, 1:length(alpha{index_pol}));                    
+%                     figure(i+100)
+%                     hold on
+%                     plot(alpha{index_pol},CL_pert,'--','LineWidth',2);
+                    
                     CL{index_pol}   = CL_pert;
                     
                 case 'CM'
                     
                     CM_pert = computeCurves(1, ind_alpha_pert, X(index_pol)*d, d, plotCurve, ...
                         alpha{index_pol}, CM{index_pol}, 3, 1:length(alpha{index_pol}));
-                    CM{index_pol}   = CM_pert;
                     
+%                     figure(i+100)
+%                     hold on
+%                     plot(alpha{index_pol},CM_pert,'--','LineWidth',2);                    
+                    
+                    CM{index_pol}   = CM_pert;
+
                 case 'CD'
                     
                     CD_pert = computeCurves(1, ind_alpha_pert, X(index_pol)*d, d, plotCurve, ...
                         alpha{index_pol}, CD{index_pol}, 3, 1:length(alpha{index_pol}));
-                    CD{index_pol}   = CD_pert;
                     
+%                     figure(i+100)
+%                     hold on
+%                     plot(alpha{index_pol},CD_pert,'--','LineWidth',2);                    
+
+                    CD{index_pol}   = CD_pert;
+
             end
             zz = zz + 1;
             uncertainty_covered(i) = 1;

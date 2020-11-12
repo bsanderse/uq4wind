@@ -18,6 +18,8 @@ current_folder  = 'AEROmodule/NM80_calibrate/current/';
 % Name of Matlab file representing the model
 Model.mHandle = @aero_module;
 % Quantity of interest
+% note that we look at the mean (in time) of the QoI, as the AeroModule predictions
+% for this test case are basically steady state.
 QoI = 'Sectional_normal_force';
 
 
@@ -33,23 +35,60 @@ output_raw   = readNM80(filename_exp, 2);
 % interpolation of the aeromodule results: see NM80_calibrate_readoutput.m
 r_exp_data = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
 
+ % 'mean', 'full', 'synthetic'; other options also possible but need to be implemented
+ % below
+Data_type = 'full';
+
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
-Data(1).y = mean(output_raw.Fy03); % [N/m]
+% these data are column vectors; each entry corresponding to a different
+% measurement
+Data(1).y = output_raw.Fy03; % [N/m]
 Data(1).Name = 'Fy03';
 Data(1).MOMap = 1; % Model Output Map 1
 
-Data(2).y = mean(output_raw.Fy05); % [N/m]
+Data(2).y = output_raw.Fy05; % [N/m]
 Data(2).Name = 'Fy05';
 Data(2).MOMap = 2; % Model Output Map 2
 
-Data(3).y = mean(output_raw.Fy08); % [N/m]
+Data(3).y = output_raw.Fy08; % [N/m]
 Data(3).Name = 'Fy08';
 Data(3).MOMap = 3; % Model Output Map 3
 
-Data(4).y = mean(output_raw.Fy10); % [N/m]
+Data(4).y = output_raw.Fy10; % [N/m]
 Data(4).Name = 'Fy10';
 Data(4).MOMap = 4; % Model Output Map 4
+
+
+switch Data_type
+    
+    case 'mean'
+        
+        % Because the model has different discrepancy options at different radial locations,
+        % the measurement data is stored in four different data structures:
+        Data(1).y = mean(Data(1).y); % [N/m]        
+        Data(2).y = mean(Data(2).y); % [N/m] 
+        Data(3).y = mean(Data(3).y); % [N/m]        
+        Data(4).y = mean(Data(4).y); % [N/m]
+        
+    case 'full'
+        Data(1).y = Data(1).y(1:100); % [N/m]        
+        Data(2).y = Data(2).y(1:100); % [N/m] 
+        Data(3).y = Data(3).y(1:100); % [N/m]        
+        Data(4).y = Data(4).y(1:100); % [N/m]
+        
+        
+    case 'synthetic'
+        % Y0 is obtained by running the code at unperturbed conditions
+        Y0 = 1.0e+03 *[0.5385    0.8705    1.3804    1.4787];
+        N_synth = 500;
+        sigma   = [10;10;10;10];
+        
+        for i=1:4
+            Data(i).y = Y0(i) + sigma(i)*randn(N_synth,1);
+        end
+end
+
 
 %% Get and store uncertain and fixed parameters
 
@@ -81,45 +120,28 @@ Prior = UncertainInputs;
 
 
 %% Likelihood description
-% Here, the discrepancy for each data structure |y| are chosen to be
-% independent and identically distributed Gaussian random variables.
-% For the current case, 2*standard deviations of the experimental
-% measurements is chosen as the prior.
-DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
-DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
-DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 2*std(output_raw.Fy03)];
-DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
+% Here, the discrepancy for each data point y are chosen to be
+% independent and identically distributed Gaussian random variables with
+% mean zero and unknown variance. A prior is needed for the variance.
+% we assume the following prior for sigma^2
+% discrepancy bounds for prior (specify here the expected variance between model
+% and data, and multiply by some factor, e.g. 5 to have sufficiently broad prior
+prior_sigma2_bounds = 5*[0 100; 0 100; 0 100; 0 100];
 
-DiscrepancyOpts(1).Type = 'Gaussian';
-DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
 
-DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
-DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
-DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 2*std(output_raw.Fy05)];
-DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
+for i=1:size(prior_sigma2_bounds,1)
 
-DiscrepancyOpts(2).Type = 'Gaussian';
-DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
+    DiscrepancyPriorOpts.Name = strcat('Prior of Sigma2 ',num2str(i));
+    DiscrepancyPriorOpts.Marginals(1).Name = strcat('Sigma2-',num2str(i));
+    DiscrepancyPriorOpts.Marginals(1).Type = 'Uniform';
+    DiscrepancyPriorOpts.Marginals(1).Parameters = prior_sigma2_bounds(i,:);
+    DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
 
-DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
-DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma3';
-DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 2*std(output_raw.Fy08)];
-DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
+    DiscrepancyOpts(i).Type = 'Gaussian';
+    DiscrepancyOpts(i).Prior = DiscrepancyPrior;
+        
+end
 
-DiscrepancyOpts(3).Type = 'Gaussian';
-DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
-
-DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
-DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma4';
-DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
-DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 2*std(output_raw.Fy10)];
-DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
-
-DiscrepancyOpts(4).Type = 'Gaussian';
-DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
 
 %% Surrogate model options
 test_run = 0; % perform test run with Forward Model without uncertainties
@@ -128,10 +150,10 @@ test_run = 0; % perform test run with Forward Model without uncertainties
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
-Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS.mat'; % Specify the surrogate model file to be used
+Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS_CL_LHS40.mat'; % Specify the surrogate model file to be used
 
 % Options for creating a surrogate model
 % These are used if Bayes_full = 0 and Surrogate_model_type = 1
@@ -140,7 +162,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 10;
+MetaOpts.ExpDesign.NSamples = 40;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
@@ -169,7 +191,7 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.Steps = 5e2;
         Solver.MCMC.NChains = 1e2;
         Solver.MCMC.a = 5;
         
