@@ -58,16 +58,18 @@ pause(0.01)
 myForwardModel = uq_createModel(Model);
 
 % do a test run with the forward model at unperturbed settings
+ndim = length(myPrior.Marginals);
+% set unperturbed vector:
+for i=1:ndim
+    % we take the mean of each parameter as the unperturbed
+    % condition
+    X_unperturbed(1,i) = myPrior.Marginals(i).Moments(1);
+end
 if (exist('test_run','var'))
     if (test_run == 1)
         disp('Performing test run at unperturbed (mean value) settings');
-        ndim = length(myPrior.Marginals);
-        for i=1:ndim
-            % we take the mean of each parameter as the unperturbed
-            % condition
-            X_test(1,i) = myPrior.Marginals(i).Moments(1);
-        end
-        Y_test = uq_evalModel(X_test);
+        
+        Y_unperturbed = uq_evalModel(X_unperturbed);
     end
 end
 

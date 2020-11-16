@@ -53,16 +53,30 @@ else
     Y_MAP = uq_evalModel(myForwardModel, X_MAP(1:ndim));  
 end
 
-figure
-hold on
+% put experimental data into a vector for plotting
 for i=1:4
-%      plot(r_exp_data(i)*ones(length(Data(i).y),1),Data(i).y);
-    plot(r_exp_data(i),mean(Data(i).y),'x');
+    mean_exp_data(i) = mean(Data(i).y);   
 end
+% get unperturbed model result from surrogate if not available yet
+if (test_run == 0)    
+    warning('unperturbed AeroModule results are obtained from the surrogate model');
+    if (Surrogate_model_type == 0)
+        Y_unperturbed = uq_evalModel(loaded_surrogate_model.mySurrogateModel, X_unperturbed);  
+    else
+        Y_unperturbed = uq_evalModel(mySurrogateModel, X_unperturbed);  
+    end     
+end
+
+figure
+plot(r_exp_data,mean_exp_data,'x');
+hold on
 plot(r_exp_data,Y_MAP,'o');
-if (test_run == 1)
-    plot(r_exp_data,Y_test,'s');
-end
+plot(r_exp_data,Y_unperturbed,'s');
+
+grid on
+xlabel('r [m]');
+ylabel('Fn [N/m]');
+legend('Experimental data','Calibrated AeroModule (MAP)','Uncalibrated AeroModule');
 
 %% Write calibrated polars using mean of posterior
 % run('write_calibration.m');
