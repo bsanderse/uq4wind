@@ -2,7 +2,7 @@
 clearvars
 close all
 
-%% load some data
+%% load some simulation data
 root_folder = pwd;
 filename = fullfile('AEROmodule','NewMexico_calibrate','current','output','B1n_BEM.txt');
 
@@ -46,7 +46,7 @@ t_last_rev    = t_sim(ind_last_rev);
 
 % Interpolation: columns of Fn_last_rev are interpolated to
 % yield new columns at r_exp positions
-Y   = spline(r_sim,Fn_last_rev,r_exp);
+Fn_int   = spline(r_sim,Fn_last_rev,r_exp);
 
 
 %% loop over radial sections and do FFT for each section
@@ -68,21 +68,23 @@ for k = 1:length(r_index)
     n    = length(azi_last_rev);
     dazi = mean(diff(azi_last_rev)); % in degrees
     dt   = mean(diff(t_last_rev)); % in seconds
-    Fn   = Fn_last_rev(:,r_index(k));
+    Fn_k   = Fn_int(:,r_index(k));
     % subtract the mean of the data (possible, not required)
 %     Fn_mean = mean(Fn);
-    Fn_pert = Fn; % - Fn_mean;
+    Fn_pert = Fn_k; % - Fn_mean;
     % do the fourier transform
-    Fhat = fft(Fn_pert,n);
+    % include scaling to get physical interpretable coefficients
+    Fhat = fft(Fn_pert,n)/n;
     % get the power spectral density
-    PSD  = Fhat.*conj(Fhat)/(n^2);
+    PSD  = Fhat.*conj(Fhat);
 
     % first half of frequencies contains all information, because the signal is
     % real, so c_k = c_{-k}
     % we therefore plot the one-sided (positive) frequency range only
     freqVals = (1/dt)*(0:floor(n/2)-1)'/n;
     
-    norm(Fn)^2/n;
+    % power in time and in frequency domain (should match)
+    norm(Fn_k)^2/n;
     sum(PSD);
 
     % for plotting purposes, the fftshift can be useful:
@@ -103,7 +105,24 @@ for k = 1:length(r_index)
     % set other indices to 0
     Fhat_new = ind_select.*Fhat;
     % back to the time domain
-    Fnew     = ifft(Fhat_new,n);
+    Fnew     = n*ifft(Fhat_new,n);
+    
+    % note: if we want physical meaning out of the Fourier coefficients
+    % (amplitude, angle) we need to multiply by 2 if we don't
+    % include the complex conjugates
+    % below is with all coefficients:
+    ind_keep = ind(1:2*n_keep-1);
+    f_keep = Fhat(ind_keep);
+    abs(f_keep);
+    angle(f_keep);
+
+    % alternatively, with only positive frequencies:
+    ind_pos = ind(2:2:2*(n_keep-1));
+    f_pos  = Fhat(ind_pos);
+    abs(Fhat(ind(1)))
+    abs(f_pos)*2
+    angle(f_pos)    
+    
     
     figure(9)
     semilogy(freqVals(1:end),PSD(1:floor(n/2)),'x-','Color',colormap(k,:))
@@ -136,41 +155,7 @@ legend('Section 1','Section 1 - 3 modes',...
     'Section 5','Section 5 - 3 modes');
 xlabel('t [s]')
 ylabel('Fn [N/m]');
-title('Approximation of blade 1 forces with Fourier modes (mean subtracted)')
+title('Approximation of blade 1 forces with Fourier modes')
 
 
-%% simple example of  FFT and iFFT
-% n  = 50; % number of samples
-% t  = linspace(0,1,n)';
-% dt = t(2)-t(1);
-% freq = 1/dt; %sampling frequency should be at least 2*highest frequency in signal
-% f    = sin(2*pi*3*(t-0.4));% + sin(2*pi*120*t);
-% n    = length(t);
-% fhat = fft(f,n);
-% psd  = fhat.*conj(fhat)/(n^2);
-% 
-% % power in time and in frequency domain (should match)
-% norm(f)^2/n
-% sum(psd)
-% 
-% fVals = freq*(0:n/2-1)/n;
-% figure
-% semilogy(fVals,psd(1:n/2))
-% 
-% % select indices with largest PSD by sorting the PSD
-% [val,ind] = sort(psd,'desc');
-% %
-% ind_select = ones(n,1);
-% % select 2*n_keep indices, where the factor 2 is needed because we need the
-% % coefficients associated with negative frequencies as well to do the inverse
-% % transform
-% n_keep = 3;
-% ind_select(ind(2*n_keep+1:end)) = 0;
-% % set other indices to 0
-% fhat_new = ind_select.*fhat;
-% fnew    = ifft(fhat_new,n);
-% 
-% figure
-% plot(t,f);
-% hold on
-% plot(t,fnew);
+

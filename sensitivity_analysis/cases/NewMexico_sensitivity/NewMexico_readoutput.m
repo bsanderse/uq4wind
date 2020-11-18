@@ -48,7 +48,7 @@ switch P.FixedParameters.QoI
         
         % Locations of experimental data
         % These values are made available from NewMexico: 
-        r_exp = P.FixedParameters.r_exp; %2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
+        r_exp = P.FixedParameters.r_exp;
         
         switch P.FixedParameters.QoI_type
 
@@ -62,13 +62,13 @@ switch P.FixedParameters.QoI
             case 'full'
                 
                 % number of revolutions to consider (counting backward)
-                n_rev = 4;
+                n_rev     = P.FixedParameters.n_rev;
                 % number of Fourier coefficients to keep (including mean)
-                % note: we get (n_keep-1)*2 + 1 coefficients
-                n_keep = 2;
+                % note: we get (n_fourier-1)*2 + 1 coefficients
+                n_fourier = P.FixedParameters.n_fourier;
                 % radial indices to consider:
-                r_index = 1:5;
-                
+                r_index   = P.FixedParameters.r_index;
+                                               
                 % Use full (azimuth dependent) solution
                 % select a couple of revolutions by looking at where azimuth is smaller
                 % than a threshold value; the threshold value is taken as the minimum of the difference
@@ -82,22 +82,26 @@ switch P.FixedParameters.QoI
                 % select force, azimuth and time based on this index
                 Fn_last_rev   = Fn(ind_last_rev,:);
                 azi_last_rev  = azi_sim(ind_last_rev);
+%               dazi = mean(diff(azi_last_rev)); % in degrees
+                % get the time step from the simulation data, it should
+                % be constant
                 t_last_rev    = t_sim(ind_last_rev);
-
-
+                dt   = mean(diff(t_last_rev)); % in seconds
+                % number of data points
+                n    = length(azi_last_rev); 
+                
+                % Interpolated Fn to the right r-positions using spline               
+                Fn_int   = spline(r_sim,Fn_last_rev,r_exp);               
+                
                 Y = [];
                 for k=1:length(r_index)
 
-                    n    = length(azi_last_rev); 
-%                     dazi = mean(diff(azi_last_rev)); % in degrees
-                    % get the time step from the simulation data, it should
-                    % be constant
-                    dt   = mean(diff(t_last_rev)); % in seconds
-                    Fn   = Fn_last_rev(:,r_index(k));
+
+                    Fn_k = Fn_int(:,r_index(k));
                     % do the fourier transform
-                    Fhat = fft(Fn,n);
+                    Fhat = fft(Fn_k,n)/n; % include scaling with 1/n to get physical results for coefficients
                     % get the power spectral density
-                    PSD  = Fhat.*conj(Fhat)/(n^2);
+                    PSD  = Fhat.*conj(Fhat);
 
                     % first half of frequencies contains all information, because the signal is
                     % real, so c_k = c_{-k}
@@ -117,15 +121,17 @@ switch P.FixedParameters.QoI
                     % note that the indices that are skipped correspond to
                     % the complex conjugate, so they don't need to be
                     % stored
-                    ind_select = 2:2:2*(n_keep-1);
+                    ind_select = 2:2:2*(n_fourier-1);
                     
                     % add mean separately
-                    Fhat_mean = Fhat(ind(1));
+                    Fhat_mean = abs(Fhat(ind(1)));
                     Fhat_new  = Fhat(ind(ind_select));
 
                     % save the complex coefficients in terms of amplitude
-                    % and phase angle
-                    Y = horzcat(Y,[Fhat_mean abs(Fhat_new)' angle(Fhat_new)']);
+                    % and phase angleei
+                    % since we only store the positive frequencies, we need
+                    % to multiply by 2 for the physical amplitudes
+                    Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
                     
                 end
         

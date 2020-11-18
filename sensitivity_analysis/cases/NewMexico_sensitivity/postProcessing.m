@@ -50,14 +50,26 @@ end
 % end
 
 %% bar chart of Sobol indices
-
 % corresponding to largest number of samples
+
+figure
+cmap = get(gca,'ColorOrder');
+
+hold on
+
+m_plot = 3; % number of coefficients used for QoI
+n_plot = 5; % number of columns = number of radial sections
+
+titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
+QoI_names   = {'mean','amplitude 1','angle 1'};
 
 for q=1:nout
     
-    figure
-    cmap = get(gca,'ColorOrder');
-
+    [i_plot,j_plot] = ind2sub([m_plot n_plot],q);
+    % note that subplot index does not correspond to ind2sub indexing
+    % therefore, get q_plot by reversing the indexing:
+    q_plot = sub2ind([n_plot m_plot],j_plot,i_plot);
+    subplot(m_plot,n_plot,q_plot);
     hold on
     
     n_methods = length(methods);
@@ -98,14 +110,20 @@ for q=1:nout
         k = k+1;
     end
     
-    legend(methods, 'Interpreter', 'none')
-    ylabel('Total order Sobol index');
+%     legend(methods, 'Interpreter', 'none')
+%     ylabel('Total order Sobol index');
     ylim([0 1])
     xticks(1:ndim)
     for i =1:ndim
         label_names{i} = Input.Marginals(i).Name;
     end
     xticklabels(label_names)
-    title(strcat('Sobol indices for output ',num2str(q)))
+    if (j_plot==1) % first column
+        ylabel(QoI_names{i_plot});
+    end
+    if (i_plot==1) % first row
+        title(titles{j_plot});
+    end
+%     title(strcat('Sobol indices for output ',num2str(q)))
 
 end

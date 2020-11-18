@@ -22,7 +22,21 @@ Model.mHandle = @aero_module;
 % Quantity of interest
 % QoI = 'Axial_Force_Blade';
 QoI = 'Sectional_normal_force';
+% 'mean' or 'full'; in case of 'full', specify:
+% * the radial indices (sections to consider in the analysis)
+% * the number of revolutions 
+% * number of Fourier coefficients that are required
 QoI_type = 'full';
+               
+% number of revolutions to consider (counting from end of time series)
+n_rev = 4;
+% number of Fourier coefficients to keep (including mean)
+% note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
+% imaginary component (stored as amplitude and phase angle) for each
+% frequency
+n_fourier = 2;
+% radial indices (blade sections) to consider:
+r_index = 1:5;
 
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
@@ -35,6 +49,13 @@ FixedParameters.QoI_type       = QoI_type;
 
 FixedParameters.r_exp          = r_exp_data;
 
+switch QoI_type
+    case 'full'
+        % store parameters in struct
+        FixedParameters.n_rev          = n_rev;
+        FixedParameters.n_fourier      = n_fourier;
+        FixedParameters.r_index        = r_index;
+end
 
 P.FixedParameters = FixedParameters;
 P.UncertainInputs = UncertainInputs;
@@ -77,7 +98,7 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [40]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [80]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 

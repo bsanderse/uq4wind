@@ -105,8 +105,6 @@ Input.Marginals(counter).Type = 'Gaussian';
 Input.Marginals(counter).Parameters = [AM25, AM25_Std*abs(AM25)];
 % Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
 
-
-
 counter = counter+1;
 PH11     = -51.2;
 PH11_Std = 30;  % Standard deviation
