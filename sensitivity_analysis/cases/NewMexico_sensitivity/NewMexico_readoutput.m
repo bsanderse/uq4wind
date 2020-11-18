@@ -37,9 +37,7 @@ switch P.FixedParameters.QoI
         % column 1 is time, 
         % column 2 is azimuth,
         % columns 3:end correspond to different radial locations
-        Fn = D{:,3:end};                                               
-        Fn_mean = mean(Fn,1); % Mean (average in time) values at different radial stations
-        
+        Fn = D{:,3:end};     
         
         % Radial stations   
         r_sim = str2double(D.Properties.VariableNames(3:end)); 
@@ -52,10 +50,86 @@ switch P.FixedParameters.QoI
         % These values are made available from NewMexico: 
         r_exp = P.FixedParameters.r_exp; %2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
         
-        % Interpolation
-        % These values are made available from NewMexico: 
-        r_i = 2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length
-        Y   = spline(r_sim,Fn_mean,r_exp); % Interpolated data using spline
+        switch P.FixedParameters.QoI_type
+
+            case 'mean'
+                Fn_mean = mean(Fn,1); % Mean (average in time) values at different radial stations
+                
+                % Interpolation
+                % These values are made available from NewMexico: 
+                Y   = spline(r_sim,Fn_mean,r_exp); % Interpolated data using spline
+
+            case 'full'
+                
+                % number of revolutions to consider (counting backward)
+                n_rev = 4;
+                % number of Fourier coefficients to keep (including mean)
+                % note: we get (n_keep-1)*2 + 1 coefficients
+                n_keep = 2;
+                % radial indices to consider:
+                r_index = 1:5;
+                
+                % Use full (azimuth dependent) solution
+                % select a couple of revolutions by looking at where azimuth is smaller
+                % than a threshold value; the threshold value is taken as the minimum of the difference
+                % between azimuth angles
+                t_sim         = D{:,1};
+                azi_sim       = D{:,2};
+                delta_azi     = floor(min(abs(diff(azi_sim)))); % this should be around 10;
+                ind_small_azi = find(azi_sim<delta_azi,n_rev+1,'last');
+                % index of requested revolutions
+                ind_last_rev  = ind_small_azi(1):ind_small_azi(end)-1;
+                % select force, azimuth and time based on this index
+                Fn_last_rev   = Fn(ind_last_rev,:);
+                azi_last_rev  = azi_sim(ind_last_rev);
+                t_last_rev    = t_sim(ind_last_rev);
+
+
+                Y = [];
+                for k=1:length(r_index)
+
+                    n    = length(azi_last_rev); 
+%                     dazi = mean(diff(azi_last_rev)); % in degrees
+                    % get the time step from the simulation data, it should
+                    % be constant
+                    dt   = mean(diff(t_last_rev)); % in seconds
+                    Fn   = Fn_last_rev(:,r_index(k));
+                    % do the fourier transform
+                    Fhat = fft(Fn,n);
+                    % get the power spectral density
+                    PSD  = Fhat.*conj(Fhat)/(n^2);
+
+                    % first half of frequencies contains all information, because the signal is
+                    % real, so c_k = c_{-k}
+                    % we therefore plot the one-sided (positive) frequency range only
+%                     freqVals = (1/dt)*(0:floor(n/2)-1)'/n;
+
+                    % select indices with largest PSD by sorting the PSD
+                    [~,ind] = sort(PSD,'desc');
+                    %
+%                     ind_select = ones(n,1);
+                    % select 2*n_keep indices, where the factor 2 is needed because we need the
+                    % coefficients associated with negative frequencies as well to do the inverse
+                    % transform
+%                     ind_select(ind(2*n_keep:end)) = 0; 
+                    
+                    % alternatively, we can select directly from Fhat:
+                    % note that the indices that are skipped correspond to
+                    % the complex conjugate, so they don't need to be
+                    % stored
+                    ind_select = 2:2:2*(n_keep-1);
+                    
+                    % add mean separately
+                    Fhat_mean = Fhat(ind(1));
+                    Fhat_new  = Fhat(ind(ind_select));
+
+                    % save the complex coefficients in terms of amplitude
+                    % and phase angle
+                    Y = horzcat(Y,[Fhat_mean abs(Fhat_new)' angle(Fhat_new)']);
+                    
+                end
+        
+        end
         
     otherwise
         error(strcat('QoI type unknown; check the turbine file ',P{29}));
