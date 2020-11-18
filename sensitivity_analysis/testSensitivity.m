@@ -13,7 +13,7 @@ ind = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NM80'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -88,23 +88,26 @@ if (find(strcmp(methods,'MC')))
             % evaluate model at sample
             Y_ED = uq_evalModel(myModel,X_ED);
             
-            % moments of solution
-            mean_MC(k,i) = mean(Y_ED);
-            std_MC(k,i)  = std(Y_ED);
+            % loop over the output vector
+            nout = size(Y_ED,2);
             
-            % Sobol analysis; 
+            % moments of solution
+            mean_MC(k,i,1:nout) = mean(Y_ED,1);
+            std_MC(k,i,1:nout)  = std(Y_ED,1);
+            
+            % Sobol analysis;
             SobolOpts.Sobol.SampleSize = NsamplesMC(i);
             SobolAnalysis_MC           = uq_createAnalysis(SobolOpts);
             SobolResults_MC            = SobolAnalysis_MC.Results;
-            Sobol_MC_FirstOrder(k,i,1:ndim) = SobolResults_MC.FirstOrder;
-            Sobol_MC_Total(k,i,1:ndim)      = SobolResults_MC.Total;     
+            Sobol_MC_FirstOrder(k,i,1:ndim,1:nout) = SobolResults_MC.FirstOrder;
+            Sobol_MC_Total(k,i,1:ndim,1:nout)      = SobolResults_MC.Total;
             Sobol_MC_Nsamples(i)          = SobolResults_MC.Cost;
         end
     end
     
     % take average over first dimension (multiple MC runs)
-    AVG_Sobol_MC_FirstOrder = squeeze(mean(Sobol_MC_FirstOrder,1));
-    AVG_Sobol_MC_Total      = squeeze(mean(Sobol_MC_Total,1));
+    AVG_Sobol_MC_FirstOrder = reshape(mean(Sobol_MC_FirstOrder,1),[N_MC ndim nout]);
+    AVG_Sobol_MC_Total      = reshape(mean(Sobol_MC_Total,1),[N_MC ndim nout]);
     
     if (compare_mean == 1)
         err_mean_MC = abs((mean(mean_MC,1)-mean_exact)/mean_ref);
@@ -112,7 +115,7 @@ if (find(strcmp(methods,'MC')))
     if (compare_std == 1)
         err_std_MC = abs((mean(std_MC,1)-std_exact)/std_ref);
     end
- 
+    
 end
 %% Polynomial Chaos with quadrature
 
@@ -135,7 +138,7 @@ if (find(strcmp(methods,'PCE_Quad')))
     
     metamodelQuad.Method          = 'Quadrature' ;
     metamodelQuad.Quadrature.Type = 'Full';
-       
+    
     for i = 1:N_Quad
         
         metamodelQuad.Degree = DegreesQuad(i);
@@ -143,15 +146,20 @@ if (find(strcmp(methods,'PCE_Quad')))
         
         % moments of solution
         NsamplesQuad(i) = myPCE_Quad.ExpDesign.NSamples;
-        mean_Quad(i)    = myPCE_Quad.PCE.Moments.Mean;
-        std_Quad(i)     = sqrt(myPCE_Quad.PCE.Moments.Var);
+        
+        % loop over the output vector
+        nout = length(myPCE_Quad.PCE);
+        for q=1:nout
+            mean_Quad(i,q)    = myPCE_Quad.PCE(q).Moments.Mean;
+            std_Quad(i,q)     = sqrt(myPCE_Quad.PCE(q).Moments.Var);
+        end
         
         % Sobol analysis
-        % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model        
+        % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
         SobolAnalysis_Quad    = uq_createAnalysis(SobolOpts);
         SobolResults_Quad     = SobolAnalysis_Quad.Results;
-        Sobol_Quad_FirstOrder(i,1:ndim) = SobolResults_Quad.FirstOrder;
-        Sobol_Quad_Total(i,1:ndim)      = SobolResults_Quad.Total;
+        Sobol_Quad_FirstOrder(i,1:ndim,1:nout) = SobolResults_Quad.FirstOrder;
+        Sobol_Quad_Total(i,1:ndim,1:nout)      = SobolResults_Quad.Total;
     end
     
     if (compare_mean == 1)
@@ -198,7 +206,7 @@ if (find(strcmp(methods,'PCE_OLS')))
     % if there are issues with LOO, try the following: metamodelOLS.OLS.ModifiedLOO = 0;
     % note that default sampling is LHS, this can be changed (see below)
     
-    % as there is randomness in the experimental design, we can 
+    % as there is randomness in the experimental design, we can
     % average over several runs
     for k = 1:OLS_repeat
         for i = 1:N_OLS
@@ -207,23 +215,28 @@ if (find(strcmp(methods,'PCE_OLS')))
             metamodelOLS.ExpDesign.Sampling = 'LHS'; % LHS is default
             myPCE_OLS = uq_createModel(metamodelOLS);
             
-            % moments of solution            
-            mean_OLS(k,i) = myPCE_OLS.PCE.Moments.Mean;
-            std_OLS(k,i)  = sqrt(myPCE_OLS.PCE.Moments.Var);          
+            % loop over the output vector
+            nout = length(myPCE_OLS.PCE);
+            for q=1:nout
+                
+                % moments of solution
+                mean_OLS(k,i,q) = myPCE_OLS.PCE(q).Moments.Mean;
+                std_OLS(k,i,q)  = sqrt(myPCE_OLS.PCE(q).Moments.Var);
+            end
             
             % Sobol analysis
             % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
             SobolAnalysis_OLS    = uq_createAnalysis(SobolOpts);
             SobolResults_OLS     = SobolAnalysis_OLS.Results;
-            Sobol_OLS_FirstOrder(k,i,1:ndim) = SobolResults_OLS.FirstOrder;
-            Sobol_OLS_Total(k,i,1:ndim)      = SobolResults_OLS.Total;
+            Sobol_OLS_FirstOrder(k,i,1:ndim,1:nout) = SobolResults_OLS.FirstOrder;
+            Sobol_OLS_Total(k,i,1:ndim,1:nout)      = SobolResults_OLS.Total;
         end
         
     end
     
     % take average over first dimension (multiple OLS runs)
-    AVG_Sobol_OLS_FirstOrder = squeeze(mean(Sobol_OLS_FirstOrder,1));
-    AVG_Sobol_OLS_Total      = squeeze(mean(Sobol_OLS_Total,1));
+    AVG_Sobol_OLS_FirstOrder = reshape(mean(Sobol_OLS_FirstOrder,1),[N_OLS ndim nout]);
+    AVG_Sobol_OLS_Total      = reshape(mean(Sobol_OLS_Total,1),[N_OLS ndim nout]);
     
     % take mean over first dimension (k)
     if (compare_mean == 1)
@@ -265,8 +278,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     metamodelLARS.Degree    = 1:4; % this automatically switches on degree adaptive PCE
     metamodelLARS.TruncOptions.qNorm = 0.75;
     
-    % as there is randomness in the experimental design, we can 
-    % average over several runs    
+    % as there is randomness in the experimental design, we can
+    % average over several runs
     for k = 1:LARS_repeat
         for i = 1:N_LARS
             
@@ -279,25 +292,32 @@ if (find(strcmp(methods,'PCE_LARS')))
             
             % use sampling strategy, note that default is MC!
             metamodelLARS.ExpDesign.Sampling = 'LHS'; % or 'LHS' or 'Sobol' or 'Halton'
-            metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);            
+            metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);
             myPCE_LARS     = uq_createModel(metamodelLARS);
             
-            % moments of solution            
-            mean_LARS(k,i) = myPCE_LARS.PCE.Moments.Mean;
-            std_LARS(k,i)  = sqrt(myPCE_LARS.PCE.Moments.Var);
- 
+            
+            
+            % loop over the output vector
+            nout = length(myPCE_LARS.PCE);
+            for q=1:nout
+                
+                % moments of solution
+                mean_LARS(k,i,q) = myPCE_LARS.PCE(q).Moments.Mean;
+                std_LARS(k,i,q)    = sqrt(myPCE_LARS.PCE(q).Moments.Var);
+            end
+            
             % Sobol analysis
             % note the same options structure SobolOpts can be re-used to create a new analysis on the PCE model
             SobolAnalysis_LARS    = uq_createAnalysis(SobolOpts);
             SobolResults_LARS     = SobolAnalysis_LARS.Results;
-            Sobol_LARS_FirstOrder(k, i, 1:ndim) = SobolResults_LARS.FirstOrder;
-            Sobol_LARS_Total(k, i, 1:ndim)      = SobolResults_LARS.Total;
-       end
+            Sobol_LARS_FirstOrder(k, i, 1:ndim, 1:nout) = SobolResults_LARS.FirstOrder;
+            Sobol_LARS_Total(k, i, 1:ndim, 1:nout)      = SobolResults_LARS.Total;
+        end
     end
     
     % take average over first dimension (multiple LARS runs)
-    AVG_Sobol_LARS_FirstOrder = squeeze(mean(Sobol_LARS_FirstOrder,1));
-    AVG_Sobol_LARS_Total      = squeeze(mean(Sobol_LARS_Total,1));
+    AVG_Sobol_LARS_FirstOrder = reshape(mean(Sobol_LARS_FirstOrder,1),[N_LARS ndim nout]);
+    AVG_Sobol_LARS_Total      = reshape(mean(Sobol_LARS_Total,1),[N_LARS ndim nout]);
     
     if (compare_mean == 1)
         err_mean_LARS =  abs((mean(mean_LARS,1)-mean_exact)/mean_ref);
