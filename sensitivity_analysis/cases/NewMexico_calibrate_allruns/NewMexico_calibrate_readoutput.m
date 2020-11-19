@@ -39,29 +39,69 @@ switch P.FixedParameters.QoI
                 Y   = spline(r_sim,Fn_mean,r_exp); % Interpolated data using spline                
                 
             case 'full'
+                
+                % number of revolutions to consider (counting backward)
+                n_rev     = P.FixedParameters.n_rev;
+                % number of Fourier coefficients to keep (including mean)
+                % note: we get (n_fourier-1)*2 + 1 coefficients
+                n_fourier = P.FixedParameters.n_fourier;
+                % radial indices to consider:
+                r_index   = P.FixedParameters.r_index;
+                
                 % Use full (azimuth dependent) solution
                 % select only the last revolution
-                delta_azi = 10;
+                t_sim     = D{:,1};
                 azi_sim   = D{:,2};
-                ind_last_rev = find(azi_sim<delta_azi,2,'last');
-                Fn_last_rev = Fn(ind_last_rev(1):ind_last_rev(2)-1,:);
-                azi_last_rev = azi_sim(ind_last_rev(1):ind_last_rev(2)-1);
+                delta_azi = floor(min(abs(diff(azi_sim)))); % this should be around 10;
+                ind_small_azi = find(azi_sim<delta_azi,n_rev+1,'last');
+                % index of requested revolutions
+                ind_last_rev  = ind_small_azi(1):ind_small_azi(end)-1;
+
+                % select force, azimuth and time based on this index
+                Fn_last_rev   = Fn(ind_last_rev,:);
+                azi_last_rev  = azi_sim(ind_last_rev);
+
+                % get the time step from the simulation data, it should
+                % be constant (if not, we should interpolate to equidistant
+                % timesteps to do the Fourier transform)
+                t_last_rev    = t_sim(ind_last_rev);
+                dt   = mean(diff(t_last_rev)); % in seconds                
                 
                 % Interpolation: columns of Fn_last_rev are interpolated to
                 % yield new columns at r_exp positions
-                Y   = spline(r_sim,Fn_last_rev,r_exp);
+                Fn_int   = spline(r_sim,Fn_last_rev,r_exp);        
 
-                % now interpolate to the azimuth positions of the
+
+                % get the coefficients of the first 3 modes
+                % the coefficients are ordered according to the PSD                
+                Fhat        = getFourierCoefficients(Fn_int,n_fourier);
+                ind_select = 2:2:2*(n_fourier-1);
+
+                
+                Y = [];
+                for k=1:length(r_index)
+                    
+                    % add mean separately
+                    Fhat_mean = abs(Fhat(1,r_index(k)));
+                    Fhat_new  = Fhat(ind_select,r_index(k));
+                    
+                    % save the complex coefficients in terms of amplitude
+                    % and phase angleei
+                    % since we only store the positive frequencies, we need
+                    % to multiply by 2 for the physical amplitudes
+                    Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
+                    
+                end                
+
+                % alternative: interpolate to the azimuth positions of the
                 % experimental data
                 % use transpose to make interpolation of entire matrix
                 % possible
-                azi_exp = P.FixedParameters.azi_exp; %
-                Y   = spline(azi_last_rev',Y',azi_exp)';
-                
-                % alternatively, we could directly do 2D interpolation
-                
+%                 azi_exp = P.FixedParameters.azi_exp; %
+%                 Y   = spline(azi_last_rev',Y',azi_exp)';
                 % put all into a single row vector
-                Y   = Y(:)';                
+%                 Y   = Y(:)';                
+                
                 
             otherwise
                 error('QoI type unknown');

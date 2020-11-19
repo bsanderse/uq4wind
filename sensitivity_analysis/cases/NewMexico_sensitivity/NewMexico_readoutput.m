@@ -88,45 +88,24 @@ switch P.FixedParameters.QoI
                 t_last_rev    = t_sim(ind_last_rev);
                 dt   = mean(diff(t_last_rev)); % in seconds
                 % number of data points
-                n    = length(azi_last_rev); 
+                % n    = length(azi_last_rev); 
                 
                 % Interpolated Fn to the right r-positions using spline               
-                Fn_int   = spline(r_sim,Fn_last_rev,r_exp);               
+                Fn_int   = spline(r_sim,Fn_last_rev,r_exp);        
+                
+                % get the coefficients of the first 3 modes
+                % the coefficients are ordered according to the PSD                
+                Fhat        = getFourierCoefficients(Fn_int,n_fourier);
+                ind_select = 2:2:2*(n_fourier-1);
+
                 
                 Y = [];
                 for k=1:length(r_index)
-
-
-                    Fn_k = Fn_int(:,r_index(k));
-                    % do the fourier transform
-                    Fhat = fft(Fn_k,n)/n; % include scaling with 1/n to get physical results for coefficients
-                    % get the power spectral density
-                    PSD  = Fhat.*conj(Fhat);
-
-                    % first half of frequencies contains all information, because the signal is
-                    % real, so c_k = c_{-k}
-                    % we therefore plot the one-sided (positive) frequency range only
-%                     freqVals = (1/dt)*(0:floor(n/2)-1)'/n;
-
-                    % select indices with largest PSD by sorting the PSD
-                    [~,ind] = sort(PSD,'desc');
-                    %
-%                     ind_select = ones(n,1);
-                    % select 2*n_keep indices, where the factor 2 is needed because we need the
-                    % coefficients associated with negative frequencies as well to do the inverse
-                    % transform
-%                     ind_select(ind(2*n_keep:end)) = 0; 
-                    
-                    % alternatively, we can select directly from Fhat:
-                    % note that the indices that are skipped correspond to
-                    % the complex conjugate, so they don't need to be
-                    % stored
-                    ind_select = 2:2:2*(n_fourier-1);
                     
                     % add mean separately
-                    Fhat_mean = abs(Fhat(ind(1)));
-                    Fhat_new  = Fhat(ind(ind_select));
-
+                    Fhat_mean = abs(Fhat(1,r_index(k)));
+                    Fhat_new  = Fhat(ind_select,r_index(k));
+                    
                     % save the complex coefficients in terms of amplitude
                     % and phase angleei
                     % since we only store the positive frequencies, we need
@@ -134,6 +113,47 @@ switch P.FixedParameters.QoI
                     Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
                     
                 end
+                    
+%                 for k=1:length(r_index)
+% 
+% 
+%                     Fn_k = Fn_int(:,r_index(k));
+%                     % do the fourier transform
+%                     Fhat = fft(Fn_k,n)/n; % include scaling with 1/n to get physical results for coefficients
+%                     % get the power spectral density
+%                     PSD  = Fhat.*conj(Fhat);
+% 
+%                     % first half of frequencies contains all information, because the signal is
+%                     % real, so c_k = c_{-k}
+%                     % we therefore plot the one-sided (positive) frequency range only
+% %                     freqVals = (1/dt)*(0:floor(n/2)-1)'/n;
+% 
+%                     % select indices with largest PSD by sorting the PSD
+%                     [~,ind] = sort(PSD,'desc');
+%                     %
+% %                     ind_select = ones(n,1);
+%                     % select 2*n_keep indices, where the factor 2 is needed because we need the
+%                     % coefficients associated with negative frequencies as well to do the inverse
+%                     % transform
+% %                     ind_select(ind(2*n_keep:end)) = 0; 
+%                     
+%                     % alternatively, we can select directly from Fhat:
+%                     % note that the indices that are skipped correspond to
+%                     % the complex conjugate, so they don't need to be
+%                     % stored
+%                     ind_select = 2:2:2*(n_fourier-1);
+%                     
+%                     % add mean separately
+%                     Fhat_mean = abs(Fhat(ind(1)));
+%                     Fhat_new  = Fhat(ind(ind_select));
+% 
+%                     % save the complex coefficients in terms of amplitude
+%                     % and phase angleei
+%                     % since we only store the positive frequencies, we need
+%                     % to multiply by 2 for the physical amplitudes
+%                     Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
+%                     
+%                 end
         
         end
         

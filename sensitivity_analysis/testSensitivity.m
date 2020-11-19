@@ -26,6 +26,8 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper'));
 addpath(fullfile(root_folder,'NURBS'));
 addpath(fullfile(root_folder,'Geometry'));
 addpath(fullfile(root_folder,'cases',caseName));
+addpath(fullfile(root_folder,'Other'));
+
 
 %% initialize UQlab
 

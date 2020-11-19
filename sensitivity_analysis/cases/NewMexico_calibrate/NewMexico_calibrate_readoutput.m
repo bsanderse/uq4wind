@@ -23,8 +23,6 @@ switch P.FixedParameters.QoI
         % to compare to experiments, add the hub radius:
         r_sim = r_sim + 0.21;
         
-        
-        
         % Locations of experimental data
         % These values are made available from NewMexico: 
         r_exp = P.FixedParameters.r_exp; %2.25*[0.25 0.35 0.6 0.82 0.92]; % Measurement radial stations in percentage of blade length

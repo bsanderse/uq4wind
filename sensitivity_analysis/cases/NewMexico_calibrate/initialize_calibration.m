@@ -43,6 +43,7 @@ switch QoI_type
         % [ Fn1(t) Fn2(t) Fn3(t) Fn4(t) Fn5(t)]
         Data.y = Fn_exp_data(:)';
         Data.Name = 'Normal forces';        
+        warning('using full data vector for calibration, this is very expensive');
         
     case 'mean'
         
