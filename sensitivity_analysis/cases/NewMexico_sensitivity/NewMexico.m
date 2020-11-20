@@ -7,22 +7,22 @@ counter = 0;
 counter = counter+1;
 SNEL3DFACTOR     = 3.1;
 SNEL3DFACTOR_Std = 0.2;  % Standard deviation
-% SNEL3DFACTOR_LB = 0; % Lower bound of truncated Gaussian distribution
-% SNEL3DFACTOR_UB = 1;  % Upper bound of truncated Gaussian distribution 
+SNEL3DFACTOR_LB = 1; % Lower bound of truncated Gaussian distribution
+SNEL3DFACTOR_UB = 5;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'SNEL3DFACTOR';
 Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [SNEL3DFACTOR, SNEL3DFACTOR*abs(SNEL3DFACTOR)];
-% Input.Marginals(counter).Bounds = [SNEL3DFACTOR_LB SNEL3DFACTOR_UB]; 
+Input.Marginals(counter).Parameters = [SNEL3DFACTOR, SNEL3DFACTOR_Std*abs(SNEL3DFACTOR)];
+Input.Marginals(counter).Bounds = [SNEL3DFACTOR_LB SNEL3DFACTOR_UB]; 
 
 counter = counter+1;
 SNEL3DPOWER     = 2;
 SNEL3DPOWER_Std = 0.2;  % Standard deviation
-% SNEL3DPOWER_LB = 0; % Lower bound of truncated Gaussian distribution
-% SNEL3DPOWER_UB = 1;  % Upper bound of truncated Gaussian distribution 
+SNEL3DPOWER_LB = 1; % Lower bound of truncated Gaussian distribution
+SNEL3DPOWER_UB = 3;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'SNEL3DPOWER';
 Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [SNEL3DPOWER, SNEL3DPOWER*abs(SNEL3DPOWER)];
-% Input.Marginals(counter).Bounds = [SNEL3DPOWER_LB SNEL3DPOWER_UB]; 
+Input.Marginals(counter).Parameters = [SNEL3DPOWER, SNEL3DPOWER_Std*abs(SNEL3DPOWER)];
+Input.Marginals(counter).Bounds = [SNEL3DPOWER_LB SNEL3DPOWER_UB]; 
 
 % % define marginals of yaw model
 % counter = counter+1;
