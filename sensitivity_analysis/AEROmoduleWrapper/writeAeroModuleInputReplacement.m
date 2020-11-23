@@ -151,6 +151,12 @@ for i=1:ndim
             V_inf = X(i);
             uncertainty_covered(i) = 1;
             
+%         case {'k_ch ','exp_ch'}
+%             
+%             uncertainty_covered(i) = 1;
+%             
+%            %case for testing Chaviaropoulos - Hansen model
+            
         otherwise
             %% generic scalar variables
             % check if a line starts with the variable name (case sensitive)
