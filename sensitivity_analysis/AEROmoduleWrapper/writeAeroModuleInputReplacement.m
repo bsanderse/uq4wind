@@ -163,14 +163,22 @@ for i=1:ndim
             factor3D = X(1);
             exp3D = X(2);
             
-            % Ask for user input, choose between Snel and Chav. - Hansen
-            % models
+            % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
             
-            disp('Please select type of 3D correction')
-
-            prompt = '1 --> Snel, 2 --> Chav.-Hansen\n';
-
-            type = input(prompt)
+            type = 2;
+            
+            if type == 1
+                
+                disp('Snel correction selected')
+                
+            elseif type == 2
+                
+                disp('Chaviaropoulos - Hansen correction selected')
+            
+            else
+                
+                disp('Invalid type of correction')
+            end
             
             write_polars(type,factor3D,exp3D)
             
