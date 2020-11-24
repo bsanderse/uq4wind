@@ -66,7 +66,6 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
             
             fclose(fileID);
             
-            cd(oldFolder);
 
         end  
     
@@ -138,8 +137,6 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
             disp([section{i} ' polar file created!'])
             
             fclose(fileID);
-            
-            cd(oldFolder);
 
         end
 
