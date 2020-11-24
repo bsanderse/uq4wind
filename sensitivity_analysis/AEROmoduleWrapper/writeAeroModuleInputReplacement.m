@@ -11,9 +11,9 @@ current_folder = FixedParameters.current_folder;
 
 % add 3D correction folder on path to be accessible only use for NewMexico
 % case
-addpath('3D_correction');
+addpath('AEROmoduleWrapper\3D_correction');
 % add the path to the aeromodule folder of inputs
-addpath('..\AEROmodule\NewMexico\current');
+addpath('AEROmodule\NewMexico\current');
 
 %% copy all files from reference folder to current folder
 ref_dir = fullfile(root_folder,ref_folder);
