@@ -9,6 +9,12 @@ root_folder    = FixedParameters.root_folder;
 ref_folder     = FixedParameters.ref_folder;
 current_folder = FixedParameters.current_folder;
 
+% add 3D correction folder on path to be accessible only use for NewMexico
+% case
+addpath('3D_correction');
+% add the path to the aeromodule folder of inputs
+addpath('..\AEROmodule\NewMexico\current');
+
 %% copy all files from reference folder to current folder
 ref_dir = fullfile(root_folder,ref_folder);
 cur_dir = fullfile(root_folder,current_folder);
@@ -151,11 +157,22 @@ for i=1:ndim
             V_inf = X(i);
             uncertainty_covered(i) = 1;
             
-        case {'k_ch ','exp_ch'}
+        case {'kfactor ','exp'}
             
            %% case for testing Chaviaropoulos - Hansen model 
-            k_ch = X(1);
-            exp_ch = X(2);
+            kfactor = X(1);
+            exp = X(2);
+            
+            % Ask for user input, choose between Snel and Chav. - Hansen
+            % models
+            
+            disp('Please select type of 3D correction')
+
+            prompt = '1 --> Snel, 2 --> Chav.-Hansen\n';
+
+            type = input(prompt)
+            
+            write_polars(type,kfactor,exp)
             
             uncertainty_covered(i) = 1;
             
