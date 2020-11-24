@@ -31,6 +31,8 @@ addpath(fullfile(root_folder,'Other'));
 % add 3D correction folder on path to be accessible only use for NewMexico
 % case
 addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction'));
+addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
+
 % add the path to the aeromodule folder of inputs
 addpath(fullfile(root_folder,'AEROmodule\NewMexico\current'));
 
