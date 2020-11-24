@@ -2,13 +2,13 @@ function [polarm,Re] = snel_3Dcor(k,x,section,c,r)
 
     %%%% Snel model for 3D correction takes coefficients and creates 3D
     %%%% polar files in PhatAero_BEM
-    
-    % add the path to 2D polars
-    addpath('3D_correction\2D_polars');
+  
     
     %% data input - read file
-    
-    fid = fopen(section,'r');
+      root_folder = pwd;
+      
+      fid = fopen(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars',section),'r');
+ 
     
     if fid == -1 
         
