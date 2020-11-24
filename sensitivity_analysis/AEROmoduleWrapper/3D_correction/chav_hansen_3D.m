@@ -1,11 +1,8 @@
 function [polar, Re] = chav_hansen_3D(k,x,section,c,r,pitch,twist)
 
     %% data input - read file
-    
-    % add the path to 2D polars
-    addpath('3D_correction\2D_polars');
-    
-    fid = fopen(section,'r');
+    root_folder = pwd;
+    fid = fopen(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars',section),'r');
     
     if fid == -1 
         
