@@ -46,7 +46,7 @@
 
             if fileID == -1
 
-                disp('Error, check file name')
+                disp('Error, check 3D polar file name')
 
             end
 
@@ -119,7 +119,7 @@
 
             if fileID == -1
 
-                disp('Error, check file name')
+                disp('Error, check 3D polar file name')
 
             end
 
