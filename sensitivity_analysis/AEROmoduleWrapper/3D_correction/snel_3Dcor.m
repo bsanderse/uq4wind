@@ -33,7 +33,6 @@ function [polarm,Re] = snel_3Dcor(k,x,section,c,r)
     
     fclose(fid);
     
-    cd(oldFolder);
     
     aoa = [data{1}];
     
