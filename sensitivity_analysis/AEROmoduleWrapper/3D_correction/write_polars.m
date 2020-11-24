@@ -1,13 +1,13 @@
  function write_polars(type,kfactor,exp)
 
-%%% For 3D models the coefficients, currently, need to be set inside the function 
 %%% Chaviaropoulos - Hansen model currently only works for constant pitch
-
+root_folder = pwd;
+addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
 %% 3D Snel, type == 1
     
    if type == 1
         
-        dinfo = dir('2D_polars');
+        dinfo = dir(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
         
         files = {dinfo.name};
         
@@ -74,7 +74,7 @@
     
     elseif type == 2
         
-        dinfo = dir('2D_polars');
+        dinfo = dir(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
         
         files = {dinfo.name};
         
