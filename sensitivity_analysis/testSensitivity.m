@@ -28,6 +28,12 @@ addpath(fullfile(root_folder,'Geometry'));
 addpath(fullfile(root_folder,'cases',caseName));
 addpath(fullfile(root_folder,'Other'));
 
+% add 3D correction folder on path to be accessible only use for NewMexico
+% case
+addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction'));
+% add the path to the aeromodule folder of inputs
+addpath(fullfile(root_folder,'AEROmodule\NewMexico\current'));
+
 
 %% initialize UQlab
 
