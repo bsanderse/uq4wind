@@ -274,10 +274,8 @@ end
 
 %% check if there are any uncertainties not written to one of the files
 ind_notcovered = find(uncertainty_covered == 0);
-if (~isempty(ind_notcovered))
-    
+if (~isempty(ind_notcovered))    
     for i=1:length(ind_notcovered)
         warning([UncertainInputs.Marginals(ind_notcovered(i)).Name ' not used when writing input files']);
-    end
-    
+    end    
 end

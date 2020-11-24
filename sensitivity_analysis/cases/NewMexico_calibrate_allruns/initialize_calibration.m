@@ -25,13 +25,30 @@ Model.mHandle = @aero_module;
 % Quantity of interest (see NewMexico_calibrate_readoutput)
 QoI = 'Sectional_normal_force';
 % choose whether only the time-average of the data is used, or the full dataset
-% 'mean' or 'full'
-QoI_type = 'mean';
+% using 'mean' or 'full'
+% for the full dataset, a Fourier analysis is done, and one should choose
+% the number of fourier modes below
+% note that the 'mean' case can also be run by setting 'full' and then
+% choosing n_fourier=1.
+QoI_type = 'full';
 
+% the following settings are only used in case of 'full':
+% (currently for 'mean', only 1 revolution is used, and all radial indices)
+% number of revolutions to consider (counting from end of time series)
+n_rev = 4;
+% number of Fourier coefficients to keep (including mean)
+% note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
+% imaginary component (stored as amplitude and phase angle) for each
+% frequency
+n_fourier = 2;
+% radial indices (blade sections) to consider:
+r_index = 1:5;
     
+
 %% High-level surrogate model options
 
-% perform test run with Forward Model without uncertainties; this is used as a check and to plot the uncalibrated model in the results
+% perform test run with Forward Model without uncertainties; 
+% this is used as a check and to plot the uncalibrated model in the results
 test_run = 1; 
 
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
@@ -53,7 +70,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 5; % number of samples for each surrogate model (each run)
+MetaOpts.ExpDesign.NSamples = 40; % number of samples for each surrogate model (each run)
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;   
 
@@ -70,7 +87,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = [936;940;949]; 
+select_runs = [936;940]; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -131,6 +148,14 @@ FixedParameters.current_folder = current_folder;  % folder where the AeroModule 
 
 FixedParameters.QoI            = QoI;
 FixedParameters.QoI_type       = QoI_type;
+
+switch QoI_type
+    case 'full'
+        % store parameters in struct
+        FixedParameters.n_rev          = n_rev;
+        FixedParameters.n_fourier      = n_fourier;
+        FixedParameters.r_index        = r_index;
+end
 
 P.FixedParameters = FixedParameters;
 
@@ -198,7 +223,7 @@ for i = 1:n_runs
     end
     ind_notcovered = find(conditions_covered==0);
     if (~isempty(ind_notcovered))
-        for k=ind_notcovered
+        for k=1:length(ind_notcovered)
             warning(['Variable ' changing_conditions{k} ' not found in the table']);
         end
     end
@@ -208,7 +233,8 @@ for i = 1:n_runs
     UncertainInputs = addOperatingConditions(UncertainInputs_NoOC,OperatingCondition);
     clear OperatingConditions; 
     
-    % total dimension of the uncertain inputs vector
+    % total dimension of the uncertain inputs vector, this includes any
+    % constants
     ndim  = length(UncertainInputs.Marginals);
 
     
@@ -233,13 +259,44 @@ for i = 1:n_runs
         case 'full'
             % concatenate all the time-dependent normal forces into one row vector :
             % [ Fn1(t) Fn2(t) Fn3(t) Fn4(t) Fn5(t)]
-            Data(i).y = Fn_exp_data(:)';
+            dazi  = 10;
+%             dt    = dazi/RPM/6;
+            azi_exp_int = (0:dazi:350)';
+            Fn_exp_int  = spline(azi_exp_data',Fn_exp_data',azi_exp_int)';
+            % get the coefficients of the first n_fourier modes
+            % the coefficients are ordered according to the PSD
+            Fhat        = getFourierCoefficients(Fn_exp_int,n_fourier);
+            ind_select  = (2:2:2*(n_fourier-1))';
+            
+            Fhat_total = [];
+            n_r_index = length(r_index);
+            n_coeffs  = 2*n_fourier-1; % mean + ampl. mode 1 + angle mode 1 + ampl. mode 2 + angle mode 2 + etc.
+            for k = 1:n_r_index
+                
+                Fhat_mean   = abs(Fhat(1,r_index(k))); 
+                Fhat_new    = Fhat(ind_select,r_index(k));  
+                Fhat_total  = horzcat(Fhat_total,[Fhat_mean 2*abs(Fhat_new).' angle(Fhat_new).']);
+                
+            end
+            Data(i).y    = Fhat_total;            
             Data(i).Name = 'Normal force';
-            error('not finished');
+                        
+            % describe the model ID and output ID corresponding to this
+            % data set
+            % in this case, Data(i) corresponds to the i-th model (i-th operating condition)
+            % to the Model ID map is simple
+            % the output ID maps the entry in Data(i) to the entries in the model output Y
+            % (as computed in aero_module.m)
+            % in our case, Y is constructed such that it is ordered in
+            % the same way as Data.y
+            n_output      = n_coeffs * n_r_index;
+            Data(i).MOMap = [ i*ones(1,n_output); % Model IDs ...
+                              1:n_output]; % Output IDs
             
         case 'mean'
             
             % row vector
+            n_coeffs = 1;
             Data(i).y = mean(Fn_exp_data);
             Data(i).Name = 'Normal force';
             Data(i).MOMap = [ i i i i i; % Model ID ...
@@ -275,19 +332,21 @@ for i = 1:n_runs
     % Set the Prior equal to the Input
     Prior   = UncertainInputs;
     myPrior = uq_createInput(Prior);
+    
 
     % do a test run with the forward model at unperturbed settings
+    ndim = length(myPrior.Marginals);
+    % set unperturbed vector:
+    for k=1:ndim
+        % we take the mean of each parameter as the unperturbed
+        % condition
+        X_unperturbed(1,k) = myPrior.Marginals(k).Moments(1);
+    end    
     if (exist('test_run','var'))
         if (test_run == 1)
             disp('Performing test run at unperturbed (mean value) settings');
-            ndim = length(myPrior.Marginals);
-            for k=1:ndim
-                % we take the mean of each parameter as the unperturbed
-                % condition
-                X_unpert(1,k) = myPrior.Marginals(k).Moments(1);
-            end
-            % store output of current surrogate model
-            Y_unpert(i,:) = uq_evalModel(X_unpert);
+            % store output of current model i
+            Y_unperturbed(i,:) = uq_evalModel(myForwardModel,X_unperturbed);
         end
     end        
     
