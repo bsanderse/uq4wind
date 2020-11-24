@@ -9,6 +9,8 @@ INCLUDE                         specialist_input.txt
 !---------------------------------------------------------------------
 AEROPROPS
 !zB [m] chord [m] t/c [-] twist [deg]  C14 [%c] xB [m] yB [m]
+!0	0.195	1	0	-4.9	0	0
+!0.02	0.195	1	0	-4.9	0	0
 0.025	0.09	1	0	-2.3	0	0
 0.09	0.09	1	0	-2.3	0	0
 0.165	0.165	0.625	8.2	-1.1	0	0
@@ -37,25 +39,25 @@ CONEANGLE                       0.0
 HUBHEIGHT                       5.49
 NROFBLADES                      3     
 PITCHANGLE                     -2.3
-RPM                             425.1
+RPM                             424.5
 STARTAZIMUTH			0.0
 TBEGIN                          0.0
 TEND                            2.1206
 TILTANGLE                       0.0
 TIMESTEP                        0.00393 
 XNAC2HUB                       -2.13
-YAWANGLE                        30.01
+YAWANGLE                        0.0
 ZNAC2HUB                        0.37
 !---------------------------------------------------------------------
 ! Airfoil data -------------------------------------------------------
 !---------------------------------------------------------------------           
 COEFFFILENAME                   airfoils.dat
-CORR3DTYPE            1 !0: No correction 1: Snel
+CORR3DTYPE            0 !0: No correction 1: Snel
 DYNSTALLTYPE          1 !0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
 !---------------------------------------------------------------------
 ! Environment --------------------------------------------------------
 !---------------------------------------------------------------------
-AIRDENSITY                      1.2049
+AIRDENSITY                      1.225
 HORSHEAR			0.0
 SHEAREXP			0.0
 TOWERBASERADIUS                 0.254
@@ -67,3 +69,11 @@ WINDTYPE                        1 ! 1: Simple 2: SWIFT 3: TurbSim 4: Mann
 !---------------------------------------------------------------------
 NROFBEMELEMENTS                 14 
 PRANDTLROOT                     1                                    
+!---------------------------------------------------------------------
+!AWSM ----------------------------------------------------------------
+!---------------------------------------------------------------------
+STREAMWISEWAKEPOINTS            541
+FREESTRMWISEWAKEPOINTS          540
+WAKEREDUCTIONSTART		0
+WAKEREDUCTIONSKIP		0
+PARALLEL	                0   !0: off 1: on
