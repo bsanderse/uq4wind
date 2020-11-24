@@ -2,7 +2,7 @@
 
 %%% For 3D models the coefficients, currently, need to be set inside the function 
 %%% Chaviaropoulos - Hansen model currently only works for constant pitch
-addpath('3D_correction\2D_polars');
+
 %% 3D Snel, type == 1
     
    if type == 1
