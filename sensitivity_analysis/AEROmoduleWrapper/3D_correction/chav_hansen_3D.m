@@ -30,8 +30,6 @@ function [polar, Re] = chav_hansen_3D(k,x,section,c,r,pitch,twist)
     
     fclose(fid);
     
-    cd(oldFolder);
-    
     aoa = [data{1}];
     
     cl2d_visc = [data{2}];
