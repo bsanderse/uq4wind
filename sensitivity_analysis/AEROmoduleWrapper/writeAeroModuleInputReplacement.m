@@ -157,11 +157,11 @@ for i=1:ndim
             V_inf = X(i);
             uncertainty_covered(i) = 1;
             
-        case {'kfactor ','exp'}
+        case {'factor3D ','exp3D'}
             
            %% case for testing Chaviaropoulos - Hansen model 
-            kfactor = X(1);
-            exp = X(2);
+            factor3D = X(1);
+            exp3D = X(2);
             
             % Ask for user input, choose between Snel and Chav. - Hansen
             % models
@@ -172,7 +172,7 @@ for i=1:ndim
 
             type = input(prompt)
             
-            write_polars(type,kfactor,exp)
+            write_polars(type,factor3D,exp3D)
             
             uncertainty_covered(i) = 1;
             
