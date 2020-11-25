@@ -154,8 +154,10 @@ for i=1:ndim
             
         case {'factor3D', 'exp3D'}
             
-           %% case for testing Chaviaropoulos - Hansen model 
-            factor3D = X(1);
+           %% case for testing 3D model 
+           
+            % 3Dcoeffs = X(i)??
+            factor3D = X(1); 
             exp3D = X(2);
             
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
