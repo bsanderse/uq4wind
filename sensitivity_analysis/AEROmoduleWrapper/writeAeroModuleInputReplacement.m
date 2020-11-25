@@ -33,6 +33,7 @@ lines_new = lines;
 zz = 1;
 
 write_wind_file = 0; % determines whether the wind.dat file needs to be updated
+correction3D = 0; %determines whether there is 3D correction applied
 
 % loop over all uncertainties (and constants), and look for a match in the
 % input files
@@ -155,10 +156,11 @@ for i=1:ndim
         case {'factor3D', 'exp3D'}
             
            %% case for testing 3D model 
-           
-            % 3Dcoeffs = X(i)??
-            factor3D = X(1); 
-            exp3D = X(2);
+              correction3D = 1; %3D correction is applied
+              coeffs3D(i) = X(i);
+            
+%             factor3D = X(1); 
+%             exp3D = X(2);
             
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
             
@@ -177,10 +179,10 @@ for i=1:ndim
                 disp('Invalid type of correction')
             end
             
-            write_polars(type,factor3D,exp3D)
             
             uncertainty_covered(i) = 1;
             
+           
 
             
         otherwise
@@ -293,7 +295,19 @@ if (write_wind_file == 1)
     writetable(wind_data,filename_wind,'Delimiter','space','WriteVariableNames',false);
     
 end
+%% Write the 3D polars
 
+if (correction3D == 1)
+    
+    factor3D =  coeffs3D(1)
+    exp3D = coeffs3D(2)
+    
+    write_polars(type,factor3D,exp3D);
+    
+end
+    
+    
+    
 %% check if there are any uncertainties not written to one of the files
 ind_notcovered = find(uncertainty_covered == 0);
 if (~isempty(ind_notcovered))    
