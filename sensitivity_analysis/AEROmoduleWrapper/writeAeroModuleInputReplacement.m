@@ -299,8 +299,8 @@ end
 
 if (correction3D == 1)
     
-    factor3D =  coeffs3D(1)
-    exp3D = coeffs3D(2)
+    factor3D =  coeffs3D(1);
+    exp3D = coeffs3D(2);
     
     write_polars(type,factor3D,exp3D);
     
