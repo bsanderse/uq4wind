@@ -152,7 +152,7 @@ for i=1:ndim
             V_inf = X(i);
             uncertainty_covered(i) = 1;
             
-        case {'factor3D ','exp3D'}
+        case {'factor3D', 'exp3D'}
             
            %% case for testing Chaviaropoulos - Hansen model 
             factor3D = X(1);
