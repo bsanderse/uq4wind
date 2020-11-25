@@ -132,7 +132,7 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
             fprintf(fileID,'\n');
             fprintf(fileID,'Reynolds_Nr %f\n',Re(i));
             
-            writematrix(polar_mat, section{i}, 'WriteMode', 'Append', 'Delimiter', '\t');
+            writematrix(polar_mat, filevar, 'WriteMode', 'Append', 'Delimiter', '\t');
             
             disp([section{i} ' polar file created!'])
             
