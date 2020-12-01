@@ -32,8 +32,8 @@ lines_new = lines;
 
 zz = 1;
 
-write_wind_file = 1; % determines whether the wind.dat file needs to be updated
-correction3D = 1; %determines whether there is 3D correction applied
+write_wind_file = 0; % determines whether the wind.dat file needs to be updated
+correction3D = 0; %determines whether there is 3D correction applied
 
 % loop over all uncertainties (and constants), and look for a match in the
 % input files
