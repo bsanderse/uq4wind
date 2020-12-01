@@ -47,7 +47,7 @@ n_rev = 4;
 % note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
 % imaginary component (stored as amplitude and phase angle) for each
 % frequency
-n_fourier = 2;
+n_fourier = 1;
 % radial indices (blade sections) to consider:
 r_index = 1:5;
 
