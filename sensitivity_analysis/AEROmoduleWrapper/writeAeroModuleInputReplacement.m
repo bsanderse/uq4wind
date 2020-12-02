@@ -159,9 +159,6 @@ for i=1:ndim
               correction3D = 1; %3D correction is applied
               coeffs3D(i) = X(i);
             
-%             factor3D = X(1); 
-%             exp3D = X(2);
-            
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
             
             type = 2;
