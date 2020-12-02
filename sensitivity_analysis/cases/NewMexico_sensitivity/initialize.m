@@ -22,7 +22,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the run for which the sensitivity analysis is to be performed
 % note: only a single run is possible at this moment
-select_runs = 966; 
+select_runs = 1002; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
