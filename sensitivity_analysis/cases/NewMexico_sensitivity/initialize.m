@@ -39,7 +39,7 @@ QoI = 'Sectional_normal_force';
 % * the radial indices (sections to consider in the analysis)
 % * the number of revolutions 
 % * number of Fourier coefficients that are required
-QoI_type = 'full';
+QoI_type = 'mean';
                
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;
