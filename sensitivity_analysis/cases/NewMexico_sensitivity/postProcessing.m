@@ -57,11 +57,11 @@ cmap = get(gca,'ColorOrder');
 
 hold on
 
-m_plot = 3; % number of coefficients used for QoI
+m_plot = 1; % number of coefficients used for QoI
 n_plot = 5; % number of columns = number of radial sections
 
 titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
-QoI_names   = {'mean','amplitude 1','angle 1'};
+QoI_names   = {'mean'};
 
 for q=1:nout
     
