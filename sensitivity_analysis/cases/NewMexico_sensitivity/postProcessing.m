@@ -70,6 +70,7 @@ for q=1:nout
     % therefore, get q_plot by reversing the indexing:
     q_plot = sub2ind([n_plot m_plot],j_plot,i_plot);
     subplot(m_plot,n_plot,q_plot);
+    xtickangle(45)
     hold on
     
     n_methods = length(methods);
