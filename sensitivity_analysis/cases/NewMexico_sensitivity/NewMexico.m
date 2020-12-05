@@ -16,7 +16,7 @@ counter = 0;
         % factor3D_LB = 1.5; % Lower bound of truncated Gaussian distribution
         % factor3D_UB = 3.5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'factor3D';
-        Input.Marginals(counter).Type = Distr; 
+        Input.Marginals(counter).Type = distr; 
         Input.Marginals(counter).Parameters = [factor3D , factor3D_Std*abs(factor3D)];
         % Input.Marginals(counter).Bounds = [factor3D_LB factor3D_UB]; 
 
@@ -26,7 +26,7 @@ counter = 0;
         % exp3D_LB = 2; % Lower bound of truncated Gaussian distribution
         % exp3D_UB = 5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'exp3D';
-        Input.Marginals(counter).Type = Distr; 
+        Input.Marginals(counter).Type = distr; 
         Input.Marginals(counter).Parameters = [exp3D, exp3D_Std*abs(exp3D)];
         % Input.Marginals(counter).Bounds = [exp3D_LB exp3D_UB]; 
 
@@ -58,7 +58,7 @@ counter = 0;
             factor3D_LB = 1.0; % Lower bound Uniform distribution
             factor3D_UB = 4;  % Upper bound of Uniform distribution 
             Input.Marginals(counter).Name = 'factor3D';
-            Input.Marginals(counter).Type = Distr; 
+            Input.Marginals(counter).Type = distr; 
             Input.Marginals(counter).Bounds = [factor3D_LB factor3D_UB]; 
 
             counter = counter+1;
@@ -66,7 +66,7 @@ counter = 0;
             exp3D_LB = 2; % Lower bound of Uniform distribution
             exp3D_UB = 5;  % Upper bound of Uniform distribution 
             Input.Marginals(counter).Name = 'exp3D';
-            Input.Marginals(counter).Type = Distr; 
+            Input.Marginals(counter).Type = distr; 
             Input.Marginals(counter).Bounds = [exp3D_LB exp3D_UB]; 
     end
 end
