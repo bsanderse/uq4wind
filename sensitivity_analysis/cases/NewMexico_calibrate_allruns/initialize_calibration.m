@@ -40,7 +40,19 @@ n_rev = 4;
 % note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
 % imaginary component (stored as amplitude and phase angle) for each
 % frequency
-n_fourier = 2;
+% n_fourier = 2;
+% instead, we give the leading indices of the fourier modes that are used
+% as follows:
+% index 1: mean of signal (zeroth mode)
+% index 2: amplitude of first mode
+% index 3: angle of first mode
+% index 4: amplitude of second mode
+% index 5: anle of second mode
+% etc.
+% example: index_fourier = [2 3]; % amplitude and angle of first mode
+% example: index_fourier = 1:5; % zeroth, first and second mode
+index_fourier = [2 3]; 
+
 % radial indices (blade sections) to consider:
 r_index = 1:5;
     
@@ -153,8 +165,9 @@ switch QoI_type
     case 'full'
         % store parameters in struct
         FixedParameters.n_rev          = n_rev;
-        FixedParameters.n_fourier      = n_fourier;
+%         FixedParameters.n_fourier      = n_fourier;
         FixedParameters.r_index        = r_index;
+        FixedParameters.index_fourier  = index_fourier;        
 end
 
 P.FixedParameters = FixedParameters;
@@ -265,17 +278,37 @@ for i = 1:n_runs
             Fn_exp_int  = spline(azi_exp_data',Fn_exp_data',azi_exp_int)';
             % get the coefficients of the first n_fourier modes
             % the coefficients are ordered according to the PSD
-            Fhat        = getFourierCoefficients(Fn_exp_int,n_fourier);
-            ind_select  = (2:2:2*(n_fourier-1))';
+            Fhat        = getFourierCoefficients(Fn_exp_int);
             
             Fhat_total = [];
             n_r_index = length(r_index);
-            n_coeffs  = 2*n_fourier-1; % mean + ampl. mode 1 + angle mode 1 + ampl. mode 2 + angle mode 2 + etc.
+            n_coeffs  = length(index_fourier);
+%             ind_select = index_fourier; %(2:2:2*(n_fourier-1))';
+%             n_coeffs  = 2*n_fourier-1; % mean + ampl. mode 1 + angle mode 1 + ampl. mode 2 + angle mode 2 + etc.
+            % loop over radial indices            
             for k = 1:n_r_index
-                
-                Fhat_mean   = abs(Fhat(1,r_index(k))); 
-                Fhat_new    = Fhat(ind_select,r_index(k));  
-                Fhat_total  = horzcat(Fhat_total,[Fhat_mean 2*abs(Fhat_new).' angle(Fhat_new).']);
+                % loop over modes
+                for mode = 1:length(index_fourier)
+                    ind_select = index_fourier(mode);
+                    Fcurr = Fhat(ind_select,r_index(k));
+                    
+                    % exception for the mean:
+                    if (index_fourier(mode)==1) % this means the mean is requested
+                       F_add = abs(Fcurr); 
+                    else                        
+                        % even index => amplitude
+                        if (mod(index_fourier(mode),2)==0) 
+                            F_add = 2*abs(Fcurr);
+                        else % odd index => angle                          
+                            F_add = angle(Fcurr);
+                        end
+                    end
+                    
+                    Fhat_total = [Fhat_total F_add];
+                end
+%                 Fhat_mean   = abs(Fhat(1,r_index(k))); 
+%                 Fhat_new    = Fhat(ind_select,r_index(k));  
+%                 Fhat_total  = horzcat(Fhat_total,[Fhat_mean 2*abs(Fhat_new).' angle(Fhat_new).']);
                 
             end
             Data(i).y    = Fhat_total;            

@@ -10,7 +10,7 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R52P81D942_loads.dat';
+filename_exp = 'R52P82D943_loads.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
 output_raw   = readNewMexico(full_filename_exp);    
@@ -48,7 +48,7 @@ colormap = get(gca,'ColorOrder');
 % radial indices to plot:
 r_index = 1:5;
 
-% number of fourier coefficients to keep
+% number of fourier modes to keep (including the mean)
 n_keep = 3;
 
 %     
@@ -111,9 +111,9 @@ for k = 1:length(r_index)
     % alternatively, with only positive frequencies:
     ind_pos = ind(2:2:2*(n_keep-1));
     f_pos  = Fhat(ind_pos);
-    abs(Fhat(ind(1)))
-    abs(f_pos)*2
-    angle(f_pos)    
+    abs(Fhat(ind(1)));
+    abs(f_pos)*2;
+    angle(f_pos);   
     
     
     figure(9)

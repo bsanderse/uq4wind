@@ -113,6 +113,24 @@ switch P.FixedParameters.QoI
                     Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
                     
                 end
+                
+%                 figure(100)
+%                 plot(t_last_rev,Fn_int(:,1),'-');
+%                 hold on
+%                 figure(101)
+%                 plot(t_last_rev,Fn_int(:,2),'-');
+%                 hold on
+%                 figure(102)
+%                 plot(t_last_rev,Fn_int(:,3),'-');
+%                 hold on
+%                 figure(103)
+%                 plot(t_last_rev,Fn_int(:,4),'-');
+%                 hold on
+%                 figure(104)
+%                 plot(t_last_rev,Fn_int(:,5),'-');
+%                 hold on                
+                
+                
                     
 %                 for k=1:length(r_index)
 % 
