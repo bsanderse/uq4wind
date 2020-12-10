@@ -1,14 +1,10 @@
 function Input  = NewMexico()
 
 %% set type of distribution to describe the parameters that will be used to switch
-    distr = 'Uniform';
+
 % initialize counter of marginals
 counter = 0;
 %% define marginals of Snel 3D Correction model in case of performing 3D correction outside of Aeromodule
-
-    switch distr
-
-        case 'Gaussian'
 
         counter = counter+1;
         factor3D     = 2.2;
@@ -16,7 +12,7 @@ counter = 0;
         % factor3D_LB = 1.5; % Lower bound of truncated Gaussian distribution
         % factor3D_UB = 3.5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'factor3D';
-        Input.Marginals(counter).Type = distr; 
+        Input.Marginals(counter).Type = 'Gaussian'; 
         Input.Marginals(counter).Parameters = [factor3D , factor3D_Std*abs(factor3D)];
         % Input.Marginals(counter).Bounds = [factor3D_LB factor3D_UB]; 
 
@@ -26,7 +22,7 @@ counter = 0;
         % exp3D_LB = 2; % Lower bound of truncated Gaussian distribution
         % exp3D_UB = 5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'exp3D';
-        Input.Marginals(counter).Type = distr; 
+        Input.Marginals(counter).Type = 'Gaussian'; 
         Input.Marginals(counter).Parameters = [exp3D, exp3D_Std*abs(exp3D)];
         % Input.Marginals(counter).Bounds = [exp3D_LB exp3D_UB]; 
 
@@ -51,24 +47,7 @@ counter = 0;
         % Input.Marginals(counter).Parameters = [SNEL3DPOWER, SNEL3DPOWER_Std*abs(SNEL3DPOWER)];
         % Input.Marginals(counter).Bounds = [SNEL3DPOWER_LB SNEL3DPOWER_UB]; 
 
-        case 'Uniform'
 
-            counter = counter+1;
-
-            factor3D_LB = 1.0; % Lower bound Uniform distribution
-            factor3D_UB = 4;  % Upper bound of Uniform distribution 
-            Input.Marginals(counter).Name = 'factor3D';
-            Input.Marginals(counter).Type = distr; 
-            Input.Marginals(counter).Bounds = [factor3D_LB factor3D_UB]; 
-
-            counter = counter+1;
-
-            exp3D_LB = 2; % Lower bound of Uniform distribution
-            exp3D_UB = 5;  % Upper bound of Uniform distribution 
-            Input.Marginals(counter).Name = 'exp3D';
-            Input.Marginals(counter).Type = distr; 
-            Input.Marginals(counter).Bounds = [exp3D_LB exp3D_UB]; 
-    end
 end
 
 
