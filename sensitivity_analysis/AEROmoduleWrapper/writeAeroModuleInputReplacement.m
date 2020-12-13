@@ -161,7 +161,7 @@ for i=1:ndim
             
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
             
-            type = 2;
+            type = 1;
             
             if type == 1
                 
