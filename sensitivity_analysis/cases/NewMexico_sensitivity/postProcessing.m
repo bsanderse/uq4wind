@@ -111,7 +111,7 @@ for q=1:nout
         k = k+1;
     end
     
-%     legend(methods, 'Interpreter', 'none')
+     legend(methods, 'Interpreter', 'none')
 %     ylabel('Total order Sobol index');
     ylim([0 1])
     xticks(1:ndim)
