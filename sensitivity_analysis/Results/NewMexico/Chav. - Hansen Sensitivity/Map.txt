@@ -1,0 +1,7 @@
+Run one is with previous framework version that splits output into fourier modes
+which used only specific conditions
+
+Run2 is the new version with truncated Gaussian
+
+Run3 is with 24.05 m/s conditions keeping only the mean and a non - truncated Gaussian
+distr using two methods for variances
