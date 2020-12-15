@@ -82,7 +82,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 40; % number of samples for each surrogate model (each run)
+MetaOpts.ExpDesign.NSamples = 5; % number of samples for each surrogate model (each run)
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;   
 
@@ -99,7 +99,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = [936;940]; 
+select_runs = [935]; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -131,8 +131,8 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e3;
-        Solver.MCMC.NChains = 1e1;
+        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.NChains = 1e2;
         Solver.MCMC.a = 5;
         
     case 'HMC'
@@ -254,10 +254,10 @@ for i = 1:n_runs
     %% get the experimental dataset for the current run   
 
     % filename uses the R, P and D columns of the csv file
-    filename_exp = strcat('R',num2str(data_runs.RUN(i_run)),'P',num2str(data_runs.POL(i_run)),'D',num2str(data_runs.PNT(i_run)),'_loads.dat');
+    filename_exp = strcat('R',num2str(data_runs.RUN(i_run)),'P',num2str(data_runs.POL(i_run)),'D',num2str(data_runs.PNT(i_run)),'_loads_n.dat');
     full_filename_exp = fullfile(folder_exp,filename_exp);
     % read in the table
-    output_raw   = readNewMexico(full_filename_exp);    
+    output_raw   = readNewMexicoModified(full_filename_exp);    
 
     % azimuthal positions
     azi_exp_data = output_raw.Azi;
@@ -265,7 +265,7 @@ for i = 1:n_runs
     % Because the model has different discrepancy options at different radial locations,
     % the measurement data is stored in five different data structures:
     % normal forces at five stations
-    Fn_exp_data  = table2array(output_raw(:,2:6));
+    Fn_exp_data  = table2array(output_raw(:,4:8));
     
     switch QoI_type
         

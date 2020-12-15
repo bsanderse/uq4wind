@@ -2,6 +2,7 @@
 clearvars
 close all
 
+
 %% load  experimental data
 % run this file from sensitivity_analysis folder
 RPM = 425.1;
@@ -10,10 +11,10 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R52P82D943_loads.dat';
+filename_exp = 'R52P80D935_loads_n.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
-output_raw   = readNewMexico(full_filename_exp);    
+output_raw   = readNewMexicoModified(full_filename_exp);    
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NM80_calibrate_readoutput.m
@@ -24,7 +25,7 @@ azi_exp_data = output_raw.Azi;
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in five different data structures:
 % normal forces at five stations
-Fn_exp_data = table2array(output_raw(:,2:6));
+Fn_exp_data = table2array(output_raw(:,4:8));
 
 % interpolate the data to be equidistant in time/azimuth
 dazi  = 10;
@@ -49,7 +50,7 @@ colormap = get(gca,'ColorOrder');
 r_index = 1:5;
 
 % number of fourier modes to keep (including the mean)
-n_keep = 3;
+n_keep = 2:3;
 
 %     
 
@@ -122,9 +123,9 @@ for k = 1:length(r_index)
     semilogy(freqVals.*ind_select(1:floor(n/2)),PSD(1:floor(n/2)).*ind_select(1:floor(n/2)),'s','Color',colormap(k,:))
     
     figure(10)
-    plot(azi_exp_data,Fn_pert,'-','Color',colormap(k,:));
+    plot(azi_exp_data,Fn_pert,'-','Color',colormap(k,:), 'LineWidth',1);
     hold on
-    plot(azi_exp_data,Fnew,'--','Color',colormap(k,:));
+    plot(azi_exp_data,Fnew,'--','Color',colormap(k,:), 'LineWidth',2);
     
 end
 
@@ -139,15 +140,17 @@ xlabel('Frequency [1/s]');
 ylabel('Power spectral density');
 
 figure(10)
-grid
+
 legend('Section 1','Section 1 - 3 modes',...
     'Section 2','Section 2 - 3 modes',...
     'Section 3','Section 3 - 3 modes',...
     'Section 4','Section 4 - 3 modes',...
     'Section 5','Section 5 - 3 modes');
 xlabel('azimuth [degree]')
-ylabel('Fn [N/m]');
-title('Approximation of experimental data with Fourier modes')
+ylabel('F_N [N/m]');
+xlim([0 360])
+ylim([0 400])
+% title('Approximation of experimental data with Fourier modes')
 
 
 
