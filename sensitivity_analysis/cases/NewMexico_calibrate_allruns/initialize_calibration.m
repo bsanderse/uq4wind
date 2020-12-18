@@ -423,49 +423,44 @@ for i = 1:n_runs
     % For the current case, 2*standard deviations of the experimental
     % measurements is chosen as the prior.
 
+    % option 1: scalar known discrepancy for all QoIs (iid), for each forward
+    % model the same
+%     DiscrepancyOpts(i).Type = 'Gaussian';
+%     DiscrepancyOpts(i).Parameters = 1e-6;    
+    
+    % option 2: vector known discrepancy for QoIs (independent but not idd)
+    % that is different for phase and amplitude
+    % the QoI is ordered as follows:
+    % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
+    sigma_amp = 5;
+    sigma_phase = 1;
+    discrepancy_vector = zeros(1,n_output);
+    discrepancy_vector(1:2:end) = sigma_amp.^2;
+    discrepancy_vector(2:2:end) = sigma_phase.^2;
     DiscrepancyOpts(i).Type = 'Gaussian';
-    DiscrepancyOpts(i).Parameters = 1e-6;    
+    DiscrepancyOpts(i).Parameters = discrepancy_vector;
     
-    % DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
-    % DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
-    % DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
-    % DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 2*std(output_raw.Fy03)];
-    % DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
-    %
-    % DiscrepancyOpts(1).Type = 'Gaussian';
-    % DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
-    
-    %
-    % DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
-    % DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
-    % DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
-    % DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 2*std(output_raw.Fy05)];
-    % DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
-    %
-    % DiscrepancyOpts(2).Type = 'Gaussian';
-    % DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
-    %
-    % DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
-    % DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma3';
-    % DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
-    % DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 2*std(output_raw.Fy08)];
-    % DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
-    %
-    % DiscrepancyOpts(3).Type = 'Gaussian';
-    % DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
-    %
-    % DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
-    % DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma4';
-    % DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
-    % DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 2*std(output_raw.Fy10)];
-    % DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
-    %
-    % DiscrepancyOpts(4).Type = 'Gaussian';
-    % DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
-    
-    % DiscrepancyOpts.Type = 'Gaussian';
-    % DiscrepancyOpts.Parameters = 1e-6;
-    
+    % option 3: unknown residual variance: define a prior and calibrate
+%     DiscrepancyPriorOpts.Name = 'Prior of discrepancy parameter';
+%     % amplitudes
+%     % same discrepancy for each section
+%     for q=1:2:2*n_r_index
+%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
+%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
+%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 25];
+%     end
+%     % phase angle
+%     % same discrepancy for each section
+%     for q=2:2:2*n_r_index
+%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
+%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
+%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 2];
+%     end
+%     DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
+% 
+%     DiscrepancyOpts(i).Type = 'Gaussian';
+%     DiscrepancyOpts(i).Prior = DiscrepancyPrior;    
+%         
     
 end
 

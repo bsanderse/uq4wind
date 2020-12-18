@@ -50,7 +50,12 @@ colormap = get(gca,'ColorOrder');
 r_index = 1:5;
 
 % number of fourier modes to keep (including the mean)
-n_keep = 2:3;
+% n_keep = 1 :  zeroth mode (meanonly) (1 coefficient in total)
+% n_keep = 2 :  + amplitude and phase of first mode (3 coefficients in
+% total)
+% n_keep = 3 :  + amplitude and phase of second mode (5 coefficients in
+% total)
+n_keep = 2;
 
 %     
 

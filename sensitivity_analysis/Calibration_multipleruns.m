@@ -58,7 +58,7 @@ if (Bayes_full == 0) % create a PCE surrogate model to be used
         BayesOpts.ForwardModel = loaded_surrogate_models.mySurrogateModels;
         
     elseif (Surrogate_model_type == 1)
-        disp('creating surrogate model');
+        % disp('creating surrogate model');
         % use prior also as input uncertainties for surrogate model
         % other MetaOpts should have been set in the initialize_calibration
         % file
