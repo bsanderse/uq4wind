@@ -154,7 +154,7 @@ Input = UncertainInputs;
 
 % methods = {'PCE_OLS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
-methods = {'MC','PCE_Quad'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+methods = {'PCE_Quad'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
 
 % for MC, specify number of times to repeat MC-based methods to obtain 'nice' convergence
