@@ -1,4 +1,4 @@
-function [daqwin] = filt(daqwin)
+function [daqwin] = filt(daqwin,t1,t2)
 
 t = daqwin(:,174);
 
@@ -7,7 +7,7 @@ t = daqwin(:,174);
 % hold on
 % grid on
 
-index = find(t>=200 & t<=450);
+index = find(t>=t1 & t<=t2);
 
 % figure(1)
 % plot(daqwin(index,174),daqwin(index,84),'or')

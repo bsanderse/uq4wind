@@ -67,11 +67,11 @@ test_run = 1;
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 % note that this file should contain all the surrogate models
-Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/PCE_testrun.mat'; 
+Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/935PCE500.mat'; 
    
 
 %% Detailed surrogate model options
@@ -131,7 +131,7 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.Steps = 1e3;
         Solver.MCMC.NChains = 1e2;
         Solver.MCMC.a = 5;
         
@@ -176,7 +176,7 @@ P.FixedParameters = FixedParameters;
 if (Bayes_full == 0) % use a PCE surrogate model for calibration
     if (Surrogate_model_type == 0) % load existing surrogate model
         disp(['loading surrogate models from file: ' Surrogate_model_filename]);
-        loaded_surrogate_models = load(Surrogate_model_filename);
+        loaded_surrogate_models = load(fullfile(root_folder,Surrogate_model_filename));
         % check whether loaded surrogate model is having same features as
         % the uncertainties given in the prior (those we are trying to calibrate)
         if (length(loaded_surrogate_models.mySurrogateModels)~=length(select_runs))
@@ -243,6 +243,8 @@ for i = 1:n_runs
     
     % add Operatingconditions to the structure that contains the
     % uncertainties
+    % number of uncertainties without constants
+    nunc  = length(UncertainInputs_NoOC.Marginals);
     UncertainInputs = addOperatingConditions(UncertainInputs_NoOC,OperatingCondition);
     clear OperatingConditions; 
     
@@ -369,6 +371,7 @@ for i = 1:n_runs
 
     % do a test run with the forward model at unperturbed settings
     ndim = length(myPrior.Marginals);
+    ncons = ndim - nunc;
     % set unperturbed vector:
     for k=1:ndim
         % we take the mean of each parameter as the unperturbed
@@ -377,9 +380,15 @@ for i = 1:n_runs
     end    
     if (exist('test_run','var'))
         if (test_run == 1)
-            disp('Performing test run at unperturbed (mean value) settings');
-            % store output of current model i
-            Y_unperturbed(i,:) = uq_evalModel(myForwardModel,X_unperturbed);
+            if (Surrogate_model_type == 0)
+                disp('Performing test run at unperturbed (mean value) settings with loaded surrogate model');
+                Y_unperturbed(i,:) = uq_evalModel(loaded_surrogate_models.mySurrogateModels(i).Model,X_unperturbed);
+                
+            else
+                disp('Performing test run at unperturbed (mean value) settings');
+                % store output of current model i
+                Y_unperturbed(i,:) = uq_evalModel(myForwardModel,X_unperturbed);
+            end
         end
     end        
     
@@ -432,34 +441,35 @@ for i = 1:n_runs
     % that is different for phase and amplitude
     % the QoI is ordered as follows:
     % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
-    sigma_amp = 5;
-    sigma_phase = 1;
-    discrepancy_vector = zeros(1,n_output);
-    discrepancy_vector(1:2:end) = sigma_amp.^2;
-    discrepancy_vector(2:2:end) = sigma_phase.^2;
-    DiscrepancyOpts(i).Type = 'Gaussian';
-    DiscrepancyOpts(i).Parameters = discrepancy_vector;
+%     sigma_amp = 5;
+%     sigma_phase = 1;
+%     discrepancy_vector = zeros(1,n_output);
+%     discrepancy_vector(1:2:end) = sigma_amp.^2;
+%     discrepancy_vector(2:2:end) = sigma_phase.^2;
+%     DiscrepancyOpts(i).Type = 'Gaussian';
+%     DiscrepancyOpts(i).Parameters = discrepancy_vector;
     
     % option 3: unknown residual variance: define a prior and calibrate
-%     DiscrepancyPriorOpts.Name = 'Prior of discrepancy parameter';
-%     % amplitudes
-%     % same discrepancy for each section
-%     for q=1:2:2*n_r_index
-%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
-%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
-%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 25];
-%     end
-%     % phase angle
-%     % same discrepancy for each section
-%     for q=2:2:2*n_r_index
-%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
-%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
-%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 2];
-%     end
-%     DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
-% 
-%     DiscrepancyOpts(i).Type = 'Gaussian';
-%     DiscrepancyOpts(i).Prior = DiscrepancyPrior;    
+    DiscrepancyPriorOpts.Name = 'Prior of discrepancy parameter';
+%     amplitudes
+%     same discrepancy for each section
+    for q=1:2:2*n_r_index
+        DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
+        DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
+        DiscrepancyPriorOpts.Marginals(q).Parameters = [0 25];
+    end
+    % phase angle
+    % same discrepancy for each section
+    for q=2:2:2*n_r_index
+        DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
+        DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
+        DiscrepancyPriorOpts.Marginals(q).Parameters = [0 2];
+    end
+    DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
+
+    DiscrepancyOpts(i).Type = 'Gaussian';
+    DiscrepancyOpts(i).Prior = DiscrepancyPrior;    
+    n_hyper = n_output;
 %         
     
 end
