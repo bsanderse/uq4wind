@@ -154,7 +154,7 @@ Input = UncertainInputs;
 
 % methods = {'PCE_OLS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
-methods = {'PCE_Quad'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
+methods = {'PCE_LARS'}; % {'MC','PCE_Quad','PCE_OLS','PCE_LARS'};
 
 
 % for MC, specify number of times to repeat MC-based methods to obtain 'nice' convergence
@@ -164,7 +164,7 @@ MC_repeat = 1;
 NsamplesMC = 4; %[8 16 32];
 
 % for PCE_Quad, specify the polynomial degrees to be tested
-DegreesQuad = 1:4; %[1 2 3 4 5 6];
+DegreesQuad = 1:6; %[1 2 3 4 5 6];
 
 % for PCE-OLS:
 NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples from Quad is taken
