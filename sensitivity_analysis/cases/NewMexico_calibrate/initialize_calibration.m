@@ -8,6 +8,8 @@ ref_folder      = 'AEROmodule/NewMexico_calibrate/reference/';
 % folder used to write new input files
 current_folder  = 'AEROmodule/NewMexico_calibrate/current/';
 
+% xtra folder needed
+addpath 'C:\Users\gveri\Documents\GitHub\windtrue\sensitivity_analysis\AEROmoduleWrapper'
 
 %% Forward model description
 
