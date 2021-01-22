@@ -158,12 +158,12 @@ for i=1:ndim
         case {'factor3D', 'exp3D'}
             
            %% case for testing 3D model 
-              correction3D = 1; %3D correction is applied
+              correction3D = FixedParameters.correction; %3D correction is applied
               coeffs3D(i) = X(i);
             
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
             
-            type = 1;
+            type = correction3D;
             
             if type == 1
                 
