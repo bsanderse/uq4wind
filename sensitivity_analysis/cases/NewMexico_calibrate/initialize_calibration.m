@@ -21,6 +21,9 @@ QoI = 'Sectional_normal_force';
 % 'mean' or 'full'
 QoI_type = 'mean';
 
+%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+
+cor_type =1;
 
 %% Experimental data
 % NewMexicoData as obtained from Koen Boorsma (TNO)
@@ -87,7 +90,7 @@ FixedParameters.QoI_type       = QoI_type;
 
 FixedParameters.r_exp          = r_exp_data;
 FixedParameters.azi_exp        = azi_exp_data;
-
+FixedParameters.correction     = cor_type;
 
 P.FixedParameters = FixedParameters;
 P.UncertainInputs = UncertainInputs;
