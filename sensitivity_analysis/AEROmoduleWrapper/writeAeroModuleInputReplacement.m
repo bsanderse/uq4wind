@@ -9,6 +9,8 @@ root_folder    = FixedParameters.root_folder;
 ref_folder     = FixedParameters.ref_folder;
 current_folder = FixedParameters.current_folder;
 
+% Name of the wind file?
+wind_file = 'wind.dat';
 
 %% copy all files from reference folder to current folder
 ref_dir = fullfile(root_folder,ref_folder);
