@@ -12,8 +12,8 @@ AOAEVAL                         1
 LINREG 	                    	1
 MINAOALIN 	               -3.000
 MAXAOALIN 	                5.000
-SNEL3DFACTOR      3.2452
-SNEL3DPOWER      1.9471
+SNEL3DFACTOR      3.1
+SNEL3DPOWER      2
 !-------
 !Beddoes Leishman Parameters -----------------------------------------
 !-------

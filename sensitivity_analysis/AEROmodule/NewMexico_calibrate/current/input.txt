@@ -37,7 +37,7 @@ CONEANGLE                       0.0
 HUBHEIGHT                       5.49
 NROFBLADES                      3     
 PITCHANGLE                     -2.3
-RPM      425.1
+RPM                             425.1
 STARTAZIMUTH			0.0
 TBEGIN                          0.0
 TEND                            2.1206
