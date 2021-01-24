@@ -32,6 +32,10 @@ QoI = 'Sectional_normal_force';
 % choosing n_fourier=1.
 QoI_type = 'full';
 
+%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+
+cor_type =1;
+%%
 % the following settings are only used in case of 'full':
 % (currently for 'mean', only 1 revolution is used, and all radial indices)
 % number of revolutions to consider (counting from end of time series)
@@ -87,7 +91,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = [936;940]; 
+select_runs = 1002; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -148,6 +152,7 @@ FixedParameters.current_folder = current_folder;  % folder where the AeroModule 
 
 FixedParameters.QoI            = QoI;
 FixedParameters.QoI_type       = QoI_type;
+FixedParameters.correction     = cor_type;
 
 switch QoI_type
     case 'full'
