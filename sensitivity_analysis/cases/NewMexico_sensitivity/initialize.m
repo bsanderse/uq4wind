@@ -40,7 +40,11 @@ QoI = 'Sectional_normal_force';
 % * the number of revolutions 
 % * number of Fourier coefficients that are required
 QoI_type = 'mean';
-               
+
+%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+
+cor_type =2;
+%% 
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;
 % number of Fourier coefficients to keep (including mean)
@@ -61,6 +65,7 @@ FixedParameters.QoI            = QoI;
 FixedParameters.QoI_type       = QoI_type;
 
 FixedParameters.r_exp          = r_exp_data;
+FixedParameters.correction     = cor_type;
 
 switch QoI_type
     case 'full'
