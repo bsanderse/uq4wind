@@ -30,7 +30,7 @@ QoI = 'Sectional_normal_force';
 % the number of fourier modes below
 % note that the 'mean' case can also be run by setting 'full' and then
 % choosing n_fourier=1.
-QoI_type = 'full';
+QoI_type = 'mean';
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 
