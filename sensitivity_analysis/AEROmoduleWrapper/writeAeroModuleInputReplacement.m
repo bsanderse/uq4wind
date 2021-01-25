@@ -10,7 +10,7 @@ ref_folder     = FixedParameters.ref_folder;
 current_folder = FixedParameters.current_folder;
 
 % Name of the wind file?
-wind_file = 'wind.dat';
+%wind_file = 'wind.dat';
 
 %% copy all files from reference folder to current folder
 ref_dir = fullfile(root_folder,ref_folder);
@@ -158,12 +158,12 @@ for i=1:ndim
         case {'factor3D', 'exp3D'}
             
            %% case for testing 3D model 
-              correction3D = FixedParameters.correction; %3D correction is applied
+              correction3D = 1; %3D correction is applied
               coeffs3D(i) = X(i);
             
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
             
-            type = correction3D;
+            type = FixedParameters.correction; %Take correction type from struct
             
             if type == 1
                 
