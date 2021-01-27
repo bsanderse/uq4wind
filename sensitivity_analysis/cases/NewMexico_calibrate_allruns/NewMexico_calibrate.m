@@ -8,10 +8,14 @@ function Input  = NewMexico_calibrate()
 
 type = 1 ; 
 
+% initialize counter of marginals
 counter = 0;
+
+%% Switch between types of correction
+
     switch type
     
-    % initialize counter of marginals
+
     
 
     %% If correction = 1 --> Snel
