@@ -24,13 +24,13 @@ for i = 1:length(d)
   end
 end
 
-%% Create new txt files with the desired format for the framework
+%% Create new dat files with the desired format for the framework
 
 num_files = length(filenames);
 
 for i = 1:num_files
     
-    %% Open file
+    % Open file
     fid = fopen(filenames{i},'r');
     
     if fid == -1 
@@ -38,32 +38,32 @@ for i = 1:num_files
             disp('Error, check file name')
 
     end
-    %% Extract header lines and remove std and avg lines
+    % Extract header lines and remove std and avg lines
 
                 
-    tline = fgetl(fid);
-       
-    headers = tline;
+%     tline = fgetl(fid);
+%        
+%     headers = tline;
     
     data = readtable(filenames{i}, 'HeaderLines', 3); %skip first 3 rows
     
     fclose(fid);
     
-    %% Create a txt file with the desired format for each csv 
+    % Create a dat file with the desired format for each csv 
     
     filevar = strcat(erase(filenames{i},'.csv'), '.dat');        
     
     fid = fopen(filevar,'w');
     
-    % remove unused column headers
-    headers = erase(headers, 'Fa');
-    headers = erase(headers, 'Torque');
+%     % remove unused column headers
+%     headers = erase(headers, 'Fa');
+%     headers = erase(headers, 'Torque');
     
-    fprintf(fid, headers);
+    fprintf(fid, 'Azi Fn25[Npm] Fn35[Npm] Fn60[Npm] Fn82[Npm] Fn92[Npm] Ft25[Npm] Ft35[Npm] Ft60[Npm] Ft82[Npm] Ft92[Npm]');
     
     datamat = data(:,[1 4:13]);
   
-    writetable(datamat, filevar, 'WriteMode', 'Append', 'Delimiter', '\t');
+    writetable(datamat, filevar, 'WriteMode', 'Append', 'Delimiter', ' ');
     
     fclose(fid);
 end   
