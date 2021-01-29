@@ -12,7 +12,7 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R34P40D439_loads.dat';
+filename_exp = 'R34P40D447_loads.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
 output_raw   = readNewMexico(full_filename_exp);    
@@ -149,7 +149,7 @@ legend('Section 1','Section 1 - 3 modes',...
     'Section 5','Section 5 - 3 modes');
 xlabel('azimuth [degree]')
 ylabel('Fn [N/m]');
-title('Approximation of experimental data with Fourier modes')
+title('Approximation of experimental data with Fourier modes', filename_exp)
 
 
 
