@@ -10,7 +10,7 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R52P81D942_loads.dat';
+filename_exp = 'R34P40D432_loads.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
 output_raw   = readNewMexico(full_filename_exp);    
