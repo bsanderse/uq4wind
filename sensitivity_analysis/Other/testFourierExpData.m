@@ -2,6 +2,8 @@
 clearvars
 close all
 
+%% Need to add path to readNewMexico
+addpath 'C:\Users\gveri\Documents\GitHub\windtrue\sensitivity_analysis\AEROmoduleWrapper'
 %% load  experimental data
 % run this file from sensitivity_analysis folder
 RPM = 425.1;
@@ -10,7 +12,7 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R34P40D432_loads.dat';
+filename_exp = 'R34P40D439_loads.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
 output_raw   = readNewMexico(full_filename_exp);    
