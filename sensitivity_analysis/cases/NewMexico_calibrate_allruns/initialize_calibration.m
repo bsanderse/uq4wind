@@ -30,7 +30,7 @@ QoI = 'Sectional_normal_force';
 % the number of fourier modes below
 % note that the 'mean' case can also be run by setting 'full' and then
 % choosing n_fourier=1.
-QoI_type = 'mean';
+QoI_type = 'full';
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 
@@ -44,7 +44,7 @@ n_rev = 4;
 % note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
 % imaginary component (stored as amplitude and phase angle) for each
 % frequency
-n_fourier = 2;
+n_fourier = 1;
 % radial indices (blade sections) to consider:
 r_index = 1:5;
     
