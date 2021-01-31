@@ -1,7 +1,7 @@
 function writeAeroModuleInputReplacement(X,P)
 % This routine adds the random input to the input.txt file used for Aero
 % module.
-X
+
 FixedParameters = P.FixedParameters;
 UncertainInputs = P.UncertainInputs;
 
@@ -35,7 +35,7 @@ lines_new = lines;
 zz = 1;
 
 write_wind_file = 1; % determines whether the wind.dat file needs to be updated
-correction3D = 1; %determines whether there is 3D correction applied
+correction3D = 1; %determines whether 3D correction is applied
 
 % loop over all uncertainties (and constants), and look for a match in the
 % input files
