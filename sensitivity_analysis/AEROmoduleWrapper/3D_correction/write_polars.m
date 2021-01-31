@@ -1,13 +1,29 @@
  function write_polars(type,kfactor,exp)
 
 %%% Chaviaropoulos - Hansen model currently only works for constant pitch
+
+%% Temporary bug fix with paths wr_path points always inside sensitivity_analysis folder
 root_folder = pwd;
-addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
+ if endsWith(root_folder,'NewMexico_calibrate_allruns') 
+     
+    wr_path = fullfile(root_folder, '..\..');
+   
+    
+ elseif endsWith(root_folder, 'sensitivity_analysis')
+     
+    wr_path = root_folder;
+    
+ else 
+     error('Error check paths that function write_polars uses')
+     
+ end
+     
+     
 %% 3D Snel, type == 1
     
    if type == 1
         
-        dinfo = dir(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
+        dinfo = dir(fullfile(wr_path,'AEROmoduleWrapper\3D_correction\2D_polars'));
         
         files = {dinfo.name};
         
@@ -40,7 +56,7 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
 
             %%%%%change if folder changes
             
-            filevar = fullfile(root_folder,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
+            filevar = fullfile(wr_path,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
             
             fileID = fopen(filevar,'w');
 
@@ -73,7 +89,7 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
     
     elseif type == 2
         
-        dinfo = dir(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
+        dinfo = dir(fullfile(wr_path,'AEROmoduleWrapper\3D_correction\2D_polars'));
         
         files = {dinfo.name};
         
@@ -112,7 +128,7 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
             [polar_mat, Re(i)] = chav_hansen_3D(k,x,files1{i},c(i),r(i),pitch,twist(i));
 
             %%%%%check if folder changes
-            filevar = fullfile(root_folder,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
+            filevar = fullfile(wr_path,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
             
             fileID = fopen(filevar,'w');
 
@@ -147,7 +163,7 @@ addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));
     
     else
         
-        disp('Error, invalid model type')
+        error('Error, invalid model type')
     
     end
     
