@@ -1,6 +1,8 @@
 %% This file is used to initialize all settings in order to perform the calibration of the AeroModule 
 % for the case that experimental data corresponding to different operating
 % conditions is available
+% For 3D correction calibration please set the desired correction type in
+% the respective field below
 
 
 %% Turbine name and folders
@@ -91,7 +93,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = 1002; 
+select_runs = [432 439 447] ; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
