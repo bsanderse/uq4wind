@@ -183,7 +183,7 @@ for i=1:ndim
             
         case {'PITCHANGLE'}
                 
-            pitch = X(i)
+            pitch = X(i);
             
             uncertainty_covered(i) = 1;
             
@@ -304,7 +304,7 @@ if (correction3D == 1)
     factor3D =  coeffs3D(1);
     exp3D = coeffs3D(2);
     
-    write_polars(type,factor3D,exp3D);
+    write_polars(type,factor3D,exp3D,pitch);
     
 end
     
