@@ -44,18 +44,18 @@ TEND                            2.1206
 TILTANGLE                       0.0
 TIMESTEP                        0.00393 
 XNAC2HUB                       -2.13
-YAWANGLE                        30.01
+YAWANGLE      0
 ZNAC2HUB                        0.37
 !---------------------------------------------------------------------
 ! Airfoil data -------------------------------------------------------
 !---------------------------------------------------------------------           
 COEFFFILENAME                   airfoils.dat
-CORR3DTYPE            1 !0: No correction 1: Snel
+CORR3DTYPE            0 !0: No correction 1: Snel
 DYNSTALLTYPE          1 !0: No DS 1:Snel1 2: Snel2 3:B-Leishmann 4: Onera
 !---------------------------------------------------------------------
 ! Environment --------------------------------------------------------
 !---------------------------------------------------------------------
-AIRDENSITY                      1.2049
+AIRDENSITY      1.1969
 HORSHEAR			0.0
 SHEAREXP			0.0
 TOWERBASERADIUS                 0.254
