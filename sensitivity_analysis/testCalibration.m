@@ -36,6 +36,8 @@ addpath(fullfile(root_folder,'NURBS'));
 addpath(fullfile(root_folder,'Geometry'));
 addpath(fullfile(root_folder,'cases',caseName));
 addpath(fullfile(root_folder,'Other'));
+addpath (fullfile(root_folder,'AEROmoduleWrapper','3D_correction')); % Add the folder for 3D correction scripts
+addpath(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars'));%folder for 2D/uncorrected polars
 
 %% Initialization
 run(['cases/' input_file '/initialize_calibration.m']);
