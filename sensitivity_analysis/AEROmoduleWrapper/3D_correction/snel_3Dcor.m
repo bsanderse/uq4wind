@@ -1,7 +1,7 @@
 function [polarm,Re] = snel_3Dcor(k,x,section,c,r)
 
-    %%%% Snel model for 3D correction takes coefficients and creates 3D
-    %%%% polar files in PhatAero_BEM
+    %%%% Snel model for 3D correction takes coefficients and corrects 
+    %%%% polar files for AEROmodule
     
     %% data input - read file
       

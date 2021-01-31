@@ -1,7 +1,7 @@
 function [polar, Re] = chav_hansen_3D(k,x,section,c,r,pitch,twist)
     
-    disp('CORRECTION STARTED!!!!')
-    
+       %%%% Chaviaropoulos - Hansen model for 3D correction takes coefficients and corrects 
+       %%%% polar files for AEROmodule
     %% data input - read file
    
     
