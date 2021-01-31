@@ -1,9 +1,11 @@
- function write_polars(type,kfactor,exp)
+ function write_polars(type,kfactor,exp,pitch)
 
 %%% Chaviaropoulos - Hansen model currently only works for constant pitch
 
 %% Temporary bug fix with paths wr_path points always inside sensitivity_analysis folder
-root_folder = pwd;
+
+ root_folder = pwd;
+ 
  if endsWith(root_folder,'NewMexico_calibrate_allruns') 
      
     wr_path = fullfile(root_folder, '..\..');
@@ -53,8 +55,8 @@ root_folder = pwd;
         for i = 1 : size(files1,2)
 
             [polar_mat, Re(i)] = snel_3Dcor(k,x,files1{i},c(i),r(i));
-
-            %%%%%change if folder changes
+            
+            %%%%%check if folder changes
             
             filevar = fullfile(wr_path,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
             
@@ -75,7 +77,7 @@ root_folder = pwd;
             fprintf(fileID,'format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm\n');
             fprintf(fileID,'\n');
             fprintf(fileID,'Reynolds_Nr %f\n',Re(i));
-
+    
             writematrix(polar_mat, filevar, 'WriteMode', 'Append', 'Delimiter', '\t');
             
             disp([section{i} ' polar file created!'])
@@ -95,9 +97,6 @@ root_folder = pwd;
         
         files1 = {files{1,3:7}}; %extract the 2D polars
         
-        %%%% SET PITCH in degrees!!!!!!
-        
-        pitch = -2.3;
         
         fid = fopen('airfoils_g.dat','r');
         
