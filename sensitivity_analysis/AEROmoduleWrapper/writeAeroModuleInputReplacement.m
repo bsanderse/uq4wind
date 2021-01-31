@@ -175,14 +175,17 @@ for i=1:ndim
             
             else
                 
-                disp('Invalid type of correction')
+                error('Invalid type of correction')
             end
             
             
             uncertainty_covered(i) = 1;
             
-           
-
+        case {'PITCHANGLE'}
+                
+            pitch = X(i)
+            
+            uncertainty_covered(i) = 1;
             
         otherwise
             %% generic scalar variables

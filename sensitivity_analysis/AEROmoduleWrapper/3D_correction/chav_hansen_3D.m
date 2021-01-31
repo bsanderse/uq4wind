@@ -2,11 +2,11 @@ function [polar, Re] = chav_hansen_3D(k,x,section,c,r,pitch,twist)
 
     %% data input - read file
     root_folder = pwd;
-    fid = fopen(fullfile(root_folder,'AEROmoduleWrapper\3D_correction\2D_polars',section),'r');
+    fid = fopen(section,'r');
     
     if fid == -1 
         
-        disp('Error, check 2D polar file name')
+        error('Error, check 2D polar file name')
         
     end
         
