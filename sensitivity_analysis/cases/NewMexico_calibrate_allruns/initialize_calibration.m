@@ -36,7 +36,7 @@ QoI_type = 'full';
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 
-cor_type =1;
+cor_type =2;
 %%
 % the following settings are only used in case of 'full':
 % (currently for 'mean', only 1 revolution is used, and all radial indices)
