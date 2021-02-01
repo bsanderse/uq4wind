@@ -13,7 +13,7 @@ ind = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NM80'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options

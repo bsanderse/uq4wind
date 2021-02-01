@@ -14,7 +14,13 @@ current_folder  = 'AEROmodule/NM80/current/';
 Model.mHandle = @aero_module;
 
 % Quantity of interest
-QoI = 'Axial_Force';
+% QoI = 'Axial_Force';
+QoI = 'Sectional_normal_force';
+
+% for sectional normal force, we look at sensitivity with respect to the force
+% at the following points, corresponding to the experimental data
+% r_exp_data = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
+r_exp_data = [13.0, 19.0, 30.0, 37.0];  % see e.g. the DanAero MW final report
 
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
@@ -23,7 +29,7 @@ FixedParameters.root_folder    = root_folder;
 FixedParameters.ref_folder     = ref_folder;
 FixedParameters.current_folder = current_folder;
 FixedParameters.QoI            = QoI;
-
+FixedParameters.r_exp          = r_exp_data;
 
 P.FixedParameters = FixedParameters;
 P.UncertainInputs = UncertainInputs;
@@ -66,7 +72,7 @@ OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
 
-NsamplesLARS = [20]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [32]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 

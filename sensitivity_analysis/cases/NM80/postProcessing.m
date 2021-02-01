@@ -111,3 +111,70 @@ for q=1:nout
     title(strcat('Sobol indices for output ',num2str(q)))
 
 end
+
+%%
+label_names = {'\DeltaC_{l,1}', '\DeltaC_{l,2}', '\DeltaC_{l,3}', '\DeltaC_{l,4}', ...
+    '\DeltaC_{d,1}', '\DeltaC_{d,2}', '\DeltaC_{d,3}', '\DeltaC_{d,4}',...
+    '\DeltaC_{m,1}', '\DeltaC_{m,2}', '\DeltaC_{m,3}', '\DeltaC_{m,4}'};
+xticklabels(label_names)
+
+
+%% alternative plot, with Sobol indices gathered at different sections
+figure
+cmap = get(gca,'ColorOrder');
+hold on
+
+for k=1:nout
+    
+
+   
+%     n_methods = length(methods);
+    bar_width = 0.5/nout;
+    bar_vec   = 1:nout;
+    coords    = (bar_vec - mean(bar_vec))*bar_width;
+%     k         = 1;
+    
+    if (find(strcmp(methods,'MC')))
+%         if(length(NsamplesMC)==1)
+%             uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+%         else
+            uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(end,:,k), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+%         end
+    end
+    
+    if (find(strcmp(methods,'PCE_Quad')))
+        uq_bar((1:ndim)+ coords(k), Sobol_Quad_Total(end,:,k), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+    end
+    
+    if (find(strcmp(methods,'PCE_OLS')))
+%         if(length(NsamplesOLS)==1)
+%             uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+%         else
+            uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(end,:,k), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+%         end
+    end
+    
+    if (find(strcmp(methods,'PCE_LARS')))
+%         if(length(NsamplesLARS)==1)
+%             uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(:,end,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+%         else
+            uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(end,:,k), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+%         end
+    end
+    
+end
+legend(methods, 'Interpreter', 'none')
+ylabel('Total order Sobol index');
+ylim([0 1])
+xticks(1:ndim)
+for i =1:ndim
+    label_names{i} = Input.Marginals(i).Name;
+end
+xticklabels(label_names)
+title(strcat('Sobol indices'))
+
+label_names = {'\DeltaC_{l,1}', '\DeltaC_{l,2}', '\DeltaC_{l,3}', '\DeltaC_{l,4}', ...
+    '\DeltaC_{d,1}', '\DeltaC_{d,2}', '\DeltaC_{d,3}', '\DeltaC_{d,4}',...
+    '\DeltaC_{m,1}', '\DeltaC_{m,2}', '\DeltaC_{m,3}', '\DeltaC_{m,4}'};
+xticklabels(label_names)
+legend('Section 1','Section 2','Section 3','Section 4');
