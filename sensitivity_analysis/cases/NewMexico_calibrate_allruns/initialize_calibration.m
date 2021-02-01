@@ -58,7 +58,7 @@ r_index = 1:5;
 test_run = 1; 
 
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
-Bayes_full = 1; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
+Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
 Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
