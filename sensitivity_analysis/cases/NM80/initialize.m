@@ -19,8 +19,11 @@ QoI = 'Sectional_normal_force';
 
 % for sectional normal force, we look at sensitivity with respect to the force
 % at the following points, corresponding to the experimental data
-% r_exp_data = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
-r_exp_data = [13.0, 19.0, 30.0, 37.0];  % see e.g. the DanAero MW final report
+% Measurement radial stations, distance from blade root (not rotor center)
+r_exp_data = [11.876, 17.820, 28.976, 35.535];
+% Alternatively, distance from rotor center:
+% r_exp_data = [13.0, 19.0, 30.0, 37.0];  % see e.g. the DanAero MW final report
+% r_exp_data = [13.116, 19.06, 30.216, 36.775]; % according to Koen
 
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);

@@ -30,8 +30,10 @@ switch P.FixedParameters.QoI
         
         % Radial stations   
         r_sim = str2double(D.Properties.VariableNames(3:end)); 
-        % need to add hub radius?
-
+        % no need to add hub radius, if the experimental locations are
+        % reported as distance from blade root,
+        % otherwise, add 1.24 m
+%         r_sim = r_sim + 1.24; % according to Koen
         
         %% Calculate mean
         % Get mean (average in time) values at different radial stations
