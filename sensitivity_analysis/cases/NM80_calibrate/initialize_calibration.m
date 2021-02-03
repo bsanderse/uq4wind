@@ -33,11 +33,16 @@ output_raw   = readNM80(filename_exp, 2);
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NM80_calibrate_readoutput.m
-r_exp_data = [11.87, 17.82, 28.97, 35.53]; % Measurement radial stations
+% Measurement radial stations, distance from blade root (not rotor center)
+r_exp_data = [11.876, 17.820, 28.976, 35.535];
+% Alternatively, distance from rotor center:
+% r_exp_data = [13.0, 19.0, 30.0, 37.0];  % see e.g. the DanAero MW final report
+% r_exp_data = [13.116, 19.06, 30.216, 36.775]; % according to Koen
 
- % 'mean', 'full', 'synthetic'; other options also possible but need to be implemented
+ % 'mean', 'full', 'subset', 'synthetic'; other options also possible but need to be implemented
  % below
-Data_type = 'full';
+Data_type = 'subset';
+Data_subset = 100; % specify number of random subset
 
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
@@ -70,12 +75,21 @@ switch Data_type
         Data(2).y = mean(Data(2).y); % [N/m] 
         Data(3).y = mean(Data(3).y); % [N/m]        
         Data(4).y = mean(Data(4).y); % [N/m]
+
+    case 'subset'
+        % for testing, we can use first 100 datapoints
+        random_index = ceil(length(Data(1).y)*rand(Data_subset,1));
+        Data(1).y = Data(1).y(random_index); %(1:100); % [N/m]        
+        Data(2).y = Data(2).y(random_index); %(1:100); % [N/m] 
+        Data(3).y = Data(3).y(random_index); %(1:100); % [N/m]        
+        Data(4).y = Data(4).y(random_index); %(1:100); % [N/m]
+                
         
     case 'full'
-        Data(1).y = Data(1).y(1:100); % [N/m]        
-        Data(2).y = Data(2).y(1:100); % [N/m] 
-        Data(3).y = Data(3).y(1:100); % [N/m]        
-        Data(4).y = Data(4).y(1:100); % [N/m]
+        Data(1).y = Data(1).y; % [N/m]        
+        Data(2).y = Data(2).y; % [N/m] 
+        Data(3).y = Data(3).y; % [N/m]        
+        Data(4).y = Data(4).y; % [N/m]
         
         
     case 'synthetic'
@@ -126,7 +140,7 @@ Prior = UncertainInputs;
 % we assume the following prior for sigma^2
 % discrepancy bounds for prior (specify here the expected variance between model
 % and data, and multiply by some factor, e.g. 5 to have sufficiently broad prior
-prior_sigma2_bounds = 5*[0 100; 0 100; 0 100; 0 100];
+prior_sigma2_bounds = 5*[0 10000; 0 10000; 0 10000; 0 10000];
 
 
 for i=1:size(prior_sigma2_bounds,1)
@@ -153,7 +167,7 @@ Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model 
 Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
-Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS_CL_LHS40.mat'; % Specify the surrogate model file to be used
+Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS_N32.mat'; % Specify the surrogate model file to be used
 
 % Options for creating a surrogate model
 % These are used if Bayes_full = 0 and Surrogate_model_type = 1
@@ -162,7 +176,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 40;
+MetaOpts.ExpDesign.NSamples = 32;
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;
 
@@ -191,9 +205,9 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 5e2;
+        Solver.MCMC.Steps = 1e3;
         Solver.MCMC.NChains = 1e2;
-        Solver.MCMC.a = 5;
+        Solver.MCMC.a = 2;
         
     case 'HMC'
         Solver.MCMC.Sampler = 'HMC';

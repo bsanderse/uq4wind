@@ -11,9 +11,9 @@ uq_display(BayesianAnalysis,'scatterplot','all')
 %% trace plots
 %uq_display(BayesianAnalysis, 'meanConvergence', 'all')
 % plot trace plot of all parameters:
-% uq_display(BayesianAnalysis, 'trace', 'all')
+uq_display(BayesianAnalysis, 'trace', 'all')
 % trace plot of selected parameters:
-uq_display(BayesianAnalysis, 'trace', [1;5])
+% uq_display(BayesianAnalysis, 'trace', [1;5])
 %uq_display(BayesianAnalysis, 'acceptance', 'true')
 
 
@@ -40,6 +40,12 @@ end
 % store the MAP into BayesianAnalysis.Results.PostProc.PointEstimate:
 uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP', 'burnIn',0.5,'posteriorPredictive',0)
 X_MAP = BayesianAnalysis.Results.PostProc.PointEstimate.X;
+
+%% get posterior predictive
+nPred = 500;
+uq_postProcessInversion(BayesianAnalysis,'burnIn',0.5,'posteriorPredictive',nPred)
+postPred = BayesianAnalysis.Results.PostProc.PostPred.model.postPredRuns;
+
 
 %%
 %evaluate model at MAP
@@ -68,15 +74,39 @@ if (test_run == 0)
 end
 
 figure
-plot(r_exp_data,mean_exp_data,'x');
+h1 = plot(r_exp_data,mean_exp_data,'x','markersize',12);
 hold on
-plot(r_exp_data,Y_MAP,'o');
-plot(r_exp_data,Y_unperturbed,'s');
+h2 = plot(r_exp_data,Y_MAP,'o','markersize',10);
+set(h2, 'markerfacecolor', get(h2, 'color')); % Use same color to fill in markers
+h3 = plot(r_exp_data,Y_unperturbed,'s','markersize',10);
+set(h3, 'markerfacecolor', get(h3, 'color')); % Use same color to fill in markers
+
+
+colors = get(gca,'colororder');
+grey = [0.5 0.5 0.5];
+violin(postPred,'x',r_exp_data,'edgecolor',grey,'facecolor',grey,'medc','','mc','','plotlegend','');
 
 grid on
 xlabel('r [m]');
 ylabel('Fn [N/m]');
 legend('Experimental data','Calibrated AeroModule (MAP)','Uncalibrated AeroModule');
+
+
+xlim([0 40])
+
+%% plot calibrated polars
+P.FixedParameters.plot_polar = 1;
+% run at unperturbed setting
+writeAeroModuleInputReplacement(X_unperturbed(1:ndim),P);
+% run at MAP
+writeAeroModuleInputReplacement(X_MAP(1:ndim),P);
+
+%%
+for i=1:ndim
+    figure(100+i)
+    xlim([-10 50])
+    grid on 
+end
 
 %% Write calibrated polars using mean of posterior
 % run('write_calibration.m');
