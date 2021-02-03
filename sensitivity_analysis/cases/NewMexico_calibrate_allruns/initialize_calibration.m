@@ -55,7 +55,7 @@ r_index = 1:5;
 
 % perform test run with Forward Model without uncertainties; 
 % this is used as a check and to plot the uncalibrated model in the results
-test_run = 1; 
+test_run = 0; 
 
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
