@@ -42,7 +42,7 @@ r_exp_data = [11.876, 17.820, 28.976, 35.535];
  % 'mean', 'full', 'subset', 'synthetic'; other options also possible but need to be implemented
  % below
 Data_type = 'subset';
-Data_subset = 100; % specify number of random subset
+Data_subset = 1000; % specify number of random subset
 
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
@@ -207,7 +207,7 @@ switch MCMC_type
         Solver.MCMC.Sampler = 'AIES';
         Solver.MCMC.Steps = 1e3;
         Solver.MCMC.NChains = 1e2;
-        Solver.MCMC.a = 2;
+        Solver.MCMC.a = 5;
         
     case 'HMC'
         Solver.MCMC.Sampler = 'HMC';

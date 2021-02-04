@@ -29,9 +29,17 @@ fid_in       = fclose(fid_in);
 lines = lines{1};
 lines_new = lines;
 
+% counter for polars
 zz = 1;
+if ( isfield(P.FixedParameters,'plot_polar'))
+    plot_polar = P.FixedParameters.plot_polar;
+else
+    plot_polar = 0;
+end
 
 write_wind_file = 0; % determines whether the wind.dat file needs to be updated
+
+
 
 % loop over all uncertainties (and constants), and look for a match in the
 % input files
@@ -69,6 +77,7 @@ for i=1:ndim
             % alpha_pert consists of the indices that are perturbed
             ind_alpha_pert = find(alpha{index_pol}>=alpha_pert(1) & alpha{index_pol}<=alpha_pert(2));
             d = ones(length(ind_alpha_pert),1);
+            % switch on plotting to plot sample points:
             plotCurve = 0;
                         
             switch UncertainInputName
@@ -76,9 +85,11 @@ for i=1:ndim
                 case 'CL'
                     CL_pert = computeCurves(1, ind_alpha_pert, X(index_pol)*d, d, plotCurve, ...
                         alpha{index_pol}, CL{index_pol}, 3, 1:length(alpha{index_pol}));                    
-%                     figure(i+100)
-%                     hold on
-%                     plot(alpha{index_pol},CL_pert,'--','LineWidth',2);
+                    if (plot_polar == 1)
+                        figure(i+100)
+                        hold on
+                        plot(alpha{index_pol},CL_pert,'--','LineWidth',2);
+                    end
                     
                     CL{index_pol}   = CL_pert;
                     
@@ -87,9 +98,11 @@ for i=1:ndim
                     CM_pert = computeCurves(1, ind_alpha_pert, X(index_pol)*d, d, plotCurve, ...
                         alpha{index_pol}, CM{index_pol}, 3, 1:length(alpha{index_pol}));
                     
-%                     figure(i+100)
-%                     hold on
-%                     plot(alpha{index_pol},CM_pert,'--','LineWidth',2);                    
+                    if (plot_polar == 1)
+                        figure(i+100)
+                        hold on
+                        plot(alpha{index_pol},CM_pert,'--','LineWidth',2);                    
+                    end
                     
                     CM{index_pol}   = CM_pert;
 
@@ -98,9 +111,11 @@ for i=1:ndim
                     CD_pert = computeCurves(1, ind_alpha_pert, X(index_pol)*d, d, plotCurve, ...
                         alpha{index_pol}, CD{index_pol}, 3, 1:length(alpha{index_pol}));
                     
-%                     figure(i+100)
-%                     hold on
-%                     plot(alpha{index_pol},CD_pert,'--','LineWidth',2);                    
+                    if (plot_polar == 1)
+                        figure(i+100)
+                        hold on
+                        plot(alpha{index_pol},CD_pert,'--','LineWidth',2);                    
+                    end
 
                     CD{index_pol}   = CD_pert;
 

@@ -84,7 +84,7 @@ set(h3, 'markerfacecolor', get(h3, 'color')); % Use same color to fill in marker
 
 colors = get(gca,'colororder');
 grey = [0.5 0.5 0.5];
-violin(postPred,'x',r_exp_data,'edgecolor',grey,'facecolor',grey,'medc','','mc','','plotlegend','');
+violin(postPred,'x',r_exp_data,'edgecolor',grey-0.1,'facecolor',grey,'medc','','mc','','plotlegend','');
 
 grid on
 xlabel('r [m]');
