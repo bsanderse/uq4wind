@@ -75,9 +75,9 @@ OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
 
-NsamplesLARS = [32]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [4;8;16;32]; %32]; % if not specified, the number of samples from Quad is taken
 
-LARS_repeat = 1; % like MC_repeat
+LARS_repeat = 5; % like MC_repeat
 
 %% check location of ECNAeroModule
 %path_found  = findAeroModulePath();

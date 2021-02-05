@@ -178,3 +178,17 @@ label_names = {'\DeltaC_{l,1}', '\DeltaC_{l,2}', '\DeltaC_{l,3}', '\DeltaC_{l,4}
     '\DeltaC_{m,1}', '\DeltaC_{m,2}', '\DeltaC_{m,3}', '\DeltaC_{m,4}'};
 xticklabels(label_names)
 legend('Section 1','Section 2','Section 3','Section 4');
+
+
+%% convergence of LOO
+
+figure
+for k=1:nout
+
+    semilogy(NsamplesLARS,AVG_LOO_LARS(:,k),'s-','LineWidth',2);
+    hold on
+end
+grid on
+legend('Section 1','Section 2','Section 3','Section 4');
+xlabel('Number of samples (=number of model runs)'); 
+ylabel('LOO error');

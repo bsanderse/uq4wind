@@ -269,6 +269,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     N_LARS       = length(NsamplesLARS);
     mean_LARS    = zeros(LARS_repeat, N_LARS);
     std_LARS     = zeros(LARS_repeat, N_LARS);
+    LOO_LARS     = zeros(LARS_repeat, N_LARS);
+
     Sobol_LARS_FirstOrder = zeros(LARS_repeat, N_LARS, ndim);
     Sobol_LARS_Total      = zeros(LARS_repeat, N_LARS, ndim);
     
@@ -297,7 +299,7 @@ if (find(strcmp(methods,'PCE_LARS')))
             metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);
             myPCE_LARS     = uq_createModel(metamodelLARS);
             
-            
+
             
             % loop over the output vector
             nout = length(myPCE_LARS.PCE);
@@ -305,7 +307,9 @@ if (find(strcmp(methods,'PCE_LARS')))
                 
                 % moments of solution
                 mean_LARS(k,i,q) = myPCE_LARS.PCE(q).Moments.Mean;
-                std_LARS(k,i,q)    = sqrt(myPCE_LARS.PCE(q).Moments.Var);
+                std_LARS(k,i,q)  = sqrt(myPCE_LARS.PCE(q).Moments.Var);
+                LOO_LARS(k,i,q)  = myPCE_LARS.Error(q).LOO;
+
             end
             
             % Sobol analysis
@@ -320,6 +324,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     % take average over first dimension (multiple LARS runs)
     AVG_Sobol_LARS_FirstOrder = reshape(mean(Sobol_LARS_FirstOrder,1),[N_LARS ndim nout]);
     AVG_Sobol_LARS_Total      = reshape(mean(Sobol_LARS_Total,1),[N_LARS ndim nout]);
+        
+    AVG_LOO_LARS = squeeze(mean(LOO_LARS,1));
     
     if (compare_mean == 1)
         err_mean_LARS =  abs((mean(mean_LARS,1)-mean_exact)/mean_ref);
