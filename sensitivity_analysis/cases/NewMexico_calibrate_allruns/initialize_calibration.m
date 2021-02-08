@@ -125,7 +125,7 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e3;
+        Solver.MCMC.Steps = 5e2;
         Solver.MCMC.NChains = 1e1;
         Solver.MCMC.a = 5;
         
