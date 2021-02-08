@@ -23,7 +23,7 @@ counter = 0;
     
         counter = counter+1;
         factor3D     = 3;
-        factor3D_Std = 0.1;  % Standard deviation
+        factor3D_Std = 0.2;  % Standard deviation
         % factor3D_LB = 1.5; % Lower bound of truncated Gaussian distribution
         % factor3D_UB = 3.5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'factor3D';
@@ -33,7 +33,7 @@ counter = 0;
 
         counter = counter+1;
         exp3D     = 2;
-        exp3D_Std = 0.1;  % Standard deviation
+        exp3D_Std = 0.2;  % Standard deviation
         % exp3D_LB = 2; % Lower bound of truncated Gaussian distribution
         % exp3D_UB = 5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'exp3D';
