@@ -17,9 +17,9 @@ uq_display(BayesianAnalysis,'scatterplot','all')
 % data:
 % plot(1:length(Data.y),Data.y,'s')
 
-% uq_display(BayesianAnalysis, 'meanConvergence', 'all')
-% uq_display(BayesianAnalysis, 'trace', 'all')
-%uq_display(BayesianAnalysis, 'acceptance', 'true')
+uq_display(BayesianAnalysis, 'meanConvergence', 'all')
+uq_display(BayesianAnalysis, 'trace', 'all')
+uq_display(BayesianAnalysis, 'acceptance', 'true')
 
 % check convergence of MCMC
 uq_postProcessInversion(BayesianAnalysis,'gelmanRubin', 'true','burnIn',0.5,'posteriorPredictive',0)
