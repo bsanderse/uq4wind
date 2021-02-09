@@ -302,7 +302,15 @@ end
 if (correction3D == 1)
     
     factor3D =  coeffs3D(1);
-    exp3D = coeffs3D(2);
+    
+    if length(coeffs3D) == 2     
+        exp3D = coeffs3D(2);  
+    elseif length(coeffs3D) == 1
+        exp3D = 4; 
+    else 
+        error('Check uncertain inputs for 3D correction')
+    end
+        
     
     write_polars(type,factor3D,exp3D,pitch);
     
