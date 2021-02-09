@@ -398,7 +398,7 @@ for i = 1:n_runs
     % measurements is chosen as the prior.
 
     DiscrepancyOpts(i).Type = 'Gaussian';
-    DiscrepancyOpts(i).Parameters = 1e-3;    
+    DiscrepancyOpts(i).Parameters = 1e-1;    
     
     % DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
     % DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
