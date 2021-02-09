@@ -6,7 +6,7 @@ function Input  = NewMexico_calibrate()
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 
-type = 1 ; 
+type = 2 ; 
 
 % initialize counter of marginals
 counter = 0;
