@@ -57,11 +57,12 @@ cmap = get(gca,'ColorOrder');
 
 hold on
 
-m_plot = 3; % number of coefficients used for QoI
+m_plot = 2; % number of coefficients used for QoI
 n_plot = 5; % number of columns = number of radial sections
 
 titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
-QoI_names   = {'mean','amplitude 1','angle 1'};
+% QoI_names   = {'mean','amplitude 1','angle 1'};
+QoI_names   = {'cosine','sine'};
 
 for q=1:nout
     
@@ -126,4 +127,144 @@ for q=1:nout
     end
 %     title(strcat('Sobol indices for output ',num2str(q)))
 
+end
+
+%% convergence of LOO and modLOO
+
+figure
+for k=1:nout
+
+    if (length(NsamplesLARS)==1)
+        semilogy(NsamplesLARS,AVG_LOO_LARS(k),'s-','LineWidth',2);
+    else
+        semilogy(NsamplesLARS,AVG_LOO_LARS(:,k),'s-','LineWidth',2);
+    end
+    hold on
+end
+grid on
+switch fourier_type
+    
+    case 'real_imag'
+        legend('Cosine Section 1','Cosine Section 2','Cosine Section 3','Cosine Section 4','Cosine Section 5',...
+               'Sine Section 1','Sine Section 2','Sine Section 3','Sine Section 4','Sine Section 5');
+    case 'amp_phase'
+         legend('AM Section 1','AM Section 2','AM Section 3','AM Section 4','AM Section 5',...
+                'PH Section 1','PH Section 2','PH Section 3','PH Section 4','PH Section 5');
+    otherwise
+        warning('wrong fourier_type selected');
+end
+xlabel('Number of samples (=number of model runs)'); 
+ylabel('LOO error');
+
+
+figure
+for k=1:nout
+
+    if (length(NsamplesLARS)==1)
+        semilogy(NsamplesLARS,AVG_modLOO_LARS(k),'s-','LineWidth',2);
+    else
+        semilogy(NsamplesLARS,AVG_modLOO_LARS(:,k),'s-','LineWidth',2);
+    end
+    hold on
+end
+grid on
+switch fourier_type
+    
+    case 'real_imag'
+        legend('Cosine Section 1','Cosine Section 2','Cosine Section 3','Cosine Section 4','Cosine Section 5',...
+               'Sine Section 1','Sine Section 2','Sine Section 3','Sine Section 4','Sine Section 5');
+    case 'amp_phase'
+         legend('AM Section 1','AM Section 2','AM Section 3','AM Section 4','AM Section 5',...
+                'PH Section 1','PH Section 2','PH Section 3','PH Section 4','PH Section 5');
+    otherwise
+        warning('wrong fourier_type selected');
+end
+xlabel('Number of samples (=number of model runs)'); 
+ylabel('Modified LOO error');
+
+%% plot the actual response surface
+
+% this is easy if we have one uncertain parameter:
+if (nunc == 1)
+    
+    
+    if (find(strcmp(methods,'PCE_LARS')))        
+            
+            % points where the code has been evaluated:
+            % note that Xsamples includes the constants
+            Xsamples  = myPCE_LARS.ExpDesign.X;
+            Ysamples  = myPCE_LARS.ExpDesign.Y;            
+            
+%             Xsamples  = myPCE_LARS.ExpDesign.X;
+%             Ysamples  = unwrap(myPCE_LARS.ExpDesign.Y);
+%             
+%             % adapt the PCE by unwrapping the angle dependent part
+%             metamodel_LARS_unwrapped = metamodelLARS;
+%             %change the experimental design
+%             metamodel_LARS_unwrapped.ExpDesign.X = myPCE_LARS.ExpDesign.X;
+%             metamodel_LARS_unwrapped.ExpDesign.Y = myPCE_LARS.ExpDesign.Y;
+%             metamodel_LARS_unwrapped.ExpDesign.Y(:,2:2:end) = Ysamples(:,2:2:end);
+%             metamodel_LARS_unwrapped.ExpDesign.Sampling='user';
+%             myPCE_LARS_unwrapped  = uq_createModel(metamodel_LARS_unwrapped);
+
+            
+            % evaluate surrogate model at many points:
+            Ntest = 100;
+            domain = getMarginalBounds(myInput.Marginals(1));
+            
+            X_PCE = linspace(domain(1),domain(2),Ntest)';   
+            % add constants: 
+            X_PCE_full = [X_PCE repmat(Xsamples(1,nunc+1:end),Ntest,1)];
+
+            % evaluate the PCE model at many points
+            Y_PCE = uq_evalModel(myPCE_LARS,X_PCE_full); 
+            
+            % assume that amplitude and phase of 1 Fourier mode are
+            % considered
+            % amplitude response at different sections
+            figure
+            cmap = get(gca,'ColorOrder');
+
+            for k=1:n_r_index
+                plot(X_PCE(:,1:nunc),Y_PCE(:,2*k-1),'-','Color',cmap(k,:));
+                hold on
+                plot(Xsamples(:,1:nunc),Ysamples(:,2*k-1),'s','Color',cmap(k,:));
+            end
+            xlabel(myInput.Marginals(1).Name);
+%             ylabel('amplitude first Fourier mode')
+            ylabel('cosine coefficient first Fourier mode')
+            legend('section 1 - surrogate','section 1 - AeroModule run',...
+                'section 2 - surrogate','section 2 - AeroModule run',...
+                'section 3 - surrogate','section 3 - AeroModule run',...
+                'section 4 - surrogate','section 4 - AeroModule run',...
+                'section 5 - surrogate','section 5 - AeroModule run');
+            grid on
+            
+            % phase response at different sections
+            figure
+            cmap = get(gca,'ColorOrder');
+            for k=1:n_r_index
+                plot(X_PCE(:,1:nunc),Y_PCE(:,2*k),'-','Color',cmap(k,:));
+                hold on
+                plot(Xsamples(:,1:nunc),Ysamples(:,2*k),'s','Color',cmap(k,:));            
+            end
+            xlabel(myInput.Marginals(1).Name);
+%             ylabel('phase shift first Fourier mode') 
+            ylabel('sine coefficient first Fourier mode')
+
+            legend('section 1 - surrogate','section 1 - AeroModule run',...
+                'section 2 - surrogate','section 2 - AeroModule run',...
+                'section 3 - surrogate','section 3 - AeroModule run',...
+                'section 4 - surrogate','section 4 - AeroModule run',...
+                'section 5 - surrogate','section 5 - AeroModule run');
+            grid on
+    else            
+            disp('response surface plotting not implemented for this method');
+    end
+    
+    
+else
+    
+    disp('response surface plotting not implemented for more than 1 uncertain parameter');
+    
 end

@@ -1,4 +1,4 @@
-function Fout = getFourierCoefficients(F,n_fourier)
+function [Fcomplex,Fabs,Fphi] = getFourierCoefficients(F,n_fourier)
 % F is supposed to be a real matrix of size n*n_col,
 % and an FFT is performed for each column of F
 
@@ -11,13 +11,14 @@ if (nargin == 1)
 end
 
 % actual number of coefficients is 2*n_fourier - 1 
-Fout = zeros(2*n_fourier-1,n_col);
+Fcomplex = zeros(2*n_fourier-1,n_col);
 
 for k = 1:n_col
     
-        % do the Fourier transform
+    % do the Fourier transform
     % include scaling to get physical interpretable coefficients
     Fhat = fft(F(:,k),n)/n;
+    
     % get the power spectral density
     PSD  = Fhat.*conj(Fhat);
 
@@ -55,7 +56,9 @@ for k = 1:n_col
     % include the complex conjugates
     % below is with all coefficients:
     ind_keep  = ind(1:2*n_fourier-1);
-    Fout(:,k) = Fhat(ind_keep);
+    Fcomplex(:,k) = Fhat(ind_keep);
+    
+
 %     abs(f_keep);
 %     angle(f_keep);
 
@@ -78,3 +81,6 @@ for k = 1:n_col
 %     plot(azi_exp_data,Fnew,'--','Color',colormap(k,:));
     
 end
+
+Fabs = abs(Fcomplex);
+Fphi = angle(Fcomplex);

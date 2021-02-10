@@ -22,10 +22,10 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the run for which the sensitivity analysis is to be performed
 % note: only a single run is possible at this moment
-select_runs = 926; 
+select_runs = 935; 
 
 % the position of the sections of the experimental data which are used for
-% interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
+% interpolation of the aeromodule results: see NewMexico_readoutput.m
 r_exp_data = [0.25 0.35 0.6 0.82 0.92]*2.25;
 
 
@@ -43,13 +43,32 @@ QoI_type = 'full';
                
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;
-% number of Fourier coefficients to keep (including mean)
-% note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
-% imaginary component (stored as amplitude and phase angle) for each
-% frequency
-n_fourier = 2;
+
+% supply the indices of the fourier modes that are used
+% for fourier_type = 'amp_phase'  we use the following convention:
+% index 1: mean of signal (zeroth mode)
+% index 2: amplitude of first mode
+% index 3: angle of first mode
+% index 4: amplitude of second mode
+% index 5: angle of second mode
+% etc.
+% example: index_fourier = [2 3]; % amplitude and angle of first mode
+% example: index_fourier = 1:5; % zeroth, first and second mode
+
+% for fourier_type = 'real_imag'  we use the following convention:
+% index 1: mean of signal (zeroth mode)
+% index 2: real part of first mode
+% index 3: imaginary part of first mode
+% index 4: real part of second mode
+% index 5: imaginary part of second mode
+% etc.
+fourier_type = 'real_imag';
+index_fourier = [2 3]; 
+
 % radial indices (blade sections) to consider:
 r_index = 1:5;
+n_r_index = length(r_index);
+
 
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs_NoOC] = getParameterAeroModule(turbineName);
@@ -66,7 +85,8 @@ switch QoI_type
     case 'full'
         % store parameters in struct
         FixedParameters.n_rev          = n_rev;
-        FixedParameters.n_fourier      = n_fourier;
+        FixedParameters.index_fourier  = index_fourier;         
+        FixedParameters.fourier_type   = fourier_type;                       
         FixedParameters.r_index        = r_index;
 end
 
@@ -120,6 +140,7 @@ end
 
 % add Operatingconditions to the structure that contains the
 % uncertainties
+nunc  = length(UncertainInputs_NoOC.Marginals);
 UncertainInputs = addOperatingConditions(UncertainInputs_NoOC,OperatingCondition);
 clear OperatingConditions; 
 
@@ -146,6 +167,8 @@ Model.isVectorized = false;
 %% Input uncertainties
 ndim  = length(UncertainInputs.Marginals);
 Input = UncertainInputs;
+% number of constants
+ncons = ndim - nunc;
 
 
 %% list of UQ methods to be used for analysis
@@ -171,7 +194,7 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [80]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = 256; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 

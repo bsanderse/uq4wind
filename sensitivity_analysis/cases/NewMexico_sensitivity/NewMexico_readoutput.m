@@ -65,7 +65,9 @@ switch P.FixedParameters.QoI
                 n_rev     = P.FixedParameters.n_rev;
                 % number of Fourier coefficients to keep (including mean)
                 % note: we get (n_fourier-1)*2 + 1 coefficients
-                n_fourier = P.FixedParameters.n_fourier;
+%                 n_fourier = P.FixedParameters.n_fourier;
+                index_fourier = P.FixedParameters.index_fourier;
+                fourier_type  = P.FixedParameters.fourier_type;
                 % radial indices to consider:
                 r_index   = P.FixedParameters.r_index;
                                                
@@ -79,38 +81,80 @@ switch P.FixedParameters.QoI
                 ind_small_azi = find(azi_sim<delta_azi,n_rev+1,'last');
                 % index of requested revolutions
                 ind_last_rev  = ind_small_azi(1):ind_small_azi(end)-1;
+                
                 % select force, azimuth and time based on this index
                 Fn_last_rev   = Fn(ind_last_rev,:);
                 azi_last_rev  = azi_sim(ind_last_rev);
-%               dazi = mean(diff(azi_last_rev)); % in degrees
+
                 % get the time step from the simulation data, it should
                 % be constant
                 t_last_rev    = t_sim(ind_last_rev);
                 dt   = mean(diff(t_last_rev)); % in seconds
+
                 % number of data points
                 % n    = length(azi_last_rev); 
                 
-                % Interpolated Fn to the right r-positions using spline               
+                % Interpolation: columns of Fn_last_rev are interpolated to
+                % yield new columns at r_exp positions
                 Fn_int   = spline(r_sim,Fn_last_rev,r_exp);        
                 
-                % get the coefficients of the first 3 modes
+                % get the coefficients of the dominant modes
                 % the coefficients are ordered according to the PSD                
-                Fhat        = getFourierCoefficients(Fn_int,n_fourier);
-                ind_select = 2:2:2*(n_fourier-1);
+                Fhat     = getFourierCoefficientsRealData(Fn_int); %,n_fourier);
+%                 ind_select = 2:2:2*(n_fourier-1);
 
                 
                 Y = [];
-                for k=1:length(r_index)
+                n_r_index = length(r_index);
+                % loop over radial indices
+                for k=1:n_r_index
+                    
+                    % loop over modes
+                    % the convention is that index=1 indicates the mean
+                    % index=2 indicates amplitude first mode
+                    % index=3 indicates phase shift first mode
+                    % index=4 indicates amplitude second mode
+                    % etc.
+                    for mode = 1:length(index_fourier)
+                        ind_select = index_fourier(mode);
+                        Fcurr      = Fhat(ind_select,r_index(k));
+                        
+                        % exception for the mean:
+                        if (ind_select==1) % this means the mean is requested
+                            F_add = abs(Fcurr);
+                        else
+                            switch fourier_type
+                                case 'amp_phase'
+                                    % even index => amplitude
+                                    if (mod(ind_select,2)==0)
+                                        F_add = 2*abs(Fcurr);
+                                    else % odd index => angle
+                                        F_add = angle(Fcurr);
+                                    end
+                                case 'real_imag'
+                                    % even index => real part
+                                    if (mod(ind_select,2)==0)
+                                        F_add = 2*real(Fcurr);
+                                    else % odd index => imaginary part
+                                        F_add = 2*imag(Fcurr);
+                                    end
+                                otherwise
+                                    error('wrong specification of Fourier type');
+                            end
+                        end
+                        
+                        Y = [Y F_add];
+                    end
                     
                     % add mean separately
-                    Fhat_mean = abs(Fhat(1,r_index(k)));
-                    Fhat_new  = Fhat(ind_select,r_index(k));
+%                     Fhat_mean = abs(Fhat(1,r_index(k)));
+%                     Fhat_new  = Fhat(ind_select,r_index(k));
                     
                     % save the complex coefficients in terms of amplitude
-                    % and phase angleei
+                    % and phase angle
                     % since we only store the positive frequencies, we need
                     % to multiply by 2 for the physical amplitudes
-                    Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
+%                     Y = horzcat(Y,[Fhat_mean 2*abs(Fhat_new)' angle(Fhat_new)']);
                     
                 end
                 
@@ -176,6 +220,6 @@ switch P.FixedParameters.QoI
         end
         
     otherwise
-        error(strcat('QoI type unknown; check the turbine file ',P{29}));
+        error(strcat('QoI type unknown'));
         
 end

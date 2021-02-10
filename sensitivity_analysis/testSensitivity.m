@@ -13,7 +13,7 @@ ind = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NM80'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -270,7 +270,9 @@ if (find(strcmp(methods,'PCE_LARS')))
     mean_LARS    = zeros(LARS_repeat, N_LARS);
     std_LARS     = zeros(LARS_repeat, N_LARS);
     LOO_LARS     = zeros(LARS_repeat, N_LARS);
+    modLOO_LARS  = zeros(LARS_repeat, N_LARS);
 
+    
     Sobol_LARS_FirstOrder = zeros(LARS_repeat, N_LARS, ndim);
     Sobol_LARS_Total      = zeros(LARS_repeat, N_LARS, ndim);
     
@@ -296,10 +298,26 @@ if (find(strcmp(methods,'PCE_LARS')))
             
             % use sampling strategy, note that default is MC!
             metamodelLARS.ExpDesign.Sampling = 'LHS'; % or 'LHS' or 'Sobol' or 'Halton'
-            metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);
-            myPCE_LARS     = uq_createModel(metamodelLARS);
+            metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);            
             
-
+            myPCE_LARS  = uq_createModel(metamodelLARS);
+            
+%             %% trial:
+%             % change the Y-experimental design manually
+%             myPCE_LARS_base     = uq_createModel(metamodelLARS);
+%             
+%             % copy the experimental design and create a manual PCE:         
+%             % adapt the PCE by unwrapping the angle dependent part
+%             metamodel_LARS_unwrapped = metamodelLARS;
+%             %change the experimental design
+%             metamodel_LARS_unwrapped.ExpDesign.X = myPCE_LARS_base.ExpDesign.X;
+%             metamodel_LARS_unwrapped.ExpDesign.Y = myPCE_LARS_base.ExpDesign.Y;
+%             metamodel_LARS_unwrapped.ExpDesign.Y(:,2:2:end) = unwrap(myPCE_LARS_base.ExpDesign.Y(:,2:2:end));
+%             metamodel_LARS_unwrapped.ExpDesign.Sampling = 'user';
+%             myPCE_LARS  = uq_createModel(metamodel_LARS_unwrapped);
+            
+            
+            %%    
             
             % loop over the output vector
             nout = length(myPCE_LARS.PCE);
@@ -309,6 +327,7 @@ if (find(strcmp(methods,'PCE_LARS')))
                 mean_LARS(k,i,q) = myPCE_LARS.PCE(q).Moments.Mean;
                 std_LARS(k,i,q)  = sqrt(myPCE_LARS.PCE(q).Moments.Var);
                 LOO_LARS(k,i,q)  = myPCE_LARS.Error(q).LOO;
+                modLOO_LARS(k,i,q)  = myPCE_LARS.Error(q).ModifiedLOO;
 
             end
             
@@ -326,6 +345,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     AVG_Sobol_LARS_Total      = reshape(mean(Sobol_LARS_Total,1),[N_LARS ndim nout]);
         
     AVG_LOO_LARS = squeeze(mean(LOO_LARS,1));
+    AVG_modLOO_LARS = squeeze(mean(modLOO_LARS,1));
+    
     
     if (compare_mean == 1)
         err_mean_LARS =  abs((mean(mean_LARS,1)-mean_exact)/mean_ref);
