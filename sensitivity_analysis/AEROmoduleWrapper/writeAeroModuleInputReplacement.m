@@ -35,7 +35,13 @@ lines_new = lines;
 zz = 1;
 
 write_wind_file = 1; % determines whether the wind.dat file needs to be updated
-correction3D = 1; %determines whether 3D correction is applied
+
+if FixedParameters.correction == 0  
+    correction3D = 0; %determines whether 3D correction is applied
+else
+    correction3D = 1;
+end
+
 
 % loop over all uncertainties (and constants), and look for a match in the
 % input files
@@ -178,6 +184,11 @@ for i=1:ndim
                 error('Invalid type of correction')
             end
             
+            
+            uncertainty_covered(i) = 1;
+        case {'ATRANSITION'}
+            
+            atrans = X(i);
             
             uncertainty_covered(i) = 1;
             
