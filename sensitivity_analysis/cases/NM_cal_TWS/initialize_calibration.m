@@ -12,9 +12,9 @@
 turbineName = 'NewMexico_calibrate'; 
 
 % folder used to get reference input files
-ref_folder      = 'AEROmodule/NewMexico_calibrate/reference/';
+ref_folder      = 'AEROmodule/NM_cal_TWS/reference/';
 % folder used to write new input files
-current_folder  = 'AEROmodule/NewMexico_calibrate/current/';
+current_folder  = 'AEROmodule/NM_cal_TWS/current/';
 % name of input file is assumed to be input.txt
 
 
@@ -34,9 +34,10 @@ QoI = 'Sectional_normal_force';
 % choosing n_fourier=1.
 QoI_type = 'full';
 
-%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen, 0 no external correction,
+% for no correction need to set  3d corr flag in input.txt to 1 so Snel is applied
 
-cor_type =1;
+cor_type =0;
 %%
 % the following settings are only used in case of 'full':
 % (currently for 'mean', only 1 revolution is used, and all radial indices)
@@ -65,7 +66,7 @@ Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surr
 
 % Options for loading a surrogate model
 % note that this file should contain all the surrogate models
-Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/PCE_testrun.mat'; 
+Surrogate_model_filename = 'StoredSurrogates/NM_cal_TWS/PCE_testrun.mat'; 
    
 
 %% Detailed surrogate model options
@@ -76,7 +77,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 40; % number of samples for each surrogate model (each run)
+MetaOpts.ExpDesign.NSamples = 100; % number of samples for each surrogate model (each run)
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;   
 

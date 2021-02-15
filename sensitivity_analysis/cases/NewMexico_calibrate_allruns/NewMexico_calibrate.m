@@ -5,8 +5,7 @@ function Input  = NewMexico_calibrate()
 % type = FixedParameters.correction;
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
-
-type = 2 ; 
+type = 1 ; 
 
 % initialize counter of marginals
 counter = 0;
@@ -21,15 +20,15 @@ counter = 0;
     %% If correction = 1 --> Snel
     case {1}
     
-        counter = counter+1;
-        factor3D     = 3;
-        factor3D_Std = 0.1;  % Standard deviation
-        % factor3D_LB = 1.5; % Lower bound of truncated Gaussian distribution
-        % factor3D_UB = 3.5;  % Upper bound of truncated Gaussian distribution 
-        Input.Marginals(counter).Name = 'factor3D';
-        Input.Marginals(counter).Type = 'Gaussian'; 
-        Input.Marginals(counter).Parameters = [factor3D , factor3D_Std*abs(factor3D)];
-        % Input.Marginals(counter).Bounds = [factor3D_LB factor3D_UB]; 
+%         counter = counter+1;
+%         factor3D     = 3;
+%         factor3D_Std = 0.1;  % Standard deviation
+%         % factor3D_LB = 1.5; % Lower bound of truncated Gaussian distribution
+%         % factor3D_UB = 3.5;  % Upper bound of truncated Gaussian distribution 
+%         Input.Marginals(counter).Name = 'factor3D';
+%         Input.Marginals(counter).Type = 'Gaussian'; 
+%         Input.Marginals(counter).Parameters = [factor3D , factor3D_Std*abs(factor3D)];
+%         % Input.Marginals(counter).Bounds = [factor3D_LB factor3D_UB]; 
 
         counter = counter+1;
         exp3D     = 2;
