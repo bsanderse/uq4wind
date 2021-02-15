@@ -22,7 +22,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the run for which the sensitivity analysis is to be performed
 % note: only a single run is possible at this moment
-select_runs = 1001; 
+select_runs = 432; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -41,9 +41,10 @@ QoI = 'Sectional_normal_force';
 % * number of Fourier coefficients that are required
 QoI_type = 'mean';
 
-%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen, TWS analysis: need to have
+% the aeromodule 3D correction applied
 
-cor_type =2;
+cor_type =0;
 %% 
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;

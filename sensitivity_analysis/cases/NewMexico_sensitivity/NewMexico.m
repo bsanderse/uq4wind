@@ -6,9 +6,10 @@ function Input  = NewMexico()
 
 % type = FixedParameters.correction;
 
-%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+%or type = 3 for turbulent wake model sensitivity, Wilson model
 
-type = 2 ; 
+type = 3 ; 
 
 counter = 0;
     switch type
@@ -62,9 +63,22 @@ counter = 0;
         Input.Marginals(counter).Type = 'Gaussian'; 
         Input.Marginals(counter).Parameters = [exp3D, exp3D_Std*abs(exp3D)];
         % Input.Marginals(counter).Bounds = [exp3D_LB exp3D_UB];
+        
+    case {3}
+        counter = counter +1;
+        ATRANSITION = 0.38;
+        ATRANSITION_std = 0.1;
+        Input.Marginals(counter).Name = 'ATRANSITION';
+        Input.Marginals(counter).Type = 'Gaussian'; 
+        
+        %mu = log(ATRANSITION^2/(sqrt(ATRANSITION^2+(ATRANSITION_std*abs(ATRANSITION))^2)));
+        %std = sqrt(log(1+(ATRANSITION_std*abs(ATRANSITION))^2/ATRANSITION^2));
+        
+        Input.Marginals(counter).Parameters = [ATRANSITION, ATRANSITION_std*abs(ATRANSITION)];
+        
     otherwise
         
-        error('Invalid correction type')
+        error('Invalid sensitivity case, check uncertain parameters')
         
     end
     
