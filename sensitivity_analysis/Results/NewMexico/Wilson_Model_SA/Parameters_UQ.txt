@@ -1,0 +1,5 @@
+		counter = counter +1;
+        ATRANSITION = 0.38;
+        ATRANSITION_std = 0.1;
+        Input.Marginals(counter).Name = 'ATRANSITION';
+        Input.Marginals(counter).Type = 'Gaussian'; 
