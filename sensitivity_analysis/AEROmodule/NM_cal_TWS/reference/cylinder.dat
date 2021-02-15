@@ -1,0 +1,27 @@
+! Aero mudule input file for airfoil data
+! source: ATG version 3.1.0, december 2007
+ 
+Airfoil_Name  Cylinder
+t/c           1.0         ! thickness ratio w.r.t. chord
+
+format 1       !  1: alfa-cl-cd-cm	; 2: alfa-cl; alfa-cd; alfa-cm
+
+Reynolds_Nr 1.0E+05
+-180. 0. 1. 0.
+   0. 0. 1. 0.
+ 180. 0. 1. 0.
+ 
+Reynolds_Nr 5.0E+05
+-180. 0. 0.25 0.
+   0. 0. 0.25 0.
+ 180. 0. 0.25 0.
+ 
+Reynolds_Nr 2.0E+06
+-180. 0. 0.4 0.
+   0. 0. 0.4 0.
+ 180. 0. 0.4 0.
+ 
+Reynolds_Nr 1.0E+07
+-180. 0. 0.6 0.
+   0. 0. 0.6 0.
+ 180. 0. 0.6 0.

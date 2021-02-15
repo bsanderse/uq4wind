@@ -1,0 +1,87 @@
+!---------------------------------------------------------------------
+! General ------------------------------------------------------------
+!---------------------------------------------------------------------
+TURBINETYPE                     1	! 1:HAWT 2: VAWT
+INTERPOL                        2  	! 1:Linear 2: Spline
+SUBITERFLAG                     1	! 0:dt>0 1:all dt 2:>=9+extr 3:1 and >=9
+DEBUGFILE                       1
+!---------------------------------------------------------------------
+! Airfoil data -------------------------------------------------------
+!---------------------------------------------------------------------        
+AOAEVAL                         1
+LINREG 	                    	1
+MINAOALIN 	               -3.000
+MAXAOALIN 	                5.000
+!-------
+!Beddoes Leishman Parameters -----------------------------------------
+!-------
+BL_A1	                        0.30
+BL_A2	                        0.70
+BL_B1	                        0.14
+BL_B2	                        0.53
+BL_KA	                        0.75
+BL_TP	                        1.50
+BL_TF	                        5.00
+BL_TV	                        6.00
+BL_TVL	                        5.00
+BL_ACD	                        0.13
+FSMETHOD	                2
+!-------
+!ONERA Parameters ----------------------------------------------------
+!-------
+ON_LAML	                        0.17
+ON_SIGL	                        6.28
+ON_R0  	                        0.20
+ON_R2  	                        0.20
+ON_A0  	                        0.30
+ON_A2  	                        0.20
+ON_E2  	                        0.53
+ON_SL  	                        3.14
+!---------------------------------------------------------------------
+! Environment --------------------------------------------------------
+!---------------------------------------------------------------------
+DYNVISC                         1.79e-5
+SOS                             340.3 
+RAMPTIME			0.0
+RAMPFACTOR			1.0
+WINDINTERPL			2	! 1:Linear 2: Cubic (Turbsim/Mann only)
+Z0                              0.0
+!---------------------------------------------------------------------
+!BEM  ----------------------------------------------------------------
+!---------------------------------------------------------------------
+AEROROOT                        0.2041
+ATRANSITION                     0.38                           
+COUNTERMIN			50
+DYNINFLOW                       1
+INDUCTIONDRAG                   0
+PRANDTLTIP                      1
+YAWMODEL			1
+SOLVEBEMMETHOD			1                                         
+!---------------------------------------------------------------------
+!AWSM ----------------------------------------------------------------
+!---------------------------------------------------------------------
+AERORESULTSFILE                 aeroresultsout.dat
+GEOMRESULTSFILE                 geomresultsout.dat
+TIMESTARTAERO                   1
+TIMEENDAERO                     540
+AEROOUTPUTINCREMENT             1
+TIMESTARTGEOM                   540
+TIMEENDGEOM                     540
+GEOMOUTPUTINCREMENT             1
+TRACELEVEL                      2
+STDOUTSWITCH                    0   !0: no 1: yes
+LOGTRACESWITCH                  0   !0: no 1: yes
+CENTEREDCONTRPOINTS             0   !0: no 1: yes
+VORTEXCUTOFF                    2
+WAKECUTOFFRADIUS                0.1
+CIRCCONVCRIT                    0.0001
+LIFTCUTOFFRADIUS                0.001    
+NEWRAPHNEIGHBOURS               2
+STARTSMOOTHINGS                 3
+NUMITEQMAX                      10
+NUMITAEROCONV                   100
+EXTFIELDFLAG                    0   !0: off 1: on
+GROUNDFLAG                      2
+GROUNDLEVEL	                0.0
+PRSCRBWAKE			0   !0: off 1: Mom. theory 2: Constant
+CONVECFACTOR			0.0
