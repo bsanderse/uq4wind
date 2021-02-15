@@ -37,6 +37,12 @@ uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP','burnIn',0.5,'po
 % without the model constants (if present)
 X_MAP = BayesianAnalysis.Results.PostProc.PointEstimate.X;
 
+%% get posterior predictive
+nPred = 500;
+uq_postProcessInversion(BayesianAnalysis,'burnIn',0.5,'posteriorPredictive',nPred)
+postPred = BayesianAnalysis.Results.PostProc.PostPred.model.postPredRuns;
+
+
 %%
 % number of model uncertainties, without hyperparameters
 % as input to uq_eval, we need X without the hyperparameters, but with the
