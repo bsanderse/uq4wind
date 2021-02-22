@@ -62,11 +62,25 @@ TC_airfoil = [
     19.7
     18.7];
 
+
+Z_airfoil_adapted = [
+    11.876
+    17.820
+    28.976
+    35.535];
+
+TC_airfoil_adapted = [
+    33.01
+    23.94
+    18.91
+    18.05];
+
 figure
 plot(Z,TC,'x-','LineWidth',2,'markersize',10)
 hold on
 h2 = plot(Z_airfoil,TC_airfoil,'o','markersize',10);
 set(h2, 'markerfacecolor', get(h2, 'color')); % Use same color to fill in markers
+h3 = plot(Z_airfoil_adapted,TC_airfoil_adapted,'s','markersize',10);
 
 
 xlim([0 40])
@@ -74,6 +88,6 @@ ylim([0 50])
 xlabel('r [m]');
 ylabel('t/c [%]');
 grid
-legend('planform data','airfoil sections')
+legend('planform data','airfoil sections (original)','airfoil sections (adapted)')
 set(gca,'FontSize',14)
 

@@ -13,7 +13,7 @@ ind = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NM80'; %NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -288,7 +288,7 @@ if (find(strcmp(methods,'PCE_LARS')))
     % average over several runs
     for k = 1:LARS_repeat
         for i = 1:N_LARS
-            
+            disp(['i= ' num2str(i) ', k= ' num2str(k) ]);
             % use manual experimental design:
             %         X_ED = uq_getSample(NsamplesLARS(i),'MC') ;
             %         Y_ED = uq_evalModel(myModel,X_ED);

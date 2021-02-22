@@ -5,7 +5,7 @@
 turbineName = 'NM80'; % 'NM80', 'AVATAR'
 
 % folder used to get reference input files
-ref_folder      = 'AEROmodule/NM80/reference/';
+ref_folder      = 'AEROmodule/NM80/reference_adapted_thickness/';
 % folder used to write new input files
 current_folder  = 'AEROmodule/NM80/current/';
 
