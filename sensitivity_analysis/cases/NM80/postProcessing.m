@@ -185,7 +185,12 @@ legend('Section 1','Section 2','Section 3','Section 4');
 figure
 for k=1:nout
 
-    semilogy(NsamplesLARS,AVG_LOO_LARS(:,k),'s-','LineWidth',2);
+    if (length(NsamplesLARS)==1)
+        semilogy(NsamplesLARS,AVG_LOO_LARS(k),'s-','LineWidth',2);
+    else
+        semilogy(NsamplesLARS,AVG_LOO_LARS(:,k),'s-','LineWidth',2);
+    end
+
     hold on
 end
 grid on

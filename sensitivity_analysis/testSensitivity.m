@@ -67,6 +67,22 @@ myInput = uq_createInput(Input) ;
 uq_print(myInput);
 uq_display(myInput);
 
+
+%% do a test run with the forward model at unperturbed settings
+ndim = length(myInput.Marginals);
+% set unperturbed vector:
+for i=1:ndim
+    % we take the mean of each parameter as the unperturbed
+    % condition
+    X_unperturbed(1,i) = myInput.Marginals(i).Moments(1);
+end
+if (exist('test_run','var'))
+    if (test_run == 1)
+        disp('Performing test run at unperturbed (mean value) settings');        
+        Y_unperturbed = uq_evalModel(X_unperturbed);
+    end
+end
+
 %% Monte-Carlo
 if (find(strcmp(methods,'MC')))
     

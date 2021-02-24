@@ -25,6 +25,12 @@ r_exp_data = [11.876, 17.820, 28.976, 35.535];
 % r_exp_data = [13.0, 19.0, 30.0, 37.0];  % see e.g. the DanAero MW final report
 % r_exp_data = [13.116, 19.06, 30.216, 36.775]; % according to Koen
 
+% plot lift, drag, moment polars (if they are perturbed)
+plot_polar  = 0;
+
+% perform test of code at unperturbed settings
+test_run = 0; 
+
 % Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs] = getParameterAeroModule(turbineName);
 
@@ -33,6 +39,7 @@ FixedParameters.ref_folder     = ref_folder;
 FixedParameters.current_folder = current_folder;
 FixedParameters.QoI            = QoI;
 FixedParameters.r_exp          = r_exp_data;
+FixedParameters.plot_polar     = plot_polar;
 
 P.FixedParameters = FixedParameters;
 P.UncertainInputs = UncertainInputs;
