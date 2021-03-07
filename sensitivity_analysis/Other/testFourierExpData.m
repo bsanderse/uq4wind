@@ -12,7 +12,7 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R34P40D447_loads.dat';
+filename_exp = 'R34P40D429_loads.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
 output_raw   = readNewMexico(full_filename_exp);    
@@ -51,7 +51,7 @@ colormap = get(gca,'ColorOrder');
 r_index = 1:5;
 
 % number of fourier coefficients to keep
-n_keep = 3;
+n_keep = 1;
 
 %     
 
@@ -142,14 +142,14 @@ ylabel('Power spectral density');
 
 figure(10)
 grid
-legend('Section 1','Section 1 - 3 modes',...
-    'Section 2','Section 2 - 3 modes',...
-    'Section 3','Section 3 - 3 modes',...
-    'Section 4','Section 4 - 3 modes',...
-    'Section 5','Section 5 - 3 modes');
+legend('Section 1',...
+    'Section 2',...
+    'Section 3',...
+    'Section 4',...
+    'Section 5');
 xlabel('azimuth [degree]')
 ylabel('Fn [N/m]');
-title('Approximation of experimental data with Fourier modes', filename_exp)
+title('Experimental loads', filename_exp)
 
 
 
