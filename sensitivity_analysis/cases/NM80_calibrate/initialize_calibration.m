@@ -39,10 +39,10 @@ r_exp_data = [11.876, 17.820, 28.976, 35.535];
 % r_exp_data = [13.0, 19.0, 30.0, 37.0];  % see e.g. the DanAero MW final report
 % r_exp_data = [13.116, 19.06, 30.216, 36.775]; % according to Koen
 
- % 'mean', 'full', 'subset', 'synthetic'; other options also possible but need to be implemented
+ % 'mean', 'full', 'subset_random', 'subset_regular', 'synthetic'; other options also possible but need to be implemented
  % below
-Data_type = 'subset';
-Data_subset = 1000; % specify number of random subset
+Data_type = 'subset_regular';
+Data_subset = 200; % specify number of subset
 
 % Because the model has different discrepancy options at different radial locations,
 % the measurement data is stored in four different data structures:
@@ -76,14 +76,31 @@ switch Data_type
         Data(3).y = mean(Data(3).y); % [N/m]        
         Data(4).y = mean(Data(4).y); % [N/m]
 
-    case 'subset'
-        % for testing, we can use first 100 datapoints
+    case 'subset_random'
+        % use random number of data points
         random_index = ceil(length(Data(1).y)*rand(Data_subset,1));
-        Data(1).y = Data(1).y(random_index); %(1:100); % [N/m]        
-        Data(2).y = Data(2).y(random_index); %(1:100); % [N/m] 
-        Data(3).y = Data(3).y(random_index); %(1:100); % [N/m]        
-        Data(4).y = Data(4).y(random_index); %(1:100); % [N/m]
+        Data(1).y = Data(1).y(random_index); % [N/m]        
+        Data(2).y = Data(2).y(random_index); % [N/m] 
+        Data(3).y = Data(3).y(random_index); % [N/m]        
+        Data(4).y = Data(4).y(random_index); % [N/m]
                 
+    case 'subset_regular'
+        % use regular number of data points
+        % take mean
+        data_length = length(Data(1).y); 
+        incr = floor(data_length/Data_subset);
+               
+        % forward moving mean
+        data1 = movmean(Data(1).y,[0 incr-1]);
+        data2 = movmean(Data(2).y,[0 incr-1]);
+        data3 = movmean(Data(3).y,[0 incr-1]);
+        data4 = movmean(Data(4).y,[0 incr-1]);
+        
+        % select every incr point of the forward moving mean
+        Data(1).y = data1(1:incr:incr*Data_subset); %Data(1).y(subset_index); % [N/m]        
+        Data(2).y = data2(1:incr:incr*Data_subset); %Data(2).y(subset_index); % [N/m] 
+        Data(3).y = data3(1:incr:incr*Data_subset); %Data(3).y(subset_index); % [N/m]        
+        Data(4).y = data4(1:incr:incr*Data_subset); %Data(4).y(subset_index); % [N/m]
         
     case 'full'
         Data(1).y = Data(1).y; % [N/m]        
@@ -158,16 +175,16 @@ end
 
 
 %% Surrogate model options
-test_run = 0; % perform test run with Forward Model without uncertainties
+test_run = 1; % perform test run with Forward Model without uncertainties
 
 % Switch for Bayesian analysis with the AeroModule or with the surrogate model
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
-Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS_N32.mat'; % Specify the surrogate model file to be used
+Surrogate_model_filename = 'StoredSurrogates/NM80_calibrate/PCE_LARS_N32_adapted_thickness_gaussian.mat'; % Specify the surrogate model file to be used
 
 % Options for creating a surrogate model
 % These are used if Bayes_full = 0 and Surrogate_model_type = 1

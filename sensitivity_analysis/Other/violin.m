@@ -165,7 +165,7 @@ for i=1:size(Y,2)
         [f, u, bb]=ksdensity(Y{i});
     end
     
-    f=f/max(f); %*0.3; %normalize
+    f=f/max(f)*1.5; %*0.3; %normalize
     F(:,i)=f;
     U(:,i)=u;
     MED(:,i)=nanmedian(Y{i});

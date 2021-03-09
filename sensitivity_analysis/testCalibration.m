@@ -6,7 +6,9 @@
 clc
 close all
 clearvars
-rng default
+% fix random  number generator (this makes results reproducible, but is
+% not always wanted):
+% rng default
 
 root_folder = pwd;
 
