@@ -165,6 +165,7 @@ for i=1:ndim
             
            %% case for testing 3D model 
               correction3D = 1; %3D correction is applied
+         
               coeffs3D(i) = X(i);
             
             % Choose 3D correction type, 1 --> Snel, 2 --> Chav.-Hansen
@@ -315,7 +316,7 @@ if (correction3D == 1)
     factor3D =  coeffs3D(1);
     
     if length(coeffs3D) == 2     
-        exp3D = coeffs3D(2);  
+        exp3D = coeffs3D(2); 
     elseif length(coeffs3D) == 1
         exp3D = 4; 
     else 
