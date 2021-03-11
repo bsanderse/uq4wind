@@ -22,7 +22,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the run for which the sensitivity analysis is to be performed
 % note: only a single run is possible at this moment
-select_runs = 429; 
+select_runs = 447; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -45,7 +45,7 @@ QoI_type = 'mean';
 % the aeromodule 3D correction applied, so set the 3D correction flag in
 % input.txt to 1
 
-cor_type = 0;
+cor_type = 1;
 %% 
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;
@@ -178,7 +178,7 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [80]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [100]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 5; % like MC_repeat
 
