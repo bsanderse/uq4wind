@@ -58,7 +58,7 @@
            
             %%%%%check if folder changes
             
-            filevar = fullfile(wr_path,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
+            filevar = fullfile(wr_path,'AEROmodule\NewMexico_calibrate\current',section{i}); % path to polar in current folder for Aeromodule
             
             fileID = fopen(filevar,'w');
 
@@ -127,7 +127,7 @@
             [polar_mat, Re(i)] = chav_hansen_3D(k,x,files1{i},c(i),r(i),pitch,twist(i));
 
             %%%%%check if folder changes
-            filevar = fullfile(wr_path,'AEROmodule\NewMexico\current',section{i}); % path to polar in current folder for Aeromodule
+            filevar = fullfile(wr_path,'AEROmodule\NewMexico_calibrate\current',section{i}); % path to polar in current folder for Aeromodule
             
             fileID = fopen(filevar,'w');
 
