@@ -311,13 +311,20 @@ if (write_wind_file == 1)
 end
 %% Write the 3D polars
 
-if (correction3D == 1)
+if correction3D == 1
     
-    factor3D =  coeffs3D(1);
-    
-    if length(coeffs3D) == 2     
-        exp3D = coeffs3D(2); 
-    elseif length(coeffs3D) == 1
+    if type == 1 %Snel et al. model, edit: according to the parameter u want to test if not both
+        
+        if length(coeffs3D)== 1
+        exp3D = coeffs3D(1);
+        factor3D = 3;
+        else
+            factor3D = coeffs3D(1);
+            exp3D = coeffs3D(2);
+        end
+        
+    elseif type == 2 %Chav - Hansen only factor 3D is calibrated
+        factor3D =  coeffs3D(1);
         exp3D = 4; 
     else 
         error('Check uncertain inputs for 3D correction')

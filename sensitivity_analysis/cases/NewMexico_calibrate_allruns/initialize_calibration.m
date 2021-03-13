@@ -36,7 +36,7 @@ QoI_type = 'full';
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 
-cor_type =1;
+cor_type =2;
 %%
 % the following settings are only used in case of 'full':
 % (currently for 'mean', only 1 revolution is used, and all radial indices)
@@ -76,7 +76,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 40; % number of samples for each surrogate model (each run)
+MetaOpts.ExpDesign.NSamples = 200; % number of samples for each surrogate model (each run)
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;   
 
@@ -93,7 +93,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = [432 439 447] ; 
+select_runs = [447] ; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -125,7 +125,7 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e2;
+        Solver.MCMC.Steps = 2e2;
         Solver.MCMC.NChains = 1e1;
         Solver.MCMC.a = 5;
         
