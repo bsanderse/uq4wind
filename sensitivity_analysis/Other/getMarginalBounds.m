@@ -4,10 +4,19 @@ function [ domain ] = getMarginalBounds( Marginal )
 
 switch Marginal.Type
     case 'Gaussian'
-        domain = [Marginal.Moments(1)-2*Marginal.Moments(2), ...
-                  Marginal.Moments(1)+2*Marginal.Moments(2)];
+        if (~isfield(Marginal,'Bounds'))
+            domain = [Marginal.Moments(1)-3*Marginal.Moments(2), ...
+                      Marginal.Moments(1)+3*Marginal.Moments(2)];
+        else
+            domain = [Marginal.Bounds(1),Marginal.Bounds(2)];
+        end
     case 'Uniform'
-        domain = [Marginal.Bounds(1),Marginal.Bounds(2)];
+        if (~isfield(Marginal,'Bounds'))
+            domain = [Marginal.Parameters(1),Marginal.Parameters(2)];
+        else
+            domain = [Marginal.Bounds(1),Marginal.Bounds(2)];
+        end
+
     case 'Weibull'
         domain = [0,Marginal.Moments(1) + 4*Marginal.Moments(2)];
     otherwise

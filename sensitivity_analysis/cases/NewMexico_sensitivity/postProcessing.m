@@ -7,47 +7,86 @@ end
 %% Convergence of Sobol indices
 
 % 
-% % loop over number of quantities of interest (length of output vector)
-% for q=1:nout
-%     
-%     figure
-%     cmap = get(gca,'ColorOrder');
-%     
-%     if (find(strcmp(methods,'MC')))
-%         if(size(AVG_Sobol_MC_Total,2)>1)
-%             semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1, q), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
-%             hold on
-%         end
-%         semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end, q), 'x-','Linewidth', 2, 'Color', cmap(1,:));
-%     end
-%     if (find(strcmp(methods,'PCE_Quad')))
-%         if(size(Sobol_Quad_Total,2)>1)
-%             semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1, q), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
-%             hold on
-%         end
-%         semilogx(NsamplesQuad', Sobol_Quad_Total(:, end, q), 's-','Linewidth', 2,'Color', cmap(2,:));
-%     end
-%     if (find(strcmp(methods,'PCE_OLS')))
-%         if(size(AVG_Sobol_OLS_Total,2)>1)
-%             semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1, q), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
-%             hold on
-%         end
-%         semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, end, q), 'o-','Linewidth', 2,'Color', cmap(3,:));
-%     end
-%     if (find(strcmp(methods,'PCE_LARS')))
-%         if(size(AVG_Sobol_LARS_Total,2)>1)
-%             semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1, q), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
-%             hold on
-%         end
-%         semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:,end, q), 'd-','Linewidth', 2,'Color', cmap(4,:));
-%     end
+% loop over number of quantities of interest (length of output vector)
+fig1 = figure
+
+hold on
+
+m_plot = 2; % number of coefficients used for QoI
+n_plot = n_r_index; % number of columns = number of radial sections
+
+titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
+% QoI_names   = {'mean','amplitude 1','angle 1'};
+QoI_names   = {'cosine','sine'};
+
+for q=1:nout
+    
+    [i_plot,j_plot] = ind2sub([m_plot n_plot],q);
+    % note that subplot index does not correspond to ind2sub indexing
+    % therefore, get q_plot by reversing the indexing:
+    q_plot = sub2ind([n_plot m_plot],j_plot,i_plot);
+    subplot(m_plot,n_plot,q_plot);
+    hold on
+    
+    
+    cmap = get(gca,'ColorOrder');
+    
+    if (find(strcmp(methods,'MC')))
+        if(size(AVG_Sobol_MC_Total,2)>1)
+            semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1, q), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+            hold on
+        end
+        semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end, q), 'x-','Linewidth', 2, 'Color', cmap(1,:));
+    end
+    if (find(strcmp(methods,'PCE_Quad')))
+        if(size(Sobol_Quad_Total,2)>1)
+            semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1, q), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
+            hold on
+        end
+        semilogx(NsamplesQuad', Sobol_Quad_Total(:, end, q), 's-','Linewidth', 2,'Color', cmap(2,:));
+    end
+    if (find(strcmp(methods,'PCE_OLS')))
+        if(size(AVG_Sobol_OLS_Total,2)>1)
+            semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1, q), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
+            hold on
+        end
+        semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, end, q), 'o-','Linewidth', 2,'Color', cmap(3,:));
+    end
+    if (find(strcmp(methods,'PCE_LARS')))
+        if(size(AVG_Sobol_LARS_Total,2)>1)
+            semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1, q), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
+            hold on
+        end
+        semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:,1:nunc,q), 'd-','Linewidth', 2); %,'Color', cmap(4,:));
+    end
 %     xlabel('N') % Add proper labelling and a legend
 %     legend(methods, 'Interpreter', 'none')
 %     ylabel('Total index');
 %     grid on;
 %     title(strcat('Convergence of Sobol indices for output ',num2str(q)))
-%     
-% end
+    set(gca,'XScale','log')
+    box on
+    grid on
+    set(gca,'XMinorGrid','off')    
+    ylim([0 1])
+    xticks(NsamplesLARS)
+
+    if (j_plot==1) % first column
+        ylabel(QoI_names{i_plot});
+    end
+    if (i_plot==1) % first row
+        title(titles{j_plot});
+    end
+    
+end
+for i =1:nunc
+    label_names{i} = Input.Marginals(i).Name;
+end
+legend(label_names)
+han=axes(fig1,'visible','off'); 
+han.XLabel.Visible='on';
+xlabel(han,'Number of samples');
+set(han,'Color',[1;1;1]);
 
 %% bar chart of Sobol indices
 % corresponding to largest number of samples
@@ -58,7 +97,7 @@ cmap = get(gca,'ColorOrder');
 hold on
 
 m_plot = 2; % number of coefficients used for QoI
-n_plot = 5; % number of columns = number of radial sections
+n_plot = n_r_index; % number of columns = number of radial sections
 
 titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
 % QoI_names   = {'mean','amplitude 1','angle 1'};
@@ -217,11 +256,13 @@ if (nunc == 1)
             X_PCE_full = [X_PCE repmat(Xsamples(1,nunc+1:end),Ntest,1)];
 
             % evaluate the PCE model at many points
+            % Y_PCE is a matrix with the QoI as a row vector for each
+            % column (each realization of X)
             Y_PCE = uq_evalModel(myPCE_LARS,X_PCE_full); 
             
-            % assume that amplitude and phase of 1 Fourier mode are
+            % assume that cosine and sine of 1 Fourier mode are
             % considered
-            % amplitude response at different sections
+            % cosine response at different sections
             figure
             cmap = get(gca,'ColorOrder');
 
@@ -240,7 +281,7 @@ if (nunc == 1)
                 'section 5 - surrogate','section 5 - AeroModule run');
             grid on
             
-            % phase response at different sections
+            % sine response at different sections
             figure
             cmap = get(gca,'ColorOrder');
             for k=1:n_r_index

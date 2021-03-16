@@ -2,18 +2,18 @@
 clc
 close all
 clearvars
-rng default
+rng(1000)
 
 root_folder = pwd;
 
-% check current path for existence of folders from this working directory
+% check current path for presence of folders from this working directory
 path_all = strsplit(path,';');
-ind = startsWith(path_all,root_folder);
-% remove those
+ind      = startsWith(path_all,root_folder);
+% remove those and add later the ones that are needed
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NM80'; %NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
+caseName = 'NewMexico_sensitivity'; %NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -64,8 +64,8 @@ myModel = uq_createModel(Model);
 myInput = uq_createInput(Input) ;
 
 %% display input properties
-uq_print(myInput);
-uq_display(myInput);
+% uq_print(myInput);
+% uq_display(myInput);
 
 
 %% do a test run with the forward model at unperturbed settings
@@ -298,7 +298,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     metamodelLARS.MetaType  = 'PCE';
     metamodelLARS.Method    = 'LARS';
     metamodelLARS.Degree    = 1:4; % this automatically switches on degree adaptive PCE
-    metamodelLARS.TruncOptions.qNorm = 0.75;
+    metamodelLARS.TruncOptions.qNorm = 0.5:0.1:1.5;
+%     metamodelLARS.LARS.ModifiedLOO = 0; % use standard LOO to decide on convergence
     
     % as there is randomness in the experimental design, we can
     % average over several runs
@@ -315,7 +316,7 @@ if (find(strcmp(methods,'PCE_LARS')))
             % use sampling strategy, note that default is MC!
             metamodelLARS.ExpDesign.Sampling = 'LHS'; % or 'LHS' or 'Sobol' or 'Halton'
             metamodelLARS.ExpDesign.NSamples = NsamplesLARS(i);            
-            
+
             myPCE_LARS  = uq_createModel(metamodelLARS);
             
 %             %% trial:
