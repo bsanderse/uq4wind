@@ -397,27 +397,27 @@ for i = 1:n_runs
     % For the current case, 2*standard deviations of the experimental
     % measurements is chosen as the prior.
 
-%     DiscrepancyOpts(i).Type = 'Gaussian';
-%     DiscrepancyOpts(i).Parameters = 1e-1;    
+    DiscrepancyOpts(i).Type = 'Gaussian';
+    DiscrepancyOpts(i).Parameters = 1e-1;    
     
-    DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
-    DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
-    DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
-    DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 1e-1];
-    DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
-    
-    DiscrepancyOpts(1).Type = 'Gaussian';
-    DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
-    
-    
-    DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
-    DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
-    DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
-    DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 1e-1];
-    DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
-    
-    DiscrepancyOpts(2).Type = 'Gaussian';
-    DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
+%     DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
+%     DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
+%     DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
+%     DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 1e-1];
+%     DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
+%     
+%     DiscrepancyOpts(1).Type = 'Gaussian';
+%     DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
+%     
+%     
+%     DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
+%     DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
+%     DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
+%     DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 1e-1];
+%     DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
+%     
+%     DiscrepancyOpts(2).Type = 'Gaussian';
+%     DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
     %
     % DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
     % DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma3';
