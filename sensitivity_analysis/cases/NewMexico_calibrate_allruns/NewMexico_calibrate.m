@@ -5,7 +5,7 @@ function Input  = NewMexico_calibrate()
 % type = FixedParameters.correction;
 
 %% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
-type = 2 ; 
+type = 1 ; 
 
 % initialize counter of marginals
 counter = 0;
@@ -30,7 +30,7 @@ counter = 0;
 
         counter = counter+1;
         exp3D     = 2;
-        exp3D_Std = 0.1;  % Standard deviation
+        exp3D_Std = 0.2;  % Standard deviation
 %         exp3D_LB = 2; % Lower bound of truncated Gaussian distribution
 %         exp3D_UB = 5;  % Upper bound of truncated Gaussian distribution 
         Input.Marginals(counter).Name = 'exp3D';
