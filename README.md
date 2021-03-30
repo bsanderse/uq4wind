@@ -1,4 +1,4 @@
-# WINDTRUE: UQ for aeroelastic wind turbine models
+# UQ4WIND: UQ for aeroelastic wind turbine models
 
 This repository contains matlab routines to perform UQ of wind turbine models.
 
