@@ -32,8 +32,8 @@ uqlab
 %% Add paths for dependent routines located in the directories:'NURBS','AEROmoduleWrapper' and 'Geometry'
 % remove folders from the path to prevent that files from wrong folders are called
 addpath(fullfile(root_folder,'AEROmoduleWrapper'));
-addpath(fullfile(root_folder,'NURBS'));
 addpath(fullfile(root_folder,'Geometry'));
+addpath(fullfile(root_folder,'Geometry','NURBS'));
 addpath(fullfile(root_folder,'cases',caseName));
 addpath(fullfile(root_folder,'Other'));
 

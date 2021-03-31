@@ -14,7 +14,7 @@ ind      = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NewMexico_sensitivity'; %NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
+caseName = 'linear_portfolio'; %NewMexico_sensitivity'; % 'airfoil_lift','aero_module', etc;
 input_file = caseName; % specify directory which contains test case settings and model
 
 %% Sobol options
@@ -24,8 +24,8 @@ SobolOpts.Sobol.Order = 1;
 
 %% Add paths for dependent routines located in the directories 'NURBS','AEROmoduleWrapper' and 'Geometry'
 addpath(fullfile(root_folder,'AEROmoduleWrapper'));
-addpath(fullfile(root_folder,'NURBS'));
 addpath(fullfile(root_folder,'Geometry'));
+addpath(fullfile(root_folder,'Geometry','NURBS'));
 addpath(fullfile(root_folder,'cases',caseName));
 addpath(fullfile(root_folder,'Other'));
 
@@ -43,8 +43,10 @@ uqlab
 run(['cases/' input_file '/initialize.m']);
 
 
-%% empty the contents of the output folder of the AeroModule to prevent that old information is being loaded
-delete(strcat(pwd,'/AEROmodule/',turbineName,'/current/output/*'));
+%% for AeroModule runs, empty the contents of the output folder of the AeroModule to prevent that old information is being loaded
+if (exist('turbineName','var'))
+    delete(strcat(pwd,'/AEROmodule/',turbineName,'/current/output/*'));
+end
 
 %%
 if (exist('mean_exact','var'))
@@ -180,6 +182,11 @@ if (find(strcmp(methods,'PCE_Quad')))
         Sobol_Quad_FirstOrder(i,1:ndim,1:nout) = SobolResults_Quad.FirstOrder;
         Sobol_Quad_Total(i,1:ndim,1:nout)      = SobolResults_Quad.Total;
     end
+    
+    % average is the same as the results, since the method is deterministic
+    AVG_Sobol_Quad_FirstOrder = Sobol_Quad_FirstOrder;
+    AVG_Sobol_Quad_Total      = Sobol_Quad_Total;
+    
     
     if (compare_mean == 1)
         err_mean_Quad =  abs((mean_Quad - mean_exact)/mean_ref);

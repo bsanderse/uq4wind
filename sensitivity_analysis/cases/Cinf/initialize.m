@@ -19,7 +19,7 @@ methods = {'MC','PCE_Quad'};
 % for Monte Carlo, specify number of times to repeat MC-based methods to obtain 'nice' convergence
 % graphs
 MC_repeat = 1;
-NsamplesMC = [1e1 1e2 1e3 1e4 1e5];
+NsamplesMC = [1e1 1e2 1e3 1e4];
 
 % for PCE-Quad, specify the polynomial degrees to be tested
 DegreesQuad = 1:6; %[1 2 3 4 5 6];
