@@ -8,7 +8,7 @@ close all
 clearvars
 % fix random  number generator (this makes results reproducible, but is
 % not always wanted):
-% rng default
+rng default
 
 root_folder = pwd;
 
