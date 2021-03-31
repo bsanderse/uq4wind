@@ -30,4 +30,4 @@ In addition to the initialization and postprocessing file, for the AeroModule ru
 - XXX_readoutput.m which reads the AeroModule output and selects the quantity of interest (QoI)
 
 ## Workflow diagram
-<img src="workflow_windtrue.png" width="800" height="450">
+<img src="../workflow_windtrue.png" width="800" height="450">
