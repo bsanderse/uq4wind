@@ -28,3 +28,6 @@ You can use the function findAeroModulePath() (in the folder Other/) to check wh
 In addition to the initialization and postprocessing file, for the AeroModule runs one needs (assuming the casename is XXX):
 - XXX.m containing the definition of uncertain parameters
 - XXX_readoutput.m which reads the AeroModule output and selects the quantity of interest (QoI)
+
+## Workflow diagram
+<img src="workflow_windtrue.png" width="800" height="450">
