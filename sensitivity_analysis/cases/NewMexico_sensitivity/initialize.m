@@ -22,7 +22,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the run for which the sensitivity analysis is to be performed
 % note: only a single run is possible at this moment
-select_runs = 935; 
+select_runs = 948; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_readoutput.m
@@ -194,9 +194,9 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [8; 16; 32; 64; 128; 256; 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [8; 16; 32; 64; 128];% 256; 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
 
-LARS_repeat = 3; % like MC_repeat
+LARS_repeat = 1; % like MC_repeat
 
 
 %% check location of ECNAeroModule

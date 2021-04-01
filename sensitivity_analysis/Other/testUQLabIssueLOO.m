@@ -28,7 +28,7 @@ uqlab;
 Model.mString = 'sin(2*pi*X(:,1))';%-0.5))';
 myModel = uq_createModel(Model);
 
-Samples_list = 2:3;
+Samples_list = 5;
 Nrun = length(Samples_list);
 error_LOO = zeros(Nrun,1);
 
@@ -46,8 +46,8 @@ for k=1:Nrun
     Input.Marginals(1).Type = 'Uniform';
     Input.Marginals(1).Parameters = [mu-2*sigma, mu+2*sigma];
     
-%     Input.Marginals(2).Type = 'Constant';
-%     Input.Marginals(2).Parameters = 1;
+    Input.Marginals(2).Type = 'Constant';
+    Input.Marginals(2).Parameters = 1;
 %     Input.Marginals(3).Type = 'Constant';
 %     Input.Marginals(3).Parameters = 1;
 %     Input.Marginals(4).Type = 'Constant';
