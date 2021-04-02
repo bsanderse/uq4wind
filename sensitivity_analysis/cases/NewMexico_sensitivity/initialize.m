@@ -194,7 +194,7 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [8; 16; 32; 64; 128];% 256; 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [8; 16; 32];% 64; 128];% 256; 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 

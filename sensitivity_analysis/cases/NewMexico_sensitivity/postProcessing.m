@@ -32,31 +32,31 @@ for q=1:nout
     cmap = get(gca,'ColorOrder');
     
     if (find(strcmp(methods,'MC')))
-        if(size(AVG_Sobol_MC_Total,2)>1)
-            semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1, q), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
-            hold on
-        end
+%         if(size(AVG_Sobol_MC_Total,2)>1)
+%             semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, 1:end-1, q), 'x-','Linewidth', 2, 'Color', cmap(1,:), 'HandleVisibility','off');
+%             hold on
+%         end
         semilogx(NsamplesMC', AVG_Sobol_MC_Total(:, end, q), 'x-','Linewidth', 2, 'Color', cmap(1,:));
     end
     if (find(strcmp(methods,'PCE_Quad')))
-        if(size(Sobol_Quad_Total,2)>1)
-            semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1, q), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
-            hold on
-        end
+%         if(size(Sobol_Quad_Total,2)>1)
+%             semilogx(NsamplesQuad', Sobol_Quad_Total(:, 1:end-1, q), 's-','Linewidth', 2,'Color', cmap(2,:), 'HandleVisibility','off');
+%             hold on
+%         end
         semilogx(NsamplesQuad', Sobol_Quad_Total(:, end, q), 's-','Linewidth', 2,'Color', cmap(2,:));
     end
     if (find(strcmp(methods,'PCE_OLS')))
-        if(size(AVG_Sobol_OLS_Total,2)>1)
-            semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1, q), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
-            hold on
-        end
+%         if(size(AVG_Sobol_OLS_Total,2)>1)
+%             semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, 1:end-1, q), 'o-','Linewidth', 2,'Color', cmap(3,:), 'HandleVisibility','off');
+%             hold on
+%         end
         semilogx(NsamplesOLS, AVG_Sobol_OLS_Total(:, end, q), 'o-','Linewidth', 2,'Color', cmap(3,:));
     end
     if (find(strcmp(methods,'PCE_LARS')))
-        if(size(AVG_Sobol_LARS_Total,2)>1)
-            semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1, q), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
-            hold on
-        end
+%         if(size(AVG_Sobol_LARS_Total,2)>1)
+%             semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:, 1:end-1, q), 'd-','Linewidth', 2,'Color', cmap(4,:), 'HandleVisibility','off');
+%             hold on
+%         end
         semilogx(NsamplesLARS, AVG_Sobol_LARS_Total(:,1:nunc,q), 'd-','Linewidth', 2); %,'Color', cmap(4,:));
     end
 %     xlabel('N') % Add proper labelling and a legend

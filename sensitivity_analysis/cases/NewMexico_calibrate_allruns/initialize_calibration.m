@@ -87,9 +87,10 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 64; % number of samples for each surrogate model (each run)
+MetaOpts.ExpDesign.NSamples = 8; % number of samples for each surrogate model (each run)
 MetaOpts.Degree = 1:4;
-MetaOpts.TruncOptions.qNorm = 0.75;   
+% MetaOpts.TruncOptions.qNorm = 0.75;   
+metamodelLARS.TruncOptions.qNorm = 0.5:0.1:1.5;
 
 
 %% Description of experimental dataset and choice of operating conditions
@@ -104,14 +105,18 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = [935]; 
+select_runs = [935; 939; 948]; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
 r_exp_data = [0.25 0.35 0.6 0.82 0.92]*2.25;
 
 
-%% MCMC options
+%% Bayes and MCMC options
+
+% discrepancy model that determines likelihood
+discrepancy_model = 'vector_known';
+
 % MCMC parameters
 Solver.Type = 'MCMC';
 % MCMC algorithms available in UQLab
@@ -431,91 +436,110 @@ for i = 1:n_runs
     % For the current case, 2*standard deviations of the experimental
     % measurements is chosen as the prior.
 
-    % option 1: scalar known discrepancy for all QoIs (iid), for each forward
-    % model the same
-%     DiscrepancyOpts(i).Type = 'Gaussian';
-%     DiscrepancyOpts(i).Parameters = 1e-6;    
+    switch discrepancy_model
+        
+        case 'scalar'
+            % option 1: scalar known discrepancy for all QoIs (iid), for each forward
+            % model the same
+            DiscrepancyOpts(i).Type = 'Gaussian';
+            DiscrepancyOpts(i).Parameters = 1e-6;    
     
-    % option 2: vector known discrepancy for QoIs (independent but not idd)
-    % that is different for phase and amplitude
-    % the QoI is ordered as follows:
-    % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
-%     sigma_amp = 5;
-%     sigma_phase = 1;
-%     discrepancy_vector = zeros(1,n_output);
-%     discrepancy_vector(1:2:end) = sigma_amp.^2;
-%     discrepancy_vector(2:2:end) = sigma_phase.^2;
-%     DiscrepancyOpts(i).Type = 'Gaussian';
-%     DiscrepancyOpts(i).Parameters = discrepancy_vector;
-    
-    % option 3: unknown residual variance: define a prior and calibrate
-    % the size of the DiscrepancyPriorOpts is in this case n_r_index*n_fourier
-    % with the following order:
-    % 1: r_index 1, index_fourier 1
-    % 2: r_index 1, index_fourier 2
-    % ...
-    % n_fourier: r_index 1, index_fourier n
-    % n_fourier+1: r_index 2, index_fourier 1
-    % etc.
-    DiscrepancyPriorOpts.Name = 'Prior of discrepancy parameter';
-    switch fourier_type
-        case 'amp_phase'
-            prior_amp = [0 25];
-            prior_phase = [0 2];
+        case 'vector_known'
+            % option 2: vector known discrepancy for QoIs (independent but not idd)
+            % that is different for phase and amplitude
             
-            qoi_amp = 1:2:n_coeffs*n_r_index;       
-            for q=1:length(qoi_amp)
-%             DiscrepancyPriorOpts.Marginals(qoi_amp).Name = strcat('Prior of Sigma2 ',num2str(qoi));
-                DiscrepancyPriorOpts.Marginals(qoi_amp(q)).Type = 'Uniform';
-                DiscrepancyPriorOpts.Marginals(qoi_amp(q)).Parameters = prior_amp;
-            end
-            
-            qoi_phase = 2:2:n_coeffs*n_r_index;
-            for q=1:length(qoi_phase)
-%             DiscrepancyPriorOpts.Marginals(qoi_phase).Name = strcat('Prior of Sigma2 ',num2str(qoi));
-                DiscrepancyPriorOpts.Marginals(qoi_phase(q)).Type = 'Uniform';
-                DiscrepancyPriorOpts.Marginals(qoi_phase(q)).Parameters = prior_phase;
-            end
-            
-        case 'real_imag'
-            prior_real = [0 25];
-            prior_imag = [0 25];
+            switch fourier_type
+                
+                case 'amp_phase'
 
-            qoi_real = 1:2:n_coeffs*n_r_index;           
-            for q=1:length(qoi_real)
-%             DiscrepancyPriorOpts.Marginals(qoi_real(i)).Name = strcat('Prior of Sigma2 ',num2str(qoi));
-                DiscrepancyPriorOpts.Marginals(qoi_real(q)).Type = 'Uniform';
-                DiscrepancyPriorOpts.Marginals(qoi_real(q)).Parameters = prior_real;
+                    % the QoI is ordered as follows:
+                    % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
+                    sigma_amp = 5;
+                    sigma_phase = 1;
+                    discrepancy_vector = zeros(1,n_output);
+                    discrepancy_vector(1:2:end) = sigma_amp.^2;
+                    discrepancy_vector(2:2:end) = sigma_phase.^2;
+            
+                case 'real_imag'
+
+                    % the QoI is ordered as follows:
+                    % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
+                    sigma_real = 2;
+                    sigma_imag = 2;
+                    discrepancy_vector = zeros(1,n_output);
+                    discrepancy_vector(1:2:end) = sigma_real.^2;
+                    discrepancy_vector(2:2:end) = sigma_imag.^2;     
+                    
+                otherwise
+                    
+                    error('wrong setting for fourier_type');
             end
-            qoi_imag = 2:2:n_coeffs*n_r_index;
-            for q=1:length(qoi_imag)
-%             DiscrepancyPriorOpts.Marginals(qoi_imag).Name = strcat('Prior of Sigma2 ',num2str(qoi));
-                DiscrepancyPriorOpts.Marginals(qoi_imag(q)).Type = 'Uniform';
-                DiscrepancyPriorOpts.Marginals(qoi_imag(q)).Parameters = prior_imag; 
+                    
+            DiscrepancyOpts(i).Type = 'Gaussian';
+            DiscrepancyOpts(i).Parameters = discrepancy_vector;
+    
+               
+        case 'vector_unknown'
+            
+            % option 3: unknown residual variance: define a prior and calibrate
+            % the size of the DiscrepancyPriorOpts is in this case n_r_index*n_fourier
+            % with the following order:
+            % 1: r_index 1, index_fourier 1
+            % 2: r_index 1, index_fourier 2
+            % ...
+            % n_fourier: r_index 1, index_fourier n
+            % n_fourier+1: r_index 2, index_fourier 1
+            % etc.
+            DiscrepancyPriorOpts.Name = 'Prior of discrepancy parameter';
+            switch fourier_type
+                case 'amp_phase'
+                    prior_amp = [0 25];
+                    prior_phase = [0 2];
+
+                    qoi_amp = 1:2:n_coeffs*n_r_index;       
+                    for q=1:length(qoi_amp)
+        %             DiscrepancyPriorOpts.Marginals(qoi_amp).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                        DiscrepancyPriorOpts.Marginals(qoi_amp(q)).Type = 'Uniform';
+                        DiscrepancyPriorOpts.Marginals(qoi_amp(q)).Parameters = prior_amp;
+                    end
+
+                    qoi_phase = 2:2:n_coeffs*n_r_index;
+                    for q=1:length(qoi_phase)
+        %             DiscrepancyPriorOpts.Marginals(qoi_phase).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                        DiscrepancyPriorOpts.Marginals(qoi_phase(q)).Type = 'Uniform';
+                        DiscrepancyPriorOpts.Marginals(qoi_phase(q)).Parameters = prior_phase;
+                    end
+
+                case 'real_imag'
+                    prior_real = [0 25];
+                    prior_imag = [0 25];
+
+                    qoi_real = 1:2:n_coeffs*n_r_index;           
+                    for q=1:length(qoi_real)
+        %             DiscrepancyPriorOpts.Marginals(qoi_real(i)).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                        DiscrepancyPriorOpts.Marginals(qoi_real(q)).Type = 'Uniform';
+                        DiscrepancyPriorOpts.Marginals(qoi_real(q)).Parameters = prior_real;
+                    end
+                    qoi_imag = 2:2:n_coeffs*n_r_index;
+                    for q=1:length(qoi_imag)
+        %             DiscrepancyPriorOpts.Marginals(qoi_imag).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                        DiscrepancyPriorOpts.Marginals(qoi_imag(q)).Type = 'Uniform';
+                        DiscrepancyPriorOpts.Marginals(qoi_imag(q)).Parameters = prior_imag; 
+                    end
+
+                otherwise
+                    error('wrong setting for fourier_type');
             end
             
-        otherwise
-            error('wrong setting for fourier_type');
+            DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
+            DiscrepancyOpts(i).Type = 'Gaussian';
+            DiscrepancyOpts(i).Prior = DiscrepancyPrior;    
+            
+        otherwise 
+            error('wrong setting for discrepancy type');
     end
     
-% %     same discrepancy for each section
-% 
-%     for q=1:2:2*n_r_index
-%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
-%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
-%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 25];
-%     end
-%     % phase angle
-%     % same discrepancy for each section
-%     for q=2:2:2*n_r_index
-%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
-%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
-%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 2];
-%     end
-    DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
-
-    DiscrepancyOpts(i).Type = 'Gaussian';
-    DiscrepancyOpts(i).Prior = DiscrepancyPrior;    
+    
     n_hyper = n_output;
 %         
     

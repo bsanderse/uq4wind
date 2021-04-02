@@ -34,25 +34,25 @@ Input.Marginals(counter).Type = 'Gaussian';
 Input.Marginals(counter).Parameters = [AM13, AM13_Std*abs(AM13)];
 % Input.Marginals(counter).Bounds = [AM13_LB AM13_UB]; 
 
-counter = counter+1;
-AM14     = -0.0543;
-AM14_Std = 1;  % Standard deviation
-% AM14_LB = 0; % Lower bound of truncated Gaussian distribution
-% AM14_UB = 1;  % Upper bound of truncated Gaussian distribution 
-Input.Marginals(counter).Name = 'AM14';
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [AM14, AM14_Std*abs(AM14)];
-% Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
-
-counter = counter+1;
-AM15     = 0.367;
-AM15_Std = 1;  % Standard deviation
-% AM14_LB = 0; % Lower bound of truncated Gaussian distribution
-% AM14_UB = 1;  % Upper bound of truncated Gaussian distribution 
-Input.Marginals(counter).Name = 'AM15';
-Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [AM15, AM15_Std*abs(AM15)];
-% Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
+% counter = counter+1;
+% AM14     = -0.0543;
+% AM14_Std = 1;  % Standard deviation
+% % AM14_LB = 0; % Lower bound of truncated Gaussian distribution
+% % AM14_UB = 1;  % Upper bound of truncated Gaussian distribution 
+% Input.Marginals(counter).Name = 'AM14';
+% Input.Marginals(counter).Type = 'Gaussian'; 
+% Input.Marginals(counter).Parameters = [AM14, AM14_Std*abs(AM14)];
+% % Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
+% 
+% counter = counter+1;
+% AM15     = 0.367;
+% AM15_Std = 1;  % Standard deviation
+% % AM14_LB = 0; % Lower bound of truncated Gaussian distribution
+% % AM14_UB = 1;  % Upper bound of truncated Gaussian distribution 
+% Input.Marginals(counter).Name = 'AM15';
+% Input.Marginals(counter).Type = 'Gaussian'; 
+% Input.Marginals(counter).Parameters = [AM15, AM15_Std*abs(AM15)];
+% % Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
 
 
 % counter = counter+1;

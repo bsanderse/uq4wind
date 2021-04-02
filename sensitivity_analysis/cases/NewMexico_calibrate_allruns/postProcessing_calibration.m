@@ -36,12 +36,21 @@ uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP','burnIn',0.5,'po
 % note that X_MAP contains both model parameters and the hyperparameters
 % without the model constants (if present)
 X_MAP = BayesianAnalysis.Results.PostProc.PointEstimate.X;
+if (iscell(X_MAP)) %uqlab v1.4
+ X_MAP = cell2mat(X_MAP);
+end
 
 %% get posterior predictive
 nPred = 500;
 uq_postProcessInversion(BayesianAnalysis,'burnIn',0.5,'posteriorPredictive',nPred)
-postPred = BayesianAnalysis.Results.PostProc.PostPred.model.postPredRuns;
 
+if (isfield(BayesianAnalysis.Results.PostProc,'PostPred'))
+    % uqlab v1.3
+    postPred = BayesianAnalysis.Results.PostProc.PostPred.model.postPredRuns; 
+else
+    % uqlab v1.4
+    postPred = BayesianAnalysis.Results.PostProc.PostPredSample.PostPred;
+end
 
 %%
 % number of model uncertainties, without hyperparameters
@@ -88,15 +97,32 @@ for i = 1:n_runs
         end
 
         figure
-        plot(r_exp_data,QoI_exp_data,'x');
+        h1 = plot(r_exp_data,QoI_exp_data,'x','markersize',16,'Linewidth', 2.5);
+        t  = lines; %get(gca,'ColorOrder');
+        
         hold on
-        plot(r_exp_data,QoI_MAP,'o');
-        plot(r_exp_data,QoI_unperturbed,'s');
+        grey = [0.5 0.5 0.5];
+        violin(postPred(:,j:n_coeffs:end),'x',r_exp_data,'edgecolor',grey-0.1,'facecolor',grey+0.1,'medc','','mc','','plotlegend','','facealpha',0.5);
+
+        h2 = plot(r_exp_data,QoI_MAP,'o','markersize',16,'color',t(2,:),'Linewidth', 2.5);
+        h3 = plot(r_exp_data,QoI_unperturbed,'s','markersize',16,'color',t(3,:),'Linewidth', 2.5);
 
         grid on
         xlabel('r [m]');
 %         ylabel('Fn [N/m]');
-        legend('Experimental data','Calibrated AeroModule (MAP)','Uncalibrated AeroModule');
+        legend([h1 h2 h3],'Experimental data','Calibrated AeroModule (MAP)','Uncalibrated AeroModule');
         title(['Model vs. data for run ' num2str(select_runs(i)) ' and Fourier coefficient ' num2str(k)]);
     end
+end
+
+%% save surrogate model
+if (Bayes_full == 0 && Surrogate_model_type == 1)
+
+    filename = ['PCE_N' num2str(MetaOpts.ExpDesign.NSamples) '.mat'];
+    filepath = fullfile('..','..','StoredSurrogates','NewMexico_calibrate');
+    % prevent overwriting of file
+    filename_new = avoidOverwrite(filename,filepath);
+    disp(['saving surrogate model in ' filename_new]);
+
+    save(fullfile(filepath,filename_new),'mySurrogateModels');
 end
