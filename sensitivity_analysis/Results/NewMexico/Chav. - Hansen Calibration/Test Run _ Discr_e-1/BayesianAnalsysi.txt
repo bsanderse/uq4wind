@@ -1,0 +1,45 @@
+%----------------------- Inversion output -----------------------%
+   Number of calibrated model parameters:         1
+   Number of non-calibrated model parameters:     4
+
+   Number of calibrated discrepancy parameters:   0
+
+%------------------- Data and Discrepancy
+%  Data-/Discrepancy group 1:
+   Number of independent observations:            1
+
+   Discrepancy:
+      Type:                                       Gaussian
+      Discrepancy family:                         Scalar
+      Discrepancy parameters known:               Yes
+
+   Associated outputs:
+      Model 1: 
+         Output dimensions:                       1
+                                                  to
+                                                  5
+
+
+%------------------- Solver
+   Solution method:                               MCMC
+
+   Algorithm:                                     AIES
+   Duration (HH:MM:SS):                           00:00:14
+   Number of sample points:                       5.00e+03
+
+%------------------- Posterior Marginals
+----------------------------------------------------------
+| Parameter | Mean | Std    | (0.05-0.95) Quant. | Type  |
+----------------------------------------------------------
+| factor3D  | 0.85 | 0.0026 | (0.85 - 0.85)      | Model |
+----------------------------------------------------------
+
+%------------------- Point estimate
+-------------------------------------
+| Parameter | Map  | Parameter Type |
+-------------------------------------
+| factor3D  | 0.85 | Model          |
+-------------------------------------
+
+%------------------- Convergence
+   Gelman-Rubin MPSRF:                            1.278533e+00

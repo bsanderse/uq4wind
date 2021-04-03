@@ -45,7 +45,7 @@ QoI_type = 'mean';
 % the aeromodule 3D correction applied, so set the 3D correction flag in
 % input.txt to 1
 
-cor_type = 1;
+cor_type = 2;
 %% 
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;

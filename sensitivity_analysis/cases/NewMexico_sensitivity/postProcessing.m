@@ -112,7 +112,7 @@ for q=1:nout
     end
     
      legend(methods, 'Interpreter', 'none')
-%     ylabel('Total order Sobol index');
+    ylabel('Total order Sobol index');
     ylim([0 1])
     xticks(1:ndim)
     for i =1:ndim

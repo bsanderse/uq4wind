@@ -9,7 +9,7 @@ function Input  = NewMexico()
 % Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 %or type = 3 for turbulent wake model sensitivity, Wilson model
 
-type = 1 ; 
+type = 2 ; 
 
 counter = 0;
     switch type
