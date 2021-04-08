@@ -62,8 +62,9 @@ n_rev = 4;
 % index 4: real part of second mode
 % index 5: imaginary part of second mode
 % etc.
-fourier_type = 'real_imag';
-index_fourier = [2 3]; 
+fourier_type = 'amp_phase';
+index_fourier = [2]; 
+n_coeffs  = length(index_fourier);
 
 % radial indices (blade sections) to consider:
 r_index = 1:5;
@@ -194,7 +195,7 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = [8; 16; 32];% 64; 128];% 256; 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = 8; %[8; 16; 32; 64; 128; 256];% 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 
