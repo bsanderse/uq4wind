@@ -22,7 +22,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the run for which the sensitivity analysis is to be performed
 % note: only a single run is possible at this moment
-select_runs = 948; 
+select_runs = 935; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_readoutput.m
@@ -70,8 +70,11 @@ n_coeffs  = length(index_fourier);
 r_index = 1:5;
 n_r_index = length(r_index);
 
+% perform test run with Forward Model without uncertainties; 
+% this is used as a check and to plot the uncalibrated model in the results
+test_run =1;
 
-% Pass parameters to model via the cell array FixedInputs
+%% Pass parameters to model via the cell array FixedInputs
 [FixedParameters,UncertainInputs_NoOC] = getParameterAeroModule(turbineName);
 
 FixedParameters.root_folder    = root_folder;
