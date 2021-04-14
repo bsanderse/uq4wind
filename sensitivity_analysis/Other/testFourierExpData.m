@@ -1,7 +1,11 @@
 %% test Fourier representation of azimuth-dependent data
 clearvars
-close all
+% close all
 
+
+%% figure numbers
+figID_PSD = 9;
+figID_Fourier = 105;
 
 %% load  experimental data
 % run this file from sensitivity_analysis folder
@@ -11,7 +15,7 @@ root_folder = pwd;
 
 % NewMexicoData as obtained from Koen Boorsma (TNO)
 folder_exp    = fullfile(root_folder,'..','Experimental','NewMexicoData');
-filename_exp = 'R52P80D935_loads_n.dat';
+filename_exp = 'R52P83D948_loads_n.dat';
 full_filename_exp = fullfile(folder_exp,filename_exp);
 % read in the table
 output_raw   = readNewMexicoModified(full_filename_exp);    
@@ -43,7 +47,7 @@ Fn_exp_int  = spline(azi_exp_data',Fn_exp_data',azi_exp_int)';
 
 %% loop over radial sections and do FFT for each section
 
-figure(10)
+figure(figID_Fourier)
 colormap = get(gca,'ColorOrder');
 
 % radial indices to plot:
@@ -122,19 +126,19 @@ for k = 1:length(r_index)
     angle(f_pos);   
     
     
-    figure(9)
+    figure(figID_PSD)
     semilogy(freqVals(1:end),PSD(1:floor(n/2)),'x-','Color',colormap(k,:))
     hold on
     semilogy(freqVals.*ind_select(1:floor(n/2)),PSD(1:floor(n/2)).*ind_select(1:floor(n/2)),'s','Color',colormap(k,:))
     
-    figure(10)
-    plot(azi_exp_data,Fn_pert,'-','Color',colormap(k,:), 'LineWidth',1);
+    figure(figID_Fourier)
+    plot(azi_exp_data,Fn_pert,'s-','Color',colormap(k,:), 'LineWidth',1);
     hold on
-    plot(azi_exp_data,Fnew,'--','Color',colormap(k,:), 'LineWidth',2);
+%     plot(azi_exp_data,Fnew,'--','Color',colormap(k,:), 'LineWidth',2);
     
 end
 
-figure(9)
+figure(figID_PSD)
 grid on
 legend('Section 1','Section 1 - selected modes',...
     'Section 2','Section 2 - selected modes',...
@@ -144,7 +148,7 @@ legend('Section 1','Section 1 - selected modes',...
 xlabel('Frequency [1/s]');
 ylabel('Power spectral density');
 
-figure(10)
+figure(figID_Fourier)
 grid on
 legend('Section 1','Section 1 - Fourier',...
     'Section 2','Section 2 - Fourier',...
