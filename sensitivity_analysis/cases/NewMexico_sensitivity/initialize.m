@@ -42,7 +42,7 @@ QoI = 'Sectional_normal_force';
 QoI_type = 'full';
                
 % number of revolutions to consider (counting from end of time series)
-n_rev = 1;
+n_rev = 4;
 
 % supply the indices of the fourier modes that are used
 % for fourier_type = 'amp_phase'  we use the following convention:
@@ -198,7 +198,7 @@ NsamplesOLS = 8;%[8 16 32 64 128]; % if not specified, the number of samples fro
 OLS_repeat = 1; % like MC_repeat
  
 % for PCE-LARS:
-NsamplesLARS = 16; %[8; 16; 32; 64; 128; 256];% 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
+NsamplesLARS = [8; 16; 32; 64;];% 128; 256];% 512]; %[4;8;16;32;64]; %[4; 8; 16; 32; 64; 128; 256]; % if not specified, the number of samples from Quad is taken
 
 LARS_repeat = 1; % like MC_repeat
 

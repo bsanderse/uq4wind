@@ -169,6 +169,7 @@ for q=1:nout
 end
 
 %% convergence of LOO and modLOO
+% assuming LARS is used
 
 figure
 for k=1:nout
@@ -220,6 +221,39 @@ switch fourier_type
 end
 xlabel('Number of samples (=number of model runs)');
 ylabel('Modified LOO error');
+
+
+%% plot the QoI at each radial section
+% assuming LARS is used
+mySurrogateModel = myPCE_LARS;
+% loop over selected Fourier coefficients
+for j=1:n_coeffs
+    k = index_fourier(j);
+    % select outputs at several sections corresponding to this Fourier coefficient
+    % order is determined in NewMexico_readoutput
+    QoI_sim = myPCE_LARS.ExpDesign.Y(:,j:n_coeffs:end);
+
+    % get unperturbed model result from surrogate if not available yet
+    if (test_run == 0) % test run has not yet been performed
+        warning('unperturbed AeroModule results are obtained from the surrogate model');
+        Y_unperturbed = uq_evalModel(mySurrogateModel,X_unperturbed);
+        QoI_unperturbed = Y_unperturbed(:,j:n_coeffs:end);
+    elseif (test_run == 1)
+        QoI_unperturbed = Y_unperturbed(:,j:n_coeffs:end);
+    end
+
+    figure
+    t  = lines; %get(gca,'ColorOrder');
+    h2 = plot(r_exp_data(r_index),QoI_sim,'o','markersize',16,'color',t(2,:),'Linewidth', 2.5);
+    hold on
+    h3 = plot(r_exp_data(r_index),QoI_unperturbed,'s','markersize',16,'color',t(3,:),'Linewidth', 2.5);
+
+    grid on
+    xlabel('r [m]');
+%         ylabel('Fn [N/m]');
+%     legend([h2 h3],'Perturbations','Unperturbed');
+%     title(['Model vs. data for run ' num2str(select_runs(i)) ' and Fourier coefficient ' num2str(k)]);
+end
 
 
 %% plot the actual response surface
