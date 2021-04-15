@@ -5,9 +5,16 @@ Model.mHandle = @yaw_model;
 % name of Matlab file representing the model
 
 phi_y = 45;
-phi_r = 0;
-P     = [phi_y; phi_r];
+phi_r = 90;
+r_rel = [0.25 0.35 0.6 0.82 0.92];
+
+P.phi_y = phi_y; 
+P.phi_r = phi_r;
+P.r_rel = r_rel;
 Model.Parameters = P;
+Model.isVectorized = false;
+N_out = length(r_rel);
+
 
 %% input description
 
@@ -25,7 +32,7 @@ NsamplesMC = [1e1 1e2 1e3 1e4];
 % for PCE-Quad, specify the polynomial degrees to be tested
 DegreesQuad = 1:8; %[1 2 3 4 5 6];
 
-NsamplesLARS = 8;
+NsamplesLARS = 32;
 LARS_repeat = 1;
 
 %% input description
@@ -34,52 +41,52 @@ counter = 0;
 % define marginals of yaw model
 counter = counter+1;
 AM11     = 0.445;
-AM11_Std = 1;  % Standard deviation
+AM11_Std = 0.1;  % Standard deviation
 % AM11_LB = 0; % Lower bound of truncated Gaussian distribution
 % AM11_UB = 1;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'AM11';
 Input.Marginals(counter).Type = 'Gaussian'; 
-Input.Marginals(counter).Parameters = [AM11, AM11_Std*abs(AM11)];
+Input.Marginals(counter).Parameters = [AM11, AM11_Std];
 % Input.Marginals(counter).Bounds = [AM11_LB AM11_UB]; 
 
 counter = counter+1;
 AM12     = -1.78;
-AM12_Std = 1*abs(AM12);  % Standard deviation
+AM12_Std = 0.1;  % Standard deviation
 % AM12_LB  = AM12 - 3*AM12_Std; % Lower bound of truncated Gaussian distribution
 % AM12_UB  = AM12 + 3*AM12_Std;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'AM12';
-Input.Marginals(counter).Type = 'Constant'; 
-Input.Marginals(counter).Parameters = AM12;% [AM12 AM12_Std];
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [AM12, AM12_Std];
 % Input.Marginals(counter).Bounds = [AM12_LB AM12_UB]; 
 
 counter = counter+1;
 AM13     = 1.63;
-AM13_Std = 1;  % Standard deviation
+AM13_Std = 0.1;  % Standard deviation
 % AM13_LB = 0; % Lower bound of truncated Gaussian distribution
 % AM13_UB = 1;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'AM13';
-Input.Marginals(counter).Type = 'Constant'; 
-Input.Marginals(counter).Parameters = AM13; %[AM13, AM13_Std*abs(AM13)];
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [AM13, AM13_Std];
 % Input.Marginals(counter).Bounds = [AM13_LB AM13_UB]; 
 
 counter = counter+1;
 AM14     = -0.0543;
-AM14_Std = 1;  % Standard deviation
+AM14_Std = 0.1;  % Standard deviation
 % AM14_LB = 0; % Lower bound of truncated Gaussian distribution
 % AM14_UB = 1;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'AM14';
-Input.Marginals(counter).Type = 'Constant'; 
-Input.Marginals(counter).Parameters = AM14; %[AM14, AM14_Std*abs(AM14)];
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [AM14, AM14_Std];
 % Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
 
 counter = counter+1;
 AM15     = 0.367;
-AM15_Std = 1;  % Standard deviation
+AM15_Std = 0.1;  % Standard deviation
 AM14_LB = 0; % Lower bound of truncated Gaussian distribution
 AM14_UB = 1;  % Upper bound of truncated Gaussian distribution 
 Input.Marginals(counter).Name = 'AM15';
-Input.Marginals(counter).Type = 'Constant'; 
-Input.Marginals(counter).Parameters = AM15;% [AM15, AM15_Std*abs(AM15)];
+Input.Marginals(counter).Type = 'Gaussian'; 
+Input.Marginals(counter).Parameters = [AM15, AM15_Std];
 % Input.Marginals(counter).Bounds = [AM14_LB AM14_UB]; 
 
 
