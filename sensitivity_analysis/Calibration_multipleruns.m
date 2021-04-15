@@ -17,7 +17,7 @@ ind = startsWith(path_all,root_folder);
 rmpath(strjoin(string(path_all(ind)),';'))
 
 %% Case study
-caseName = 'NM_cal_TWS'; %'NewMexico_calibrate_allruns'(for 3D correction), 'NM_cal_TWS', 'airfoil_lift','NM80', etc;
+caseName = 'NewMexico_calibrate_allruns'; %'NewMexico_calibrate_allruns'(for 3D correction), 'NM_cal_TWS', 'airfoil_lift','NM80', etc;
 % specify directory which contains test case settings and model
 % often this is simply the caseName
 input_file = caseName; 
