@@ -143,13 +143,13 @@ switch P.FixedParameters.QoI
                 % then make a row vector with .'
                 Y = Fout(:).';
 
-                figure(105)
-                cmap = lines;
-                for i=1:5
-                    plot(azi_last_rev,Fn_int(:,i),'-','Color',cmap(i,:));
-                    hold on  
-                end
-                ylim([0 400])
+%                 figure(105)
+%                 cmap = lines;
+%                 for i=1:5
+%                     plot(azi_last_rev,Fn_int(:,i),'-','Color',cmap(i,:));
+%                     hold on  
+%                 end
+%                 ylim([0 400])
 
 %                 figure(100)
 %                 plot(t_last_rev,Fn_int(:,1),'-');

@@ -6,18 +6,28 @@ end
 
 %% Convergence of Sobol indices
 
+for i=1:n_r_index
+    titles{i} = ['section ' num2str(r_index(i))];
+end
+% titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
+% QoI_names   = {'mean','amplitude 1','angle 1'};
+% QoI_names   = {'cosine','sine'};
+switch fourier_type
+    case 'amp_phase'
+        QoI_names = {'amplitude','angle'};
+    case 'real_imag'
+        QoI_names   = {'cosine','sine'};
+end
+
+
 %
 % loop over number of quantities of interest (length of output vector)
-fig1 = figure
+fig1 = figure;
 
 hold on
 
 m_plot = length(index_fourier); % number of coefficients used for QoI
 n_plot = n_r_index; % number of columns = number of radial sections
-
-titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
-% QoI_names   = {'mean','amplitude 1','angle 1'};
-QoI_names   = {'cosine','sine'};
 
 for q=1:nout
     
@@ -99,9 +109,7 @@ hold on
 m_plot = length(index_fourier); % number of coefficients used for QoI
 n_plot = n_r_index; % number of columns = number of radial sections
 
-titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
-% QoI_names   = {'mean','amplitude 1','angle 1'};
-QoI_names   = {'cosine','sine'};
+
 
 for q=1:nout
     
