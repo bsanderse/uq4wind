@@ -8,7 +8,7 @@ rng default
 root_folder = pwd;
 
 % check current path for presence of folders from this working directory
-path_all = strsplit(path,';');
+path_all = strsplit(path,pathsep);
 ind      = startsWith(path_all,root_folder);
 % remove those and add later the ones that are needed
 rmpath(strjoin(string(path_all(ind)),';'))
@@ -240,7 +240,7 @@ if (find(strcmp(methods,'PCE_OLS')))
     for k = 1:OLS_repeat
         for i = 1:N_OLS
             disp(['i= ' num2str(i) ', k= ' num2str(k) ]);
-
+            
             metamodelOLS.ExpDesign.NSamples = NsamplesOLS(i);
             metamodelOLS.ExpDesign.Sampling = 'LHS'; % LHS is default
             myPCE_OLS = uq_createModel(metamodelOLS);
@@ -314,7 +314,7 @@ if (find(strcmp(methods,'PCE_LARS')))
     metamodelLARS.Type      = 'Metamodel';
     metamodelLARS.MetaType  = 'PCE';
     metamodelLARS.Method    = 'LARS';
-    metamodelLARS.Degree    = 1:4; % this automatically switches on degree adaptive PCE
+    metamodelLARS.Degree    = 1:10; % this automatically switches on degree adaptive PCE
     metamodelLARS.TruncOptions.qNorm = 0.5:0.1:1.5;
 %     metamodelLARS.LARS.ModifiedLOO = 0; % use standard LOO to decide on convergence
     
@@ -323,6 +323,8 @@ if (find(strcmp(methods,'PCE_LARS')))
     for k = 1:LARS_repeat
         for i = 1:N_LARS
             disp(['i= ' num2str(i) ', k= ' num2str(k) ]);
+            close all
+
             % use manual experimental design:
             %         X_ED = uq_getSample(NsamplesLARS(i),'MC') ;
             %         Y_ED = uq_evalModel(myModel,X_ED);

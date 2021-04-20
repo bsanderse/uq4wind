@@ -55,11 +55,11 @@ n_rev = 4;
 % index 4: real part of second mode
 % index 5: imaginary part of second mode
 % etc.
-fourier_type = 'real_imag';
-index_fourier = [2 3]; 
+fourier_type = 'amp_phase';
+index_fourier = [2]; 
 
 % radial indices (blade sections) to consider:
-r_index = 1:5;
+r_index = [1,2,4,5]; %1:5;
     
 
 %% High-level surrogate model options
@@ -72,11 +72,11 @@ test_run = 1;
 Bayes_full = 0; % 0: use and/or set-up surrogate model (PCE); 1: run full model for Bayes (Computationally expensive!)
 
 % If Bayes_full = 0, we need to specify options for loading a surrogate model
-Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
+Surrogate_model_type = 0; % 0: Uses a stored PCE surrogate model, 1: create surrogate model
 
 % Options for loading a surrogate model
 % note that this file should contain all the surrogate models
-Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/935PCE500.mat'; 
+Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/PCE_N256.mat'; 
    
 
 %% Detailed surrogate model options
@@ -87,8 +87,8 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 8; % number of samples for each surrogate model (each run)
-MetaOpts.Degree = 1:4;
+MetaOpts.ExpDesign.NSamples = 256; % number of samples for each surrogate model (each run)
+MetaOpts.Degree = 1:10;
 % MetaOpts.TruncOptions.qNorm = 0.75;   
 metamodelLARS.TruncOptions.qNorm = 0.5:0.1:1.5;
 
@@ -299,23 +299,38 @@ for i = 1:n_runs
             index_even = mod(index_fourier,2)==0;
             % odd indices, except 1 (which is the mean)
             index_odd  = mod(index_fourier,2)==1 & index_fourier>1; 
+%             switch fourier_type
+%                 case 'amp_phase'
+%                     % even index => amplitude
+%                     Fcurr(index_even,r_index) = 2*abs(Fcurr(index_even,r_index));
+%                     Fcurr(index_odd,r_index)  = angle(Fcurr(index_odd,r_index));
+% 
+%                 case 'real_imag'
+%                     % even index => real part
+%                     Fcurr(index_even,r_index) = 2*real(Fcurr(index_even,r_index));
+%                     Fcurr(index_odd,r_index)  = 2*imag(Fcurr(index_odd,r_index));
+%                 otherwise
+%                     error('wrong specification of Fourier type');
+%             end
+            Fout = zeros(size(Fcurr));
+
             switch fourier_type
                 case 'amp_phase'
                     % even index => amplitude
-                    Fcurr(index_even,r_index) = 2*abs(Fcurr(index_even,r_index));
-                    Fcurr(index_odd,r_index)  = angle(Fcurr(index_odd,r_index));
+                    Fout(index_even,:) = 2*abs(Fcurr(index_even,:));
+                    Fout(index_odd,:) = angle(Fcurr(index_odd,:));
 
                 case 'real_imag'
                     % even index => real part
-                    Fcurr(index_even,r_index) = 2*real(Fcurr(index_even,r_index));
-                    Fcurr(index_odd,r_index)  = 2*imag(Fcurr(index_odd,r_index));
+                    Fout(index_even,:) = 2*real(Fcurr(index_even,:));
+                    Fout(index_odd,:)  = 2*imag(Fcurr(index_odd,:));
                 otherwise
                     error('wrong specification of Fourier type');
             end
             % map from 2D to 1D:
             % [radial section 1 QoIs; radial section 2 QoIs; ...];
             % then make a column vector with .'
-            Fhat_total = Fcurr(:).';
+            Fhat_total = Fout(:).';
 
             Data(i).y    = Fhat_total;            
             Data(i).Name = 'Normal force';
@@ -454,11 +469,15 @@ for i = 1:n_runs
 
                     % the QoI is ordered as follows:
                     % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
-                    sigma_amp = 5;
+                    sigma_amp = 3;
                     sigma_phase = 1;
                     discrepancy_vector = zeros(1,n_output);
-                    discrepancy_vector(1:2:end) = sigma_amp.^2;
-                    discrepancy_vector(2:2:end) = sigma_phase.^2;
+                    discrepancy_vector(1:n_coeffs:end) = sigma_amp.^2;
+                    if (n_coeffs==2)
+                        discrepancy_vector(2:n_coeffs:end) = sigma_phase.^2;
+                    elseif (n_coeffs>2)
+                        error('more than two fourier coefficients, check discrepancy model specification');
+                    end
             
                 case 'real_imag'
 

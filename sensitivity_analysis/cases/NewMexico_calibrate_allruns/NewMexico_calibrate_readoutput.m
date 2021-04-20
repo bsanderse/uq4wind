@@ -86,25 +86,54 @@ switch P.FixedParameters.QoI
                 index_even = mod(index_fourier,2)==0;
                 % odd indices, except 1 (which is the mean)
                 index_odd  = mod(index_fourier,2)==1 & index_fourier>1; 
+                % 
+                Fout = zeros(size(Fcurr));
+%                 switch fourier_type
+%                     case 'amp_phase'
+%                         % even index => amplitude
+%                         Fcurr(index_even,r_index) = 2*abs(Fcurr(index_even,r_index));
+%                         Fcurr(index_odd,r_index)  = angle(Fcurr(index_odd,r_index));
+% 
+%                     case 'real_imag'
+%                         % even index => real part
+%                         Fcurr(index_even,r_index) = 2*real(Fcurr(index_even,r_index));
+%                         Fcurr(index_odd,r_index)  = 2*imag(Fcurr(index_odd,r_index));
+%                     otherwise
+%                         error('wrong specification of Fourier type');
+%                 end
                 switch fourier_type
                     case 'amp_phase'
                         % even index => amplitude
-                        Fcurr(index_even,r_index) = 2*abs(Fcurr(index_even,r_index));
-                        Fcurr(index_odd,r_index)  = angle(Fcurr(index_odd,r_index));
+                        Fout(index_even,:) = 2*abs(Fcurr(index_even,:));
+                        Fout(index_odd,:) = angle(Fcurr(index_odd,:));
 
                     case 'real_imag'
                         % even index => real part
-                        Fcurr(index_even,r_index) = 2*real(Fcurr(index_even,r_index));
-                        Fcurr(index_odd,r_index)  = 2*imag(Fcurr(index_odd,r_index));
+                        Fout(index_even,:) = 2*real(Fcurr(index_even,:));
+                        Fout(index_odd,:)  = 2*imag(Fcurr(index_odd,:));
                     otherwise
                         error('wrong specification of Fourier type');
                 end
                 % map from 2D to 1D:
                 % [radial section 1 QoIs; radial section 2 QoIs; ...];
-                % then make a column vector with .'
-                Y = Fcurr(:).';
-                
-                
+                % then make a row vector with .'
+                Y = Fout(:).';
+                                
+                %                 figure(100)
+%                 plot(t_last_rev,Fn_int(:,1),'-');
+%                 hold on
+%                 figure(101)
+%                 plot(t_last_rev,Fn_int(:,2),'-');
+%                 hold on
+%                 figure(102)
+%                 plot(t_last_rev,Fn_int(:,3),'-');
+%                 hold on
+                figure(103)
+                plot(azi_last_rev,Fn_int(:,4),'-');
+                hold on
+                figure(104)
+                plot(azi_last_rev,Fn_int(:,5),'-');
+                hold on   
                 % alternative: interpolate to the azimuth positions of the
                 % experimental data
                 % use transpose to make interpolation of entire matrix

@@ -17,13 +17,14 @@ uq_print(BayesianAnalysis)
 % data:
 % plot(1:length(Data.y),Data.y,'s')
 
+%% check convergence
 % uq_display(BayesianAnalysis, 'meanConvergence', 'all')
-% uq_display(BayesianAnalysis, 'trace', 'all')
+ uq_display(BayesianAnalysis, 'trace', 'all')
 %uq_display(BayesianAnalysis, 'acceptance', 'true')
 
 % check convergence of MCMC
 uq_postProcessInversion(BayesianAnalysis,'gelmanRubin', 'true','burnIn',0.5,'posteriorPredictive',0)
-R_hat_full = BayesianAnalysis.Results.PostProc.MPSRF;
+R_hat_full = BayesianAnalysis.Results.PostProc.MPSRF
 
 if (R_hat_full <= 2)
     disp('The MCMC simulation has converged')
@@ -40,17 +41,6 @@ if (iscell(X_MAP)) %uqlab v1.4
  X_MAP = cell2mat(X_MAP);
 end
 
-%% get posterior predictive
-nPred = 500;
-uq_postProcessInversion(BayesianAnalysis,'burnIn',0.5,'posteriorPredictive',nPred)
-
-if (isfield(BayesianAnalysis.Results.PostProc,'PostPred'))
-    % uqlab v1.3
-    postPred = BayesianAnalysis.Results.PostProc.PostPred.model.postPredRuns; 
-else
-    % uqlab v1.4
-    postPred = BayesianAnalysis.Results.PostProc.PostPredSample.PostPred;
-end
 
 %%
 % number of model uncertainties, without hyperparameters
@@ -61,6 +51,19 @@ X_MAP_full = [X_MAP(1:nunc) X_unperturbed(1,nunc+1:end)];
 
 for i = 1:n_runs
     
+    % get posterior predictive
+    nPred = 500;
+    uq_postProcessInversion(BayesianAnalysis,'burnIn',0.5,'posteriorPredictive',nPred)
+
+    if (isfield(BayesianAnalysis.Results.PostProc,'PostPred'))
+        % uqlab v1.3
+        postPred = BayesianAnalysis.Results.PostProc.PostPred.model.postPredRuns; 
+    else
+        % uqlab v1.4
+        postPred = BayesianAnalysis.Results.PostProc.PostPredSample(i).PostPred;
+    end
+
+
     %evaluate model at MAP
     if (Bayes_full == 0) % surrogate model used
         if (Surrogate_model_type == 0)
@@ -97,15 +100,15 @@ for i = 1:n_runs
         end
 
         figure
-        h1 = plot(r_exp_data,QoI_exp_data,'x','markersize',16,'Linewidth', 2.5);
+        h1 = plot(r_exp_data(r_index),QoI_exp_data,'x','markersize',16,'Linewidth', 2.5);
         t  = lines; %get(gca,'ColorOrder');
         
         hold on
         grey = [0.5 0.5 0.5];
-        violin(postPred(:,j:n_coeffs:end),'x',r_exp_data,'edgecolor',grey-0.1,'facecolor',grey+0.1,'medc','','mc','','plotlegend','','facealpha',0.5);
+        violin(postPred(:,j:n_coeffs:end),'x',r_exp_data(r_index),'edgecolor',grey-0.1,'facecolor',grey+0.1,'medc','','mc','','plotlegend','','facealpha',0.5);
 
-        h2 = plot(r_exp_data,QoI_MAP,'o','markersize',16,'color',t(2,:),'Linewidth', 2.5);
-        h3 = plot(r_exp_data,QoI_unperturbed,'s','markersize',16,'color',t(3,:),'Linewidth', 2.5);
+        h2 = plot(r_exp_data(r_index),QoI_MAP,'o','markersize',16,'color',t(2,:),'Linewidth', 2.5);
+        h3 = plot(r_exp_data(r_index),QoI_unperturbed,'s','markersize',16,'color',t(3,:),'Linewidth', 2.5);
 
         grid on
         xlabel('r [m]');
