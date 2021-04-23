@@ -6,7 +6,7 @@
 
  root_folder = pwd;
  
- if endsWith(root_folder,'NewMexico_calibrate_allruns') 
+ if endsWith(root_folder,'NewMexico_cal_3Dcor') 
      
     wr_path = fullfile(root_folder, '..\..');
    
