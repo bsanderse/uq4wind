@@ -1,8 +1,6 @@
 %% This file is used to initialize all settings in order to perform the calibration of the AeroModule 
 % for the case that experimental data corresponding to different operating
 % conditions is available
-% For 3D correction calibration please set the desired correction type in
-% the respective field below
 
 
 %% Turbine name and folders
@@ -31,22 +29,35 @@ QoI = 'Sectional_normal_force';
 % for the full dataset, a Fourier analysis is done, and one should choose
 % the number of fourier modes below
 % note that the 'mean' case can also be run by setting 'full' and then
-% choosing n_fourier=1.
+% choosing index_fourier=1.
 QoI_type = 'full';
 
-%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
-
-cor_type =2;
-%%
 % the following settings are only used in case of 'full':
 % (currently for 'mean', only 1 revolution is used, and all radial indices)
 % number of revolutions to consider (counting from end of time series)
 n_rev = 4;
-% number of Fourier coefficients to keep (including mean)
-% note: we get (n_fourier-1)*2 + 1 coefficients since there is both a real and
-% imaginary component (stored as amplitude and phase angle) for each
-% frequency
-n_fourier = 1;
+
+% supply the indices of the fourier modes that are used
+% for fourier_type = 'amp_phase'  we use the following convention:
+% index 1: mean of signal (zeroth mode)
+% index 2: amplitude of first mode
+% index 3: angle of first mode
+% index 4: amplitude of second mode
+% index 5: angle of second mode
+% etc.
+% example: index_fourier = [2 3]; % amplitude and angle of first mode
+% example: index_fourier = 1:5; % zeroth, first and second mode
+
+% for fourier_type = 'real_imag'  we use the following convention:
+% index 1: mean of signal (zeroth mode)
+% index 2: real part of first mode
+% index 3: imaginary part of first mode
+% index 4: real part of second mode
+% index 5: imaginary part of second mode
+% etc.
+fourier_type = 'real_imag';
+index_fourier = [2 3]; 
+
 % radial indices (blade sections) to consider:
 r_index = 1:5;
     
@@ -65,7 +76,7 @@ Surrogate_model_type = 1; % 0: Uses a stored PCE surrogate model, 1: create surr
 
 % Options for loading a surrogate model
 % note that this file should contain all the surrogate models
-Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/PCE_testrun.mat'; 
+Surrogate_model_filename = 'StoredSurrogates/NewMexico_calibrate/935PCE500.mat'; 
    
 
 %% Detailed surrogate model options
@@ -76,7 +87,7 @@ MetaOpts.MetaType = 'PCE';
 MetaOpts.Method   = 'LARS'; % Quadrature, OLS, LARS
 
 MetaOpts.ExpDesign.Sampling = 'LHS';
-MetaOpts.ExpDesign.NSamples = 200; % number of samples for each surrogate model (each run)
+MetaOpts.ExpDesign.NSamples = 64; % number of samples for each surrogate model (each run)
 MetaOpts.Degree = 1:4;
 MetaOpts.TruncOptions.qNorm = 0.75;   
 
@@ -93,7 +104,7 @@ filename_runs = fullfile(folder_exp,'DPN_overview.csv');
 changing_conditions = {'AIRDENSITY','PITCHANGLE','YAWANGLE','WINDSPEED'}; 
 % choose the runs that are to be included in the calibration
 % for all runs, set select_runs = 928:957;
-select_runs = [447] ; 
+select_runs = [935]; 
 
 % the position of the sections of the experimental data which are used for
 % interpolation of the aeromodule results: see NewMexico_calibrate_readoutput.m
@@ -125,8 +136,8 @@ switch MCMC_type
         
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
-        Solver.MCMC.Steps = 1e2;
-        Solver.MCMC.NChains = 5e1;
+        Solver.MCMC.Steps = 1e3;
+        Solver.MCMC.NChains = 1e1;
         Solver.MCMC.a = 5;
         
     case 'HMC'
@@ -154,14 +165,14 @@ FixedParameters.current_folder = current_folder;  % folder where the AeroModule 
 
 FixedParameters.QoI            = QoI;
 FixedParameters.QoI_type       = QoI_type;
-FixedParameters.correction     = cor_type;
 
 switch QoI_type
     case 'full'
         % store parameters in struct
         FixedParameters.n_rev          = n_rev;
-        FixedParameters.n_fourier      = n_fourier;
         FixedParameters.r_index        = r_index;
+        FixedParameters.index_fourier  = index_fourier;   
+        FixedParameters.fourier_type   = fourier_type;                               
 end
 
 P.FixedParameters = FixedParameters;
@@ -170,7 +181,7 @@ P.FixedParameters = FixedParameters;
 if (Bayes_full == 0) % use a PCE surrogate model for calibration
     if (Surrogate_model_type == 0) % load existing surrogate model
         disp(['loading surrogate models from file: ' Surrogate_model_filename]);
-        loaded_surrogate_models = load(Surrogate_model_filename);
+        loaded_surrogate_models = load(fullfile(root_folder,Surrogate_model_filename));
         % check whether loaded surrogate model is having same features as
         % the uncertainties given in the prior (those we are trying to calibrate)
         if (length(loaded_surrogate_models.mySurrogateModels)~=length(select_runs))
@@ -237,6 +248,8 @@ for i = 1:n_runs
     
     % add Operatingconditions to the structure that contains the
     % uncertainties
+    % number of uncertainties without constants
+    nunc  = length(UncertainInputs_NoOC.Marginals);
     UncertainInputs = addOperatingConditions(UncertainInputs_NoOC,OperatingCondition);
     clear OperatingConditions; 
     
@@ -248,10 +261,10 @@ for i = 1:n_runs
     %% get the experimental dataset for the current run   
 
     % filename uses the R, P and D columns of the csv file
-    filename_exp = strcat('R',num2str(data_runs.RUN(i_run)),'P',num2str(data_runs.POL(i_run)),'D',num2str(data_runs.PNT(i_run)),'_loads.dat');
+    filename_exp = strcat('R',num2str(data_runs.RUN(i_run)),'P',num2str(data_runs.POL(i_run)),'D',num2str(data_runs.PNT(i_run)),'_loads_n.dat');
     full_filename_exp = fullfile(folder_exp,filename_exp);
     % read in the table
-    output_raw   = readNewMexico(full_filename_exp);    
+    output_raw   = readNewMexicoModified(full_filename_exp);    
 
     % azimuthal positions
     azi_exp_data = output_raw.Azi;
@@ -259,7 +272,7 @@ for i = 1:n_runs
     % Because the model has different discrepancy options at different radial locations,
     % the measurement data is stored in five different data structures:
     % normal forces at five stations
-    Fn_exp_data  = table2array(output_raw(:,2:6));
+    Fn_exp_data  = table2array(output_raw(:,4:8));
     
     switch QoI_type
         
@@ -272,19 +285,33 @@ for i = 1:n_runs
             Fn_exp_int  = spline(azi_exp_data',Fn_exp_data',azi_exp_int)';
             % get the coefficients of the first n_fourier modes
             % the coefficients are ordered according to the PSD
-            Fhat        = getFourierCoefficients(Fn_exp_int,n_fourier);
-            ind_select  = (2:2:2*(n_fourier-1))';
+            Fhat        = getFourierCoefficientsRealData(Fn_exp_int);
             
-            Fhat_total = [];
             n_r_index = length(r_index);
-            n_coeffs  = 2*n_fourier-1; % mean + ampl. mode 1 + angle mode 1 + ampl. mode 2 + angle mode 2 + etc.
-            for k = 1:n_r_index
-                
-                Fhat_mean   = abs(Fhat(1,r_index(k))); 
-                Fhat_new    = Fhat(ind_select,r_index(k));  
-                Fhat_total  = horzcat(Fhat_total,[Fhat_mean 2*abs(Fhat_new).' angle(Fhat_new).']);
-                
+            n_coeffs  = length(index_fourier);
+            Fcurr = Fhat(index_fourier,r_index);
+            % even indices
+            index_even = mod(index_fourier,2)==0;
+            % odd indices, except 1 (which is the mean)
+            index_odd  = mod(index_fourier,2)==1 & index_fourier>1; 
+            switch fourier_type
+                case 'amp_phase'
+                    % even index => amplitude
+                    Fcurr(index_even,r_index) = 2*abs(Fcurr(index_even,r_index));
+                    Fcurr(index_odd,r_index)  = angle(Fcurr(index_odd,r_index));
+
+                case 'real_imag'
+                    % even index => real part
+                    Fcurr(index_even,r_index) = 2*real(Fcurr(index_even,r_index));
+                    Fcurr(index_odd,r_index)  = 2*imag(Fcurr(index_odd,r_index));
+                otherwise
+                    error('wrong specification of Fourier type');
             end
+            % map from 2D to 1D:
+            % [radial section 1 QoIs; radial section 2 QoIs; ...];
+            % then make a column vector with .'
+            Fhat_total = Fcurr(:).';
+
             Data(i).y    = Fhat_total;            
             Data(i).Name = 'Normal force';
                         
@@ -343,6 +370,7 @@ for i = 1:n_runs
 
     % do a test run with the forward model at unperturbed settings
     ndim = length(myPrior.Marginals);
+    ncons = ndim - nunc;
     % set unperturbed vector:
     for k=1:ndim
         % we take the mean of each parameter as the unperturbed
@@ -351,9 +379,15 @@ for i = 1:n_runs
     end    
     if (exist('test_run','var'))
         if (test_run == 1)
-            disp('Performing test run at unperturbed (mean value) settings');
-            % store output of current model i
-            Y_unperturbed(i,:) = uq_evalModel(myForwardModel,X_unperturbed);
+%             if (Surrogate_model_type == 0)
+%                 disp('Performing test run at unperturbed (mean value) settings with loaded surrogate model');
+%                 Y_unperturbed(i,:) = uq_evalModel(loaded_surrogate_models.mySurrogateModels(i).Model,X_unperturbed);
+%                 
+%             else
+                disp('Performing test run at unperturbed (mean value) settings');
+                % store output of current model i
+                Y_unperturbed(i,:) = uq_evalModel(myForwardModel,X_unperturbed);
+%             end
         end
     end        
     
@@ -397,49 +431,93 @@ for i = 1:n_runs
     % For the current case, 2*standard deviations of the experimental
     % measurements is chosen as the prior.
 
+    % option 1: scalar known discrepancy for all QoIs (iid), for each forward
+    % model the same
+%     DiscrepancyOpts(i).Type = 'Gaussian';
+%     DiscrepancyOpts(i).Parameters = 1e-6;    
+    
+    % option 2: vector known discrepancy for QoIs (independent but not idd)
+    % that is different for phase and amplitude
+    % the QoI is ordered as follows:
+    % [amp_sec1 phase_sec1 amp_sec2 phase_sec2 amp_sec3 etc.]
+%     sigma_amp = 5;
+%     sigma_phase = 1;
+%     discrepancy_vector = zeros(1,n_output);
+%     discrepancy_vector(1:2:end) = sigma_amp.^2;
+%     discrepancy_vector(2:2:end) = sigma_phase.^2;
+%     DiscrepancyOpts(i).Type = 'Gaussian';
+%     DiscrepancyOpts(i).Parameters = discrepancy_vector;
+    
+    % option 3: unknown residual variance: define a prior and calibrate
+    % the size of the DiscrepancyPriorOpts is in this case n_r_index*n_fourier
+    % with the following order:
+    % 1: r_index 1, index_fourier 1
+    % 2: r_index 1, index_fourier 2
+    % ...
+    % n_fourier: r_index 1, index_fourier n
+    % n_fourier+1: r_index 2, index_fourier 1
+    % etc.
+    DiscrepancyPriorOpts.Name = 'Prior of discrepancy parameter';
+    switch fourier_type
+        case 'amp_phase'
+            prior_amp = [0 25];
+            prior_phase = [0 2];
+            
+            qoi_amp = 1:2:n_coeffs*n_r_index;       
+            for q=1:length(qoi_amp)
+%             DiscrepancyPriorOpts.Marginals(qoi_amp).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                DiscrepancyPriorOpts.Marginals(qoi_amp(q)).Type = 'Uniform';
+                DiscrepancyPriorOpts.Marginals(qoi_amp(q)).Parameters = prior_amp;
+            end
+            
+            qoi_phase = 2:2:n_coeffs*n_r_index;
+            for q=1:length(qoi_phase)
+%             DiscrepancyPriorOpts.Marginals(qoi_phase).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                DiscrepancyPriorOpts.Marginals(qoi_phase(q)).Type = 'Uniform';
+                DiscrepancyPriorOpts.Marginals(qoi_phase(q)).Parameters = prior_phase;
+            end
+            
+        case 'real_imag'
+            prior_real = [0 25];
+            prior_imag = [0 25];
+
+            qoi_real = 1:2:n_coeffs*n_r_index;           
+            for q=1:length(qoi_real)
+%             DiscrepancyPriorOpts.Marginals(qoi_real(i)).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                DiscrepancyPriorOpts.Marginals(qoi_real(q)).Type = 'Uniform';
+                DiscrepancyPriorOpts.Marginals(qoi_real(q)).Parameters = prior_real;
+            end
+            qoi_imag = 2:2:n_coeffs*n_r_index;
+            for q=1:length(qoi_imag)
+%             DiscrepancyPriorOpts.Marginals(qoi_imag).Name = strcat('Prior of Sigma2 ',num2str(qoi));
+                DiscrepancyPriorOpts.Marginals(qoi_imag(q)).Type = 'Uniform';
+                DiscrepancyPriorOpts.Marginals(qoi_imag(q)).Parameters = prior_imag; 
+            end
+            
+        otherwise
+            error('wrong setting for fourier_type');
+    end
+    
+% %     same discrepancy for each section
+% 
+%     for q=1:2:2*n_r_index
+%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
+%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
+%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 25];
+%     end
+%     % phase angle
+%     % same discrepancy for each section
+%     for q=2:2:2*n_r_index
+%         DiscrepancyPriorOpts.Marginals(q).Name = strcat('Prior of Sigma2 ',num2str(q));
+%         DiscrepancyPriorOpts.Marginals(q).Type = 'Uniform';
+%         DiscrepancyPriorOpts.Marginals(q).Parameters = [0 2];
+%     end
+    DiscrepancyPrior = uq_createInput(DiscrepancyPriorOpts);
+
     DiscrepancyOpts(i).Type = 'Gaussian';
-    DiscrepancyOpts(i).Parameters = 1e-1;    
-    
-%     DiscrepancyPriorOpts1.Name = 'Prior of sigma 1';
-%     DiscrepancyPriorOpts1.Marginals(1).Name = 'Sigma1';
-%     DiscrepancyPriorOpts1.Marginals(1).Type = 'Uniform';
-%     DiscrepancyPriorOpts1.Marginals(1).Parameters = [0, 1e-1];
-%     DiscrepancyPrior1 = uq_createInput(DiscrepancyPriorOpts1);
-%     
-%     DiscrepancyOpts(1).Type = 'Gaussian';
-%     DiscrepancyOpts(1).Prior = DiscrepancyPrior1;
-%     
-%     
-%     DiscrepancyPriorOpts2.Name = 'Prior of sigma 2';
-%     DiscrepancyPriorOpts2.Marginals(1).Name = 'Sigma2';
-%     DiscrepancyPriorOpts2.Marginals(1).Type = 'Uniform';
-%     DiscrepancyPriorOpts2.Marginals(1).Parameters = [0, 1e-1];
-%     DiscrepancyPrior2 = uq_createInput(DiscrepancyPriorOpts2);
-%     
-%     DiscrepancyOpts(2).Type = 'Gaussian';
-%     DiscrepancyOpts(2).Prior = DiscrepancyPrior2;
-    %
-    % DiscrepancyPriorOpts3.Name = 'Prior of sigma 3';
-    % DiscrepancyPriorOpts3.Marginals(1).Name = 'Sigma3';
-    % DiscrepancyPriorOpts3.Marginals(1).Type = 'Uniform';
-    % DiscrepancyPriorOpts3.Marginals(1).Parameters = [0, 2*std(output_raw.Fy08)];
-    % DiscrepancyPrior3 = uq_createInput(DiscrepancyPriorOpts3);
-    %
-    % DiscrepancyOpts(3).Type = 'Gaussian';
-    % DiscrepancyOpts(3).Prior = DiscrepancyPrior3;
-    %
-    % DiscrepancyPriorOpts4.Name = 'Prior of sigma 4';
-    % DiscrepancyPriorOpts4.Marginals(1).Name = 'Sigma4';
-    % DiscrepancyPriorOpts4.Marginals(1).Type = 'Uniform';
-    % DiscrepancyPriorOpts4.Marginals(1).Parameters = [0, 2*std(output_raw.Fy10)];
-    % DiscrepancyPrior4 = uq_createInput(DiscrepancyPriorOpts4);
-    %
-    % DiscrepancyOpts(4).Type = 'Gaussian';
-    % DiscrepancyOpts(4).Prior = DiscrepancyPrior4;
-    
-    % DiscrepancyOpts.Type = 'Gaussian';
-    % DiscrepancyOpts.Parameters = 1e-6;
-    
+    DiscrepancyOpts(i).Prior = DiscrepancyPrior;    
+    n_hyper = n_output;
+%         
     
 end
 
