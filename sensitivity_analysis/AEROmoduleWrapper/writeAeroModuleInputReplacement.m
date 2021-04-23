@@ -187,11 +187,7 @@ for i=1:ndim
             
             
             uncertainty_covered(i) = 1;
-        case {'ATRANSITION'}
-            
-            atrans = X(i);
-            
-            uncertainty_covered(i) = 1;
+
             
         case {'PITCHANGLE'}
                 
