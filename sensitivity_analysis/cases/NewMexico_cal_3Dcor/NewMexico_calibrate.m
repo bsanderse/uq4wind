@@ -15,7 +15,7 @@ counter = 0;
     switch type
     
 
-    %% If correction = 1 --> Snel
+    %% If correction = 1 --> Snel (Can modify the mean and the std)
     case {1}
     
         counter = counter+1;
@@ -38,7 +38,7 @@ counter = 0;
         Input.Marginals(counter).Parameters = [exp3D, exp3D_Std*abs(exp3D)];
 %         Input.Marginals(counter).Bounds = [exp3D_LB exp3D_UB]; 
 
-        %% If correction = 2 --> Chaviaropoulos - Hansen
+        %% If correction = 2 --> Chaviaropoulos - Hansen (can modify the mean and the std)
     case {2}
         
         %% Chav. - Hansen model

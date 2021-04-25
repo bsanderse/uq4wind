@@ -6,7 +6,7 @@ function Input  = NewMexico()
 
 % type = FixedParameters.correction;
 
-% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
+%% Select Correction type, type = 1 -->Snel, type = 2 --> Chaviaropoulos - Hansen
 %or type = 3 for turbulent wake model sensitivity, Wilson model
 
 type = 2 ; 
