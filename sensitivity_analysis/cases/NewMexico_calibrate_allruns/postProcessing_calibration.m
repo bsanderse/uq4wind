@@ -3,7 +3,33 @@
 uq_print(BayesianAnalysis)
 
 %% Display posterior (can be expensive to plot)
-% uq_display(BayesianAnalysis,'scatterplot','all')
+uq_postProcessInversion(BayesianAnalysis,'pointEstimate', 'MAP','burnIn',0.5,'posteriorPredictive',0)
+uq_display(BayesianAnalysis,'scatterplot','all')
+% see also uq_display_uq_inversion for some hardcoded changes
+
+%% change fonts in scatterplot:
+fontsize = 14;
+
+ax = findall(gcf,'type','axes');
+% set(ax,'TickLabelInterpreter','none');
+set(ax,'TickLabelInterpreter','none','FontSize',fontsize);
+%
+xlabel(ax(1),'AM15','Interpreter','none','FontSize',fontsize)
+xlabel(ax(2),'AM14','Interpreter','none','FontSize',fontsize)
+xlabel(ax(3),'AM13','Interpreter','none','FontSize',fontsize)
+xlabel(ax(4),'AM12','Interpreter','none','FontSize',fontsize)
+xlabel(ax(5),'AM11','Interpreter','none','FontSize',fontsize)
+ylabel(ax(5),'AM15','Interpreter','none','FontSize',fontsize)
+ylabel(ax(10),'AM14','Interpreter','none','FontSize',fontsize)
+ylabel(ax(15),'AM13','Interpreter','none','FontSize',fontsize)
+ylabel(ax(20),'AM12','Interpreter','none','FontSize',fontsize)
+ylabel(ax(25),'AM11','Interpreter','none','FontSize',fontsize)
+% remove title
+ax(26).Title.String='';
+% change legend
+ax(21).Legend.Interpreter='none';
+ax(21).Legend.String={'MAP'};
+
 %
 % if (exist('test_run','var') && test_run == 1)
 %     f = gcf;
@@ -112,11 +138,26 @@ for i = 1:n_runs
 
         grid on
         xlabel('r [m]');
-%         ylabel('Fn [N/m]');
-        legend([h1 h2 h3],'Experimental data','Calibrated AeroModule (MAP)','Uncalibrated AeroModule');
-        title(['Model vs. data for run ' num2str(select_runs(i)) ' and Fourier coefficient ' num2str(k)]);
+        ylabel('F_{N} [N/m]');
+        l = legend([h1 h2 h3],'Experimental data','Calibrated AeroModule (MAP)','Uncalibrated AeroModule');
+        l.Location = 'northwest';
+%         title(['Model vs. data for run ' num2str(select_runs(i)) ' and Fourier coefficient ' num2str(k)]);
+        title(['Scenario S_' num2str(i)]);
+        set(gca,'FontSize',14)
+        set(gca,'TitleFontSizeMultiplier',1)
+        set(gca,'TitleFontWeight','normal')
+        ylim([-5 70])
+        
+        % optional: writing files as pdfs
+%         fig = gcf;
+%         fig.PaperPositionMode = 'auto';
+%         fig_pos = fig.PaperPosition;
+%         fig.PaperSize = [fig_pos(3) fig_pos(4)];
+%         print(gcf, '-dpdf', ['Fn_calibrated_N256_1e3steps_1e2chains_sigma3_' num2str(select_runs(i)) '.pdf']);
     end
 end
+
+
 
 %% save surrogate model
 if (Bayes_full == 0 && Surrogate_model_type == 1)
@@ -129,3 +170,4 @@ if (Bayes_full == 0 && Surrogate_model_type == 1)
 
     save(fullfile(filepath,filename_new),'mySurrogateModels');
 end
+

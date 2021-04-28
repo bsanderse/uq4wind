@@ -22,6 +22,37 @@ uq_display(BayesianAnalysis,'scatterplot','all')
 % selected parameters only:
 % uq_display(BayesianAnalysis,'scatterplot',[1:4])
 
+%% change fonts in scatterplot:
+fontsize = 14;
+
+ax = findall(gcf,'type','axes');
+% set(ax,'TickLabelInterpreter','none');
+set(ax,'TickLabelInterpreter','none','FontSize',fontsize);
+%
+xlabel(ax(1),'\theta_{E,4}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(2),'\theta_{E,3}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(3),'\theta_{E,2}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(4),'\theta_{E,1}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(5),'\Delta C_{l,4}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(6),'\Delta C_{l,3}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(7),'\Delta C_{l,2}','Interpreter','tex','FontSize',fontsize)
+xlabel(ax(8),'\Delta C_{l,1}','Interpreter','tex','FontSize',fontsize)
+
+ylabel(ax(8),'\theta_{E,4}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(16),'\theta_{E,3}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(24),'\theta_{E,2}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(32),'\theta_{E,1}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(40),'\Delta C_{l,4}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(48),'\Delta C_{l,3}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(56),'\Delta C_{l,2}','Interpreter','tex','FontSize',fontsize)
+ylabel(ax(64),'\Delta C_{l,1}','Interpreter','tex','FontSize',fontsize)
+
+% remove title
+ax(65).Title.String='';
+% change legend
+ax(57).Legend.Interpreter='none';
+
+
 
 %% trace plots
 %uq_display(BayesianAnalysis, 'meanConvergence', 'all')

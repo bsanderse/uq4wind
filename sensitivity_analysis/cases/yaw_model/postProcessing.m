@@ -102,6 +102,8 @@ cmap = get(gca,'ColorOrder');
 
 hold on
 
+index_unc = [1:4];
+n_unc = length(index_unc);
 
 m_plot = 1;
 n_plot = N_out; % number of columns = number of radial sections
@@ -127,13 +129,13 @@ for q=1:nout
         %         if(length(NsamplesMC)==1)
         %             uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         else
-        uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:nunc)+ coords(k), AVG_Sobol_MC_Total(end,index_unc,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         end
         k = k+1;
     end
     
     if (find(strcmp(methods,'PCE_Quad')))
-        uq_bar((1:ndim)+ coords(k), Sobol_Quad_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:n_unc)+ coords(k), Sobol_Quad_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         k = k+1;
     end
     
@@ -141,7 +143,7 @@ for q=1:nout
         %         if(length(NsamplesOLS)==1)
         %             uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         else
-        uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:n_unc)+ coords(k), AVG_Sobol_OLS_Total(end,index_unc,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         end
         k = k+1;
     end
@@ -150,7 +152,7 @@ for q=1:nout
         %         if(length(NsamplesLARS)==1)
         %             uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(:,end,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         else
-        uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:n_unc)+ coords(k), AVG_Sobol_LARS_Total(end,index_unc,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         end
         k = k+1;
     end

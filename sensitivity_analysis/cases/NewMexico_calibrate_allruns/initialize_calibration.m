@@ -142,7 +142,7 @@ switch MCMC_type
     case 'AIES'
         Solver.MCMC.Sampler = 'AIES';
         Solver.MCMC.Steps = 1e3;
-        Solver.MCMC.NChains = 1e1;
+        Solver.MCMC.NChains = 1e2;
         Solver.MCMC.a = 5;
         
     case 'HMC'
@@ -404,7 +404,7 @@ for i = 1:n_runs
 %                 Y_unperturbed(i,:) = uq_evalModel(loaded_surrogate_models.mySurrogateModels(i).Model,X_unperturbed);
 %                 
 %             else
-                disp('Performing test run at unperturbed (mean value) settings');
+                disp(['Performing test run at unperturbed (mean value) settings for run ' num2str(i)]);
                 % store output of current model i
                 Y_unperturbed(i,:) = uq_evalModel(myForwardModel,X_unperturbed);
 %             end

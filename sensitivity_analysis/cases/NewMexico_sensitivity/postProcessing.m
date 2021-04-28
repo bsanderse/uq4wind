@@ -7,14 +7,15 @@ end
 %% Convergence of Sobol indices
 
 for i=1:n_r_index
-    titles{i} = ['section ' num2str(r_index(i))];
+    titles{i} = ['section ' num2str(r_index(i)) ', ' num2str(r_sec(i)) 'R'];
 end
 % titles = {'section 1', 'section 2', 'section 3', 'section 4', 'section 5'};
 % QoI_names   = {'mean','amplitude 1','angle 1'};
 % QoI_names   = {'cosine','sine'};
 switch fourier_type
     case 'amp_phase'
-        QoI_names = {'amplitude','angle'};
+%         QoI_names = {'amplitude','angle'};
+        QoI_names = {'Total Sobol index'};
     case 'real_imag'
         QoI_names   = {'cosine','sine'};
 end
@@ -23,7 +24,7 @@ end
 %
 % loop over number of quantities of interest (length of output vector)
 fig1 = figure;
-
+fig1.Position = [100 100 840 300];
 hold on
 
 m_plot = length(index_fourier); % number of coefficients used for QoI
@@ -87,6 +88,9 @@ for q=1:nout
     if (i_plot==1) % first row
         title(titles{j_plot});
     end
+    set(gca,'FontSize',12)
+    set(gca,'TitleFontSizeMultiplier',1)
+    set(gca,'TitleFontWeight','normal')
     
 end
 for i =1:nunc
@@ -101,10 +105,15 @@ set(han,'Color',[1;1;1]);
 %% bar chart of Sobol indices
 % corresponding to largest number of samples
 
-figure
+fig2= figure
+fig2.Position = [100 100 840 300];
+
 cmap = get(gca,'ColorOrder');
 
 hold on
+
+% indices of uncertain parameters (not including constants)
+index_unc = [1:nunc];
 
 m_plot = length(index_fourier); % number of coefficients used for QoI
 n_plot = n_r_index; % number of columns = number of radial sections
@@ -130,13 +139,13 @@ for q=1:nout
         %         if(length(NsamplesMC)==1)
         %             uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         else
-        uq_bar((1:ndim)+ coords(k), AVG_Sobol_MC_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:nunc)+ coords(k), AVG_Sobol_MC_Total(end,index_unc,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         end
         k = k+1;
     end
     
     if (find(strcmp(methods,'PCE_Quad')))
-        uq_bar((1:ndim)+ coords(k), Sobol_Quad_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:nunc)+ coords(k), Sobol_Quad_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         k = k+1;
     end
     
@@ -144,7 +153,7 @@ for q=1:nout
         %         if(length(NsamplesOLS)==1)
         %             uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(:,end), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         else
-        uq_bar((1:ndim)+ coords(k), AVG_Sobol_OLS_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:nunc)+ coords(k), AVG_Sobol_OLS_Total(end,index_unc,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         end
         k = k+1;
     end
@@ -153,7 +162,7 @@ for q=1:nout
         %         if(length(NsamplesLARS)==1)
         %             uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(:,end,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         else
-        uq_bar((1:ndim)+ coords(k), AVG_Sobol_LARS_Total(end,:,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
+        uq_bar((1:nunc)+ coords(k), AVG_Sobol_LARS_Total(end,index_unc,q), bar_width, 'FaceColor', cmap(k,:), 'EdgeColor', 'none')
         %         end
         k = k+1;
     end
@@ -161,49 +170,63 @@ for q=1:nout
     %     legend(methods, 'Interpreter', 'none')
     %     ylabel('Total order Sobol index');
     ylim([0 1])
-    xticks(1:ndim)
-    for i =1:ndim
-        label_names{i} = Input.Marginals(i).Name;
+    box on
+    xticks(1:nunc)
+    for i =1:nunc
+%         label_names{i} = Input.Marginals(i).Name;
+        label_names{i} = ['\theta_{' num2str(i) '}'];
     end
     xticklabels(label_names)
+
     if (j_plot==1) % first column
         ylabel(QoI_names{i_plot});
     end
     if (i_plot==1) % first row
         title(titles{j_plot});
     end
+    set(gca,'FontSize',12)
+    set(gca,'TitleFontSizeMultiplier',1)
+    set(gca,'TitleFontWeight','normal')
     %     title(strcat('Sobol indices for output ',num2str(q)))
     
 end
 
-%% convergence of LOO and modLOO
+%% convergence of LOO 
 % assuming LARS is used
 
-figure
+figure(2)
+hold on
+cmap = get(gca,'ColorOrder');
+
 for k=1:nout
     
     if (length(NsamplesLARS)==1)
-        semilogy(NsamplesLARS,AVG_LOO_LARS(k),'s-','LineWidth',2);
+        semilogy(NsamplesLARS,AVG_LOO_LARS(k),'s-.','LineWidth',2,'Color',cmap(k,:));
     else
-        semilogy(NsamplesLARS,AVG_LOO_LARS(:,k),'s-','LineWidth',2);
+        semilogy(NsamplesLARS,AVG_LOO_LARS(:,k),'s-.','LineWidth',2,'Color',cmap(k,:));
     end
     hold on
 end
-grid on
-switch fourier_type
-    
-    case 'real_imag'
-        legend('Cosine Section 1','Cosine Section 2','Cosine Section 3','Cosine Section 4','Cosine Section 5',...
-            'Sine Section 1','Sine Section 2','Sine Section 3','Sine Section 4','Sine Section 5');
-    case 'amp_phase'
-        legend('AM Section 1','AM Section 2','AM Section 3','AM Section 4','AM Section 5',...
-            'PH Section 1','PH Section 2','PH Section 3','PH Section 4','PH Section 5');
-    otherwise
-        warning('wrong fourier_type selected');
-end
-xlabel('Number of samples (=number of model runs)');
-ylabel('LOO error');
+% grid on
+% switch fourier_type
+%     
+%     case 'real_imag'
+%         legend('Cosine Section 1','Cosine Section 2','Cosine Section 3','Cosine Section 4','Cosine Section 5',...
+%             'Sine Section 1','Sine Section 2','Sine Section 3','Sine Section 4','Sine Section 5');
+%     case 'amp_phase'
+%         legend('AM Section 1','AM Section 2','AM Section 3','AM Section 4','AM Section 5',...
+%             'PH Section 1','PH Section 2','PH Section 3','PH Section 4','PH Section 5');
+%     otherwise
+%         warning('wrong fourier_type selected');
+% end
+% xlabel('Number of samples (=number of model runs)');
+% ylabel('LOO error');
+% title('Scenario S_1');
+% set(gca,'FontSize',14);
+% set(gca,'TitleFontSizeMultiplier',1)
+% set(gca,'TitleFontWeight','normal')
 
+%% convergence of modLOO
 
 figure
 for k=1:nout
@@ -229,7 +252,10 @@ switch fourier_type
 end
 xlabel('Number of samples (=number of model runs)');
 ylabel('Modified LOO error');
-
+title('Scenario S_1');
+set(gca,'FontSize',14);
+set(gca,'TitleFontSizeMultiplier',1)
+set(gca,'TitleFontWeight','normal')
 
 %% plot the QoI at each radial section
 % assuming LARS is used
@@ -252,9 +278,9 @@ for j=1:n_coeffs
 
     figure
     t  = lines; %get(gca,'ColorOrder');
-    h2 = plot(r_exp_data(r_index),QoI_sim,'o','markersize',16,'color',t(2,:),'Linewidth', 2.5);
+    h2 = plot(r_exp_data(r_index),QoI_sim,'o','markersize',12,'color',t(2,:),'Linewidth', 2.5);
     hold on
-    h3 = plot(r_exp_data(r_index),QoI_unperturbed,'s','markersize',16,'color',t(3,:),'Linewidth', 2.5);
+    h3 = plot(r_exp_data(r_index),QoI_unperturbed,'s','markersize',12,'color',t(1,:),'Linewidth', 2.5);
 
     grid on
     xlabel('r [m]');
@@ -353,3 +379,12 @@ else
     disp('response surface plotting not implemented for more than 1 uncertain parameter');
     
 end
+
+%% save surrogate model
+filename = ['PCE_N' num2str(myPCE_LARS.ExpDesign.NSamples) '.mat'];
+filepath = fullfile('..','..','StoredSurrogates','NewMexico_sensitivity');
+% prevent overwriting of file
+filename_new = avoidOverwrite(filename,filepath);
+disp(['saving surrogate model in ' filename_new]);
+
+save(fullfile(filepath,filename_new),'myPCE_LARS');

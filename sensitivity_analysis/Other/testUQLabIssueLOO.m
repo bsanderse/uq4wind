@@ -3,9 +3,12 @@
 %% example of issue:
 % take LARS with 16 samples, rng default, and use degree 1:4. UQLab
 % suggests a straight line (degree 1) as best fit
+% see also
+% https://uqworld.org/t/surprising-results-with-pce-for-low-number-of-samples/1084/3
 
 % maybe the issue is when we have periodic functions and the support of the
 % pdf is larger than a typical period of the function
+
 
 %% other issue:
 % LHS sampling of 1D parameter is different from LHS sampling of 1D
